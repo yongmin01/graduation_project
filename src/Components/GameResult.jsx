@@ -8,9 +8,11 @@ export default function GameResult({ result, total }) {
     <Result>
       <Content>
         <Title>결과</Title>
-        <Score>
-          맞힌 문제 : {result}개 / {total}개
-        </Score>
+        <ScoreDiv>
+          <Score>
+            맞힌 문제 : {result}개 / {total}개
+          </Score>
+        </ScoreDiv>
 
         <>
           {result >= 2 ? (
@@ -64,15 +66,24 @@ const Title = styled.div`
   font-size: 120px;
   margin-bottom: 6.9vh;
 `;
+const ScoreDiv = styled.div`
+  position: relative;
+`;
 const Score = styled.div`
   font-family: Gaegu;
   font-size: 52px;
   color: #151b26;
   font-weight: 700;
   margin-bottom: 4.4vh;
-  &::after {
-    border-radius: 10px;
-    background: rgba(255, 216, 216, 0.8);
+  &:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 60%;
+    background-color: rgba(255, 216, 216, 0.8);
     filter: blur(15px);
   }
 `;
@@ -87,7 +98,7 @@ const Highlight = styled.div`
   font-family: Gaegu;
   font-size: 52px;
   color: #151b26;
-  -webkit-text-stroke-width: 6;
+  -webkit-text-stroke-width: 3px;
   -webkit-text-stroke-color: #ffdd2c;
 `;
 const OptionBtn = styled.button`

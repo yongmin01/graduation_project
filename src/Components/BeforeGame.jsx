@@ -6,8 +6,11 @@ import { ReactComponent as OptionPathTwo } from "../sources/images/descriptionPa
 import { ReactComponent as PlayIcon } from "../sources/images/playIcon.svg";
 import { ReactComponent as StartPath } from "../sources/images/sbGameStartPath.svg";
 import radioImg from "../sources/images/radio.png";
+import megaphone from "../sources/images/megaphone.png";
+import speaker from "../sources/images/speaker.png";
 import flower from "../sources/images/flower.png";
 import sprinkle from "../sources/images/sprinkle.png";
+
 export default function BeforeGame({ go, title }) {
   const [description, setDescription] = useState(false);
   return (
@@ -54,6 +57,7 @@ export default function BeforeGame({ go, title }) {
       ) : (
         // 게임 시작 or 게임 설명 선택
         <>
+          <Megaphone src={megaphone} />
           <Decoration1>귀 기울여 집중!!</Decoration1>
           <TitleStyled>{title}</TitleStyled>
           <Radio src={radioImg} />
@@ -101,7 +105,13 @@ const DescTitleText = styled.div`
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   z-index: 1;
 `;
-
+const Megaphone = styled.img`
+  height: 151px;
+  transform: rotate(-5.759deg);
+  position: absolute;
+  top: 19vh;
+  left: 12vw;
+`;
 const Elipse = styled.div`
   width: 54px;
   height: 52px;
@@ -151,7 +161,7 @@ const TitleStyled = styled.div`
 `;
 const Radio = styled.img`
   /* width: 43vw; */
-  height: 45vh;
+  height: 47vh;
   position: absolute;
   left: 55px;
   bottom: 9vh; /* 비율 수정 */
