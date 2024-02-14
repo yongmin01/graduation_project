@@ -6,13 +6,18 @@ const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
-    
+}
+
+canvas {
+      margin: 0;
+      padding: 0;
 }
 
 html, body {
     font-family: "Helvetica", "Arial", sans-serif;
     font-size: 60px;
     line-height: 1.5;
+    margin: 0;
 }
 button {
       cursor: pointer;
