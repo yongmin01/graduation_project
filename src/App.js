@@ -7,7 +7,10 @@ import MusicQuiz from "./Pages/MusicQuiz";
 
 function App() {
   const handle = useFullScreenHandle();
-
+  const [round, setRound] = useState(1);
+  useEffect(() => {
+    console.log(round);
+  }, [round]);
   return (
     <>
       <GlobalStyle />
@@ -16,8 +19,8 @@ function App() {
         <button onClick={handle.exit}>전체화면 해제</button> */}
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Map />} />
-          <Route path="/music" element={<MusicQuiz />} />
+          <Route path="/" element={<Map round={round} />} />
+          <Route path="/music" element={<MusicQuiz round={setRound} />} />
         </Routes>
       </BrowserRouter>
       {/* </FullScreen> */}

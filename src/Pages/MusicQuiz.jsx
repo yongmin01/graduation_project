@@ -13,7 +13,7 @@ import { ReactComponent as ReplayIcon } from "../sources/images/replay.svg";
 import { ReactComponent as PlayMoreIcon } from "../sources/images/playmore.svg";
 import { ReactComponent as PlayIcon } from "../sources/images/playIcon.svg";
 
-export default function MusicQuiz() {
+export default function MusicQuiz({ round }) {
   const [game, setGame] = useState("before");
   const [counter, setCounter] = useState(true);
   const [nowPlaying, setNowPlaying] = useState(false);
@@ -274,7 +274,11 @@ export default function MusicQuiz() {
           <BeforeGame go={setGame} title="전주 듣고 노래 맞추기" />
         </>
       ) : (
-        <GameResult result={score.current} total={musics.length} />
+        <GameResult
+          result={score.current}
+          total={musics.length}
+          round={round}
+        />
       )}
     </>
   );

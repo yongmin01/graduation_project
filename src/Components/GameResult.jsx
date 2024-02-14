@@ -4,8 +4,12 @@ import styled from "styled-components";
 import Bg from "../sources/images/gameEndingBg.png";
 import { ReactComponent as PlayIcon } from "../sources/images/playIcon.svg";
 import { ReactComponent as BackToMapPath } from "../sources/images/backtomapPath.svg";
-export default function GameResult({ result, total }) {
+export default function GameResult({ result, total, round }) {
   const navigator = useNavigate();
+  const backToMap = () => {
+    navigator("/");
+    round(2);
+  };
   return (
     <Result>
       <Content>
@@ -34,9 +38,7 @@ export default function GameResult({ result, total }) {
       <OptionBtn>
         <PlayIconSt />
         <Option>
-          <OptionText onClick={() => navigator("/")}>
-            맵으로 돌아가기
-          </OptionText>
+          <OptionText onClick={backToMap}>맵으로 돌아가기</OptionText>
           <BackToMapPath />
         </Option>
       </OptionBtn>
