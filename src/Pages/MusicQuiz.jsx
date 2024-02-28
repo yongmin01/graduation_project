@@ -7,11 +7,11 @@ import BeforeGame from "../Components/BeforeGame";
 import GameResult from "../Components/GameResult";
 import Chance from "../Components/Chance";
 import GameCommonStyle from "../utils/GameCommonStyle";
-import NowplayingGif from "../sources/images/nowPlaying.gif";
-import { ReactComponent as InputPath } from "../sources/images/inputPath.svg";
-import { ReactComponent as ReplayIcon } from "../sources/images/replay.svg";
-import { ReactComponent as PlayMoreIcon } from "../sources/images/playmore.svg";
-import { ReactComponent as PlayIcon } from "../sources/images/playIcon.svg";
+import NowplayingGif from "../sources/images/Game/nowPlaying.gif";
+import { ReactComponent as InputPath } from "../sources/images/Game/inputPath.svg";
+import { ReactComponent as ReplayIcon } from "../sources/images/Game/replay.svg";
+import { ReactComponent as PlayMoreIcon } from "../sources/images/Game/playmore.svg";
+import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
 
 export default function MusicQuiz({ round }) {
   const [game, setGame] = useState("before");
@@ -165,7 +165,7 @@ export default function MusicQuiz({ round }) {
 
   return (
     <>
-      <GameCommonStyle />
+      <GameCommonStyle color={"#ffedb3"} />
       {game === "start" ? (
         <Game>
           <PlayerSt
@@ -299,13 +299,13 @@ const PlayerSt = styled(Player)`
 
 const Progress = styled.div`
   font-size: 36px;
-  font-family: SangSangShinb7;
+  font-family: UhbeeJung;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
 const QuizIndex = styled.div`
   font-size: 90px;
-  font-family: SangSangShinb7;
+  font-family: UhbeeJung;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
   margin-bottom: 5.4vh;
@@ -346,7 +346,7 @@ const QuizDiv = styled.div`
   position: relative;
 `;
 const InputDiv = styled.div`
-  font-family: "SangSangShinb7";
+  font-family: "UhbeeJung";
   font-size: 60px;
   display: flex;
   flex-direction: row;
@@ -362,7 +362,7 @@ const InputBox = styled.div`
 const InputTagBox = styled.input`
   border: none;
   background-color: transparent;
-  font-family: "SangSangShinb7";
+  font-family: "UhbeeJung";
   font-size: 44px;
   margin-bottom: 4px;
 `;
@@ -372,7 +372,7 @@ const SubmitDiv = styled.div`
 const SubmitBtn = styled.div`
   border: none;
   background-color: transparent;
-  font-family: "SangSangShinb7";
+  font-family: "UhbeeJung";
   font-size: 60px;
   color: #151b26;
   &:before {

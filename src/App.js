@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import Map from "./Pages/Map";
 import MusicQuiz from "./Pages/MusicQuiz";
+import SpeechQuiz from "./Pages/SpeechQuiz";
 
 function App() {
   const handle = useFullScreenHandle();
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Map round={round} />} />
           <Route path="/music" element={<MusicQuiz round={setRound} />} />
+          <Route path="/speech" element={<SpeechQuiz round={setRound} />} />
         </Routes>
       </BrowserRouter>
       {/* </FullScreen> */}

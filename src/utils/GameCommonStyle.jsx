@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import Bg from "../sources/images/bg.png";
+import Bg from "../sources/images/Game/bg.png";
 
-export default function GameCommonStyle() {
-  return <GameBgStyle />;
+export default function GameCommonStyle({ color }) {
+  return <GameBgStyle color={color} />;
 }
 const GameBgStyle = styled.div`
-  background-color: #ffedb3;
+  background-color: ${(props) => props.color};
+
   background-image: url(${Bg});
   background-size: 94% 91%;
   background-repeat: no-repeat;

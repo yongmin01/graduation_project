@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Bg from "../sources/images/gameEndingBg.png";
-import { ReactComponent as PlayIcon } from "../sources/images/playIcon.svg";
-import { ReactComponent as BackToMapPath } from "../sources/images/backtomapPath.svg";
+import Bg from "../sources/images/Game/gameEndingBg.png";
+import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
+import { ReactComponent as BackToMapPath } from "../sources/images/Game/backtomapPath.svg";
 export default function GameResult({ result, total, round }) {
   const navigator = useNavigate();
   const backToMap = () => {
@@ -68,7 +68,7 @@ const Content = styled.div`
 `;
 
 const Title = styled.div`
-  font-family: SangSangShinb7;
+  font-family: UhbeeJung;
   font-size: 120px;
   margin-bottom: 6.9vh;
 `;
@@ -128,7 +128,7 @@ const Option = styled.div`
 const OptionText = styled.div`
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "SangSangShinb7";
+  font-family: "UhbeeJung";
   font-size: 60px;
   &:before {
     content: "";

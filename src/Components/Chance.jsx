@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ReactComponent as Heart } from "../sources/images/heart.svg";
+import { ReactComponent as Heart } from "../sources/images/Game/heart.svg";
 
 export default function Chance({ remaining, total }) {
   // SVG 아이콘을 그리는 함수

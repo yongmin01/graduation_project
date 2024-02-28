@@ -1,4 +1,3 @@
-import albumCover1 from "./sources/images/albumcover1.png";
 export const musics = [
   {
     id: "VT9lKAPWG5E",

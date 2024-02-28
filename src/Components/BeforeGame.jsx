@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import OptionsPath from "../sources/images/optionsBg.svg";
-import { ReactComponent as OptionPathOne } from "../sources/images/gameStartPath.svg";
-import { ReactComponent as OptionPathTwo } from "../sources/images/descriptionPath.svg";
-import { ReactComponent as PlayIcon } from "../sources/images/playIcon.svg";
-import { ReactComponent as StartPath } from "../sources/images/sbGameStartPath.svg";
-import radioImg from "../sources/images/radio.png";
-import megaphone from "../sources/images/megaphone.png";
-import speaker from "../sources/images/speaker.png";
-import flower from "../sources/images/flower.png";
-import sprinkle from "../sources/images/sprinkle.png";
+import OptionsPath from "../sources/images/Game/optionsBg.svg";
+import { ReactComponent as OptionPathOne } from "../sources/images/Game/gameStartPath.svg";
+import { ReactComponent as OptionPathTwo } from "../sources/images/Game/descriptionPath.svg";
+import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
+import { ReactComponent as StartPath } from "../sources/images/Game/sbGameStartPath.svg";
+import { ReactComponent as RecordBtn } from "../sources/images/Game/recordBtn.svg";
+
+// 음악퀴즈 장식
+import radioImg from "../sources/images/Game/radio.png";
+import megaphone from "../sources/images/Game/megaphone.png";
+import speaker from "../sources/images/Game/speaker.png";
+import flower from "../sources/images/Game/flower.png";
+import sprinkle from "../sources/images/Game/sprinkle.png";
+
+// 방송퀴즈 장식
+import boy from "../sources/images/Game/speech_boy.png";
+import girl from "../sources/images/Game/speech_girl.png";
 
 export default function BeforeGame({ go, title }) {
   const [description, setDescription] = useState(false);
@@ -21,26 +28,69 @@ export default function BeforeGame({ go, title }) {
           <Description>
             <DescTitle>
               <DescTitleText>게임 방법</DescTitleText>
-              <Elipse />
+              {window.location.pathname === "/music" ? <Elipse /> : null}
             </DescTitle>
-            <Line>
-              노래는 3초 카운트다운 후 전주가 <Word color="#0CA42D">1.5초</Word>{" "}
-              재생됩니다. <br />한 문제 당 정답 제출 기회는 딱{" "}
-              <Word color="#0F98F4">3번!</Word>
-              <br />
-              힌트는 <Word color="#9B3AE8">‘다시 듣기’, ‘3초 더 듣기’</Word>가
-              있어요.
-              <br />
-              <SmallLine>
-                다시 듣기 : 정답 기회가 있을 때 언제든 딱 1번 사용할 수
-                있습니다.
+            {window.location.pathname === "/music" ? ( // 음악 퀴즈
+              <Line>
+                노래는 3초 카운트다운 후 전주가{" "}
+                <Word color="#0CA42D">1.5초</Word> 재생됩니다. <br />한 문제 당
+                정답 제출 기회는 딱 <Word color="#0F98F4">3번!</Word>
                 <br />
-                3초 더 듣기 : 한 번 틀렸을 때에만 주어지는 특별 힌트! <br />
-              </SmallLine>
-              총 <Word color="#F13C93">5라운드</Word>의 게임, 3라운드 이상
-              정답을 맞춰야 일기장을 <br />
-              획득할 수 있습니다. 한 번 도전해보세요!
-            </Line>
+                힌트는 <Word color="#9B3AE8">‘다시 듣기’, ‘3초 더 듣기’</Word>가
+                있어요.
+                <br />
+                <SmallLine>
+                  다시 듣기 : 정답 기회가 있을 때 언제든 딱 1번 사용할 수
+                  있습니다.
+                  <br />
+                  3초 더 듣기 : 한 번 틀렸을 때에만 주어지는 특별 힌트! <br />
+                </SmallLine>
+                총 <Word color="#F13C93">5라운드</Word>의 게임, 3라운드 이상
+                정답을 맞춰야 일기장을 <br />
+                획득할 수 있습니다. 한 번 도전해보세요!
+              </Line>
+            ) : window.location.pathname === "/speech" ? ( // 방송 퀴즈
+              <Line>
+                3초 카운트다운 후 <Word color="#FF4BCD">짧은 영상이 재생</Word>
+                됩니다. <br />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "20px",
+                    marginLeft: "-30px",
+                  }}
+                >
+                  다음에 올 대사를{" "}
+                  <Btn>
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: "5px",
+                        width: "200px",
+                        height: "90px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        fontSize: "30px",
+                      }}
+                    >
+                      녹음하기
+                    </span>
+                    <RecordBtn fill="#E7F5FF" />
+                  </Btn>
+                  버튼을 눌러 말해주세요! <br />
+                </div>
+                영상은 제출 전까지 계속 재생 가능합니다. <br />
+                녹음 기회는 <Word color="#08C832">무제한</Word>, 답안 제출
+                기회는 <Word color="#00D4C7">2번</Word>입니다.
+                <br />총 <Word color="#005AFF">5라운드</Word>의 게임, 3라운드
+                이상 정답을 맞춰야 일기장을 <br /> 획득할 수 있습니다. 한 번
+                도전해보세요!
+              </Line>
+            ) : null}
           </Description>
           <Sprinkle src={sprinkle} />
           <Flower src={flower} />
@@ -57,10 +107,27 @@ export default function BeforeGame({ go, title }) {
       ) : (
         // 게임 시작 or 게임 설명 선택
         <>
-          <Megaphone src={megaphone} />
-          <Decoration1>귀 기울여 집중!!</Decoration1>
+          {window.location.pathname === "/music" ? (
+            <>
+              <LeftDecoImg src={megaphone} />
+              <Decoration1>귀 기울여 집중!!</Decoration1>
+              <Radio src={radioImg} />
+            </>
+          ) : window.location.pathname === "/speech" ? (
+            <Decoration>
+              <img src={boy} style={{ rotate: "-3.96deg" }} />
+              <img
+                src={girl}
+                style={{
+                  rotate: "1.74deg",
+                  position: "absolute",
+                  left: "347.12px",
+                  bottom: "32px",
+                }}
+              />
+            </Decoration>
+          ) : null}
           <TitleStyled>{title}</TitleStyled>
-          <Radio src={radioImg} />
           <Options>
             <OptionBtn onClick={() => go("start")}>
               <PlayIconSt />
@@ -99,18 +166,25 @@ const DescTitle = styled.div`
 const DescTitleText = styled.div`
   display: flex;
   flex-direction: row;
-  font-family: SangSangShinb7;
+  font-family: "UhBeeJungBold";
   font-size: 100px;
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   z-index: 1;
 `;
-const Megaphone = styled.img`
+const LeftDecoImg = styled.img`
   height: 151px;
   transform: rotate(-5.759deg);
   position: absolute;
   top: 19vh;
   left: 12vw;
+`;
+const Decoration = styled.div`
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 36.34px;
+  left: 60px;
 `;
 const Elipse = styled.div`
   width: 54px;
@@ -128,7 +202,7 @@ const Line = styled.div`
   white-space: nowrap;
 `;
 const SmallLine = styled.div`
-  font-family: Gaegu;
+  font-family: "Gaegu";
   font-size: 3.5vh;
   margin-left: 25px;
   margin-bottom: 10px;
@@ -138,13 +212,19 @@ const Word = styled.span`
   white-space: nowrap;
 `;
 
+const Btn = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 // 게임 시작 or 게임 방법
 const Decoration1 = styled.div`
   width: 344px;
   height: 98px;
   border-radius: 50%;
   background: #fad615;
-  font-family: SangSangShinb7;
+  font-family: "SangSangShinb7";
   position: absolute;
   right: 165px;
   top: 22vh;
@@ -156,8 +236,8 @@ const TitleStyled = styled.div`
   top: 30vh;
   text-align: center;
   width: 100%;
-  font-family: "SangSangShinb7";
-  font-size: 2rem;
+  font-family: "UhBeeJung";
+  font-size: 120px;
 `;
 const Radio = styled.img`
   /* width: 43vw; */
@@ -213,6 +293,7 @@ const OptionBtn = styled.button`
 const PlayIconSt = styled(PlayIcon)`
   width: 60px;
   height: 59px;
+  filter: drop-shadow();
 `;
 const Option = styled.div`
   position: relative;
@@ -221,8 +302,8 @@ const Option = styled.div`
 const OptionText = styled.div`
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "SangSangShinb7";
-  font-size: 1rem;
+  font-family: "UhBeeJung";
+  font-size: 60px;
   &:before {
     content: "";
     position: absolute;

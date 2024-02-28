@@ -34,5 +34,18 @@ button {
         font-family: 'Gaegu';
         src: url(${Gaegu}) format('opentype');
   }
+  @font-face {
+      font-family: 'UhBeejung';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_five@.2.0/UhBeejung.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+}
+  @font-face {
+      font-family: 'UhBeejungBold';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_five@.2.0/UhBeejung.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+}
+
 `;
 export default GlobalStyle;

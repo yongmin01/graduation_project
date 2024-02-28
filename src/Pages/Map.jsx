@@ -2,14 +2,15 @@ import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import backgroundImg from "../sources/images/map.png";
-import characterImg from "../sources/images/girl.png";
-import dateFormatImg from "../sources/images/dateFormat.png";
-import carImg from "../sources/images/car.png";
-import goWomanImg from "../sources/images/녹색어머니 출발.png";
-import stopWomanImg from "../sources/images/녹색어머니 멈춤.png";
-import greenlightImg from "../sources/images/초록불.png";
-import redlightImg from "../sources/images/빨간불.png";
+import backgroundImg from "../sources/images/Map/map.png";
+import characterImg from "../sources/images/Map/girl.png";
+import dateFormatImg from "../sources/images/Map/dateFormat.png";
+import carImg from "../sources/images/Map/car.png";
+import goWomanImg from "../sources/images/Map/녹색어머니 출발.png";
+import stopWomanImg from "../sources/images/Map/녹색어머니 멈춤.png";
+import greenlightImg from "../sources/images/Map/초록불.png";
+import redlightImg from "../sources/images/Map/빨간불.png";
+import loading1 from "../sources/images/MP3.gif";
 
 export default function Map({ gameStart, round }) {
   const canvasRef = useRef(null);
@@ -21,7 +22,7 @@ export default function Map({ gameStart, round }) {
   const [traficLight, setTraficLight] = useState({ x: 3966, y: 870 });
   const [light, setLight] = useState({ x: 2540, y: 720, r: 0 });
   const [car, setCar] = useState({ x: 1600, y: 600 });
-
+  const [loading, setLoading] = useState(false);
   // 캐릭터 이동 관련 state
   const [pressedKey, setPressedKey] = useState(null);
   const [stop, setStop] = useState(false);
@@ -31,7 +32,7 @@ export default function Map({ gameStart, round }) {
   bgImage.src = backgroundImg;
 
   // 캐릭터 이동 속도
-  const v = 10;
+  const v = 50;
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -197,7 +198,8 @@ export default function Map({ gameStart, round }) {
       canvasRef.current
     ) {
       cancelAnimationFrame(requestAnimationRef.current);
-      moveToGame();
+      // moveToGame();
+      setLoading(true);
       setInterval(() => {
         navigator("/music");
       }, 5000);
@@ -251,13 +253,21 @@ export default function Map({ gameStart, round }) {
     }
   };
   return (
-    <Canvas
-      ref={canvasRef}
-      width={window.innerWidth * 2}
-      height={window.innerHeight * 2}
-      // onKeyDown={handleMove}
-      tabIndex={0}
-    />
+    <>
+      {loading ? (
+        <Loading>
+          <LoadingImg src={loading1} />
+        </Loading>
+      ) : (
+        <Canvas
+          ref={canvasRef}
+          width={window.innerWidth * 2}
+          height={window.innerHeight * 2}
+          // onKeyDown={handleMove}
+          tabIndex={0}
+        />
+      )}
+    </>
   );
 }
 const Canvas = styled.canvas`
@@ -265,4 +275,16 @@ const Canvas = styled.canvas`
   height: 100%;
   background-color: brown;
   overflow-y: hidden;
+`;
+const Loading = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+`;
+
+const LoadingImg = styled.img`
+  width: 100%;
 `;
