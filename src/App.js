@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import Map from "./Pages/Map";
+import Map2 from "./Pages/Map2";
 import MusicQuiz from "./Pages/MusicQuiz";
 import SpeechQuiz from "./Pages/SpeechQuiz";
 
@@ -21,8 +22,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Map round={round} />} />
-          <Route path="/music" element={<MusicQuiz round={setRound} />} />
-          <Route path="/speech" element={<SpeechQuiz round={setRound} />} />
+          <Route path="/map2" element={<Map2 round={round} />} />
+          <Route path="/music" element={<MusicQuiz round={1} />} />
+          <Route path="/speech" element={<SpeechQuiz round={2} />} />
         </Routes>
       </BrowserRouter>
       {/* </FullScreen> */}
