@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import bgImage from "../sources/images/Map/map2/map2.png";
+import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import characterImage from "../sources/images/Map/girl.png";
 import frameImage from "../sources/images/Map/map2/frame.png";
 import panelImage from "../sources/images/Map/map2/electricPanel.png";
+import interphoneImage from "../sources/images/Map/map2/interphone.png";
+import nintendoImage from "../sources/images/Map/map2/nintendo.png";
+import speechbubbleImage from "../sources/images/Map/map2/game.png";
 import controllerImage from "../sources/images/Map/map2/controller.png";
 import noteImage from "../sources/images/Map/map2/note.png";
 import practiceNoteImage from "../sources/images/Map/map2/practiceNote.png";
@@ -33,9 +37,11 @@ export default function Map2() {
   const [pressedKey, setPressedKey] = useState(null);
   const [background, setBackground] = useState({ x: 0, y: 0 });
   const [character, setCharacter] = useState({ x: 500, y: 1000 });
+  const [round, setRound] = useState(false);
   const [loading, setLoading] = useState(false);
   const [panel, setPanel] = useState(false);
   const [noteClicked, setNoteClicked] = useState(false);
+  const [nintendoClicked, setNintendoClicked] = useState(false);
   const navigator = useNavigate();
   const canvasRef = useRef(null);
   const requestAnimationRef = useRef(null);
@@ -56,12 +62,10 @@ export default function Map2() {
       const context = canvas.getContext("2d");
       let x = (e.clientX - context.canvas.offsetLeft) * 2;
       let y = (e.clientY - context.canvas.offsetTop) * 2;
+
+      // 액자 클릭 확인
       const frame = new Image();
       frame.src = frameImage;
-
-      const note = new Image();
-      note.src = noteImage;
-      // 액자 클릭 확인
       if (
         x >=
           background.x +
@@ -80,7 +84,30 @@ export default function Map2() {
       ) {
         setPanel(true);
       }
+      // 닌텐도 클릭 확인
+      const nintendo = new Image();
+      nintendo.src = nintendoImage;
+      if (
+        x >=
+          background.x +
+            (1969 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
+        x <=
+          background.x +
+            (1969 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
+            (nintendo.width / 5000) *
+              bg.width *
+              (canvasRef.current.height / bg.height) &&
+        y >= background.y + (615 / 1024) * canvasRef.current.height &&
+        y <=
+          background.y +
+            (615 / 1024) * canvasRef.current.height +
+            (nintendo.height / 1024) * canvasRef.current.height
+      ) {
+        setNintendoClicked(true);
+      }
       // 악보 클릭 확인
+      const note = new Image();
+      note.src = noteImage;
       if (
         x >=
           background.x +
@@ -99,14 +126,47 @@ export default function Map2() {
       ) {
         setNoteClicked(true);
       }
+
+      // 리모컨 클릭 확인
+      const controller = new Image();
+      controller.src = controllerImage;
+      if (
+        x >=
+          background.x +
+            (4484 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
+        x <=
+          background.x +
+            (4484 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
+            (controller.width / 5000) *
+              bg.width *
+              (canvasRef.current.height / bg.height) &&
+        y >= background.y + (724 / 1024) * canvasRef.current.height &&
+        y <=
+          background.y +
+            (724 / 1024) * canvasRef.current.height +
+            (controller.height / 1024) * canvasRef.current.height
+      ) {
+        setRound(true);
+      }
     };
     canvasRef.current.addEventListener("click", handleCanvasClick);
     return () => {
       cancelAnimationFrame(requestAnimationRef.current);
-      canvasRef.current.removeEventListener("click", handleCanvasClick);
+      // canvasRef.current.removeEventListener("click", handleCanvasClick);
     };
   });
 
+  // 게임 화면 라우팅
+  useEffect(() => {
+    if (round) {
+      cancelAnimationFrame(requestAnimationRef.current);
+
+      setLoading(true);
+      setInterval(() => {
+        navigator("/speech");
+      }, 5000);
+    }
+  }, [round]);
   // 렌더링 함수
   const render = () => {
     if (!canvasRef.current) return;
@@ -139,6 +199,7 @@ export default function Map2() {
 
     // 액자 그리기
     let frame = framepanel();
+
     frame.onload = () => {
       context.drawImage(
         frame,
@@ -151,13 +212,63 @@ export default function Map2() {
         (frame.height / 1024) * canvasRef.current.height
       );
     };
+    // 인터폰 그리기
+    const interphone = new Image();
+    interphone.src = interphoneImage;
+
+    interphone.onload = () => {
+      context.drawImage(
+        interphone,
+        background.x +
+          (777 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        background.y + (102 / 1024) * canvasRef.current.height,
+        (interphone.width / 5000) *
+          bg.width *
+          (canvasRef.current.height / bg.height),
+        (interphone.height / 1024) * canvasRef.current.height
+      );
+    };
+
+    // 닌텐도 그리기
+    const nintendo = new Image();
+    nintendo.src = nintendoImage;
+
+    nintendo.onload = () => {
+      context.drawImage(
+        nintendo,
+        background.x +
+          (1969 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        background.y + (615 / 1024) * canvasRef.current.height,
+        (nintendo.width / 5000) *
+          bg.width *
+          (canvasRef.current.height / bg.height),
+        (nintendo.height / 1024) * canvasRef.current.height
+      );
+    };
+
+    // 게임 말풍선 그리기
+    const gamesppechbubble = new Image();
+    gamesppechbubble.src = speechbubbleImage;
+
+    if (nintendoClicked) {
+      gamesppechbubble.onload = () => {
+        context.drawImage(
+          gamesppechbubble,
+          background.x +
+            (1813 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (28 / 1024) * canvasRef.current.height,
+          (gamesppechbubble.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (gamesppechbubble.height / 1024) * canvasRef.current.height
+        );
+      };
+    }
 
     // 리모컨 그리기
     const controller = new Image();
     controller.src = controllerImage;
-    controller.onClick = () => {
-      console.log("controller clicked");
-    };
+
     controller.onload = () => {
       context.drawImage(
         controller,
@@ -202,6 +313,20 @@ export default function Map2() {
         );
       };
     }
+
+    // 날짜 그리기
+    const date = new Image();
+    date.src = dateFormatImg;
+
+    date.onload = () => {
+      context.drawImage(
+        date,
+        0,
+        0,
+        (date.width / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        (date.height / 1024) * canvasRef.current.height
+      );
+    };
   };
 
   const framepanel = () => {
@@ -248,22 +373,22 @@ export default function Map2() {
         return;
     }
   };
-  useEffect(() => {
-    if (
-      background.x <
-        -(
-          bg.width * (canvasRef.current.height / bg.height) -
-          windowSize.width
-        ) &&
-      canvasRef.current
-    ) {
-      cancelAnimationFrame(requestAnimationRef.current);
-      setLoading(true);
-      setInterval(() => {
-        navigator("/speech");
-      }, 5000);
-    }
-  }, [background]);
+  // useEffect(() => {
+  //   if (
+  //     background.x <
+  //       -(
+  //         bg.width * (canvasRef.current.height / bg.height) -
+  //         windowSize.width
+  //       ) &&
+  //     canvasRef.current
+  //   ) {
+  //     cancelAnimationFrame(requestAnimationRef.current);
+  //     setLoading(true);
+  //     setInterval(() => {
+  //       navigator("/speech");
+  //     }, 5000);
+  //   }
+  // }, [background]);
   return (
     <>
       {loading ? (
