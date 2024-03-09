@@ -17,13 +17,13 @@ import loading1 from "../sources/images/MP3.gif";
 export default function Map2() {
   // 캔버스 크기 관련
   const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth * 2,
-    height: window.innerHeight * 2,
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
   const resizeHandler = useCallback(() => {
     setWindowSize({
-      width: window.innerWidth * 2,
-      height: window.innerHeight * 2,
+      width: window.innerWidth,
+      height: window.innerHeight,
     });
   }, []);
   useEffect(() => {
@@ -60,8 +60,8 @@ export default function Map2() {
     const handleCanvasClick = (e) => {
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
-      let x = (e.clientX - context.canvas.offsetLeft) * 2;
-      let y = (e.clientY - context.canvas.offsetTop) * 2;
+      let x = e.clientX - context.canvas.offsetLeft;
+      let y = e.clientY - context.canvas.offsetTop;
 
       // 액자 클릭 확인
       const frame = new Image();
@@ -347,10 +347,12 @@ export default function Map2() {
     characterImg.onload = () => {
       context.drawImage(
         characterImg,
-        character.x,
-        character.y,
-        characterImg.width * 1.1,
-        characterImg.height * 1.1
+        (300 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        (500 / 1024) * canvasRef.current.height,
+        (characterImg.width / 5000) *
+          bg.width *
+          (canvasRef.current.height / bg.height),
+        (characterImg.height / 1024) * canvasRef.current.height
       );
     };
   };
@@ -373,22 +375,7 @@ export default function Map2() {
         return;
     }
   };
-  // useEffect(() => {
-  //   if (
-  //     background.x <
-  //       -(
-  //         bg.width * (canvasRef.current.height / bg.height) -
-  //         windowSize.width
-  //       ) &&
-  //     canvasRef.current
-  //   ) {
-  //     cancelAnimationFrame(requestAnimationRef.current);
-  //     setLoading(true);
-  //     setInterval(() => {
-  //       navigator("/speech");
-  //     }, 5000);
-  //   }
-  // }, [background]);
+
   return (
     <>
       {loading ? (
