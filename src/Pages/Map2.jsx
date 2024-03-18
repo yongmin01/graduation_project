@@ -318,15 +318,19 @@ export default function Map2() {
     const date = new Image();
     date.src = dateFormatImg;
 
-    date.onload = () => {
-      context.drawImage(
-        date,
-        0,
-        0,
-        (date.width / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        (date.height / 1024) * canvasRef.current.height
-      );
-    };
+    if (!pressedKey) {
+      date.onload = () => {
+        context.drawImage(
+          date,
+          0,
+          0,
+          (date.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (date.height / 1024) * canvasRef.current.height
+        );
+      };
+    }
   };
 
   const framepanel = () => {
@@ -361,7 +365,7 @@ export default function Map2() {
     switch (pressedKey) {
       case "ArrowLeft":
         if (background.x < 0) {
-          setBackground({ ...background, x: background.x + 10 });
+          setBackground({ ...background, x: background.x + 5 });
         }
         return;
       case "ArrowRight":
@@ -369,7 +373,7 @@ export default function Map2() {
           background.x + bg.width * (canvasRef.current.height / bg.height) >
           canvasRef.current.width
         ) {
-          setBackground({ ...background, x: background.x - 10 });
+          setBackground({ ...background, x: background.x - 5 });
         } else {
         }
         return;
