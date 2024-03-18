@@ -18,7 +18,7 @@ import sprinkle from "../sources/images/Game/sprinkle.png";
 import boy from "../sources/images/Game/speech_boy.png";
 import girl from "../sources/images/Game/speech_girl.png";
 
-export default function BeforeGame({ go, title }) {
+export default function BeforeGame({ go, title, round }) {
   const [description, setDescription] = useState(false);
   return (
     <>
@@ -68,8 +68,8 @@ export default function BeforeGame({ go, title }) {
                       style={{
                         position: "absolute",
                         top: "5px",
-                        width: "200px",
-                        height: "90px",
+                        width: "14vw",
+                        height: "8.7vh",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
@@ -79,7 +79,7 @@ export default function BeforeGame({ go, title }) {
                     >
                       녹음하기
                     </span>
-                    <RecordBtn fill="#E7F5FF" />
+                    <RecordBtn fill="#E7F5FF" width="200px" height="90px" />
                   </Btn>
                   버튼을 눌러 말해주세요! <br />
                 </div>
@@ -98,7 +98,9 @@ export default function BeforeGame({ go, title }) {
             <OptionBtn>
               <PlayIconSt />
               <Option>
-                <OptionText onClick={() => go("start")}>시작!</OptionText>
+                <OptionText onClick={() => go("start")} round={round}>
+                  시작!
+                </OptionText>
                 <StartPath />
               </Option>
             </OptionBtn>
@@ -132,14 +134,14 @@ export default function BeforeGame({ go, title }) {
             <OptionBtn onClick={() => go("start")}>
               <PlayIconSt />
               <Option>
-                <OptionText>게임 시작</OptionText>
+                <OptionText round={round}>게임 시작</OptionText>
                 <OptionPathOne />
               </Option>
             </OptionBtn>
             <OptionBtn onClick={() => setDescription(true)}>
               <PlayIconSt />
               <Option>
-                <OptionText>게임 설명</OptionText>
+                <OptionText round={round}>게임 설명</OptionText>
                 <OptionPathTwo />
               </Option>
             </OptionBtn>
@@ -312,7 +314,12 @@ const OptionText = styled.div`
     transform: translate(-50%, -50%);
     width: 80%;
     height: 60%;
-    background-color: rgba(248, 212, 24, 0.2);
+    background-color: ${(props) =>
+      props.round === 1
+        ? "rgba(248, 212, 24, 0.2)"
+        : props.round === 2
+        ? "rgba(27, 127, 199, 0.371)"
+        : "pink"};
     filter: blur(15px);
     opacity: 0;
     transition: opacity 0.3s ease;

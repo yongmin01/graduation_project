@@ -271,7 +271,11 @@ export default function MusicQuiz({ round }) {
         </Game>
       ) : game === "before" ? (
         <>
-          <BeforeGame go={setGame} title="전주 듣고 노래 맞추기" />
+          <BeforeGame
+            go={setGame}
+            title="전주 듣고 노래 맞추기"
+            round={round}
+          />
         </>
       ) : (
         <GameResult

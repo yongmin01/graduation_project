@@ -173,8 +173,8 @@ export default function SpeechQuiz({ round }) {
               <ReactPlayer
                 url={`https://www.youtube.com/watch?v=${speech[quizIndex].id}
                    ?shoinfo="0"&rel="0"`}
-                width={"600px"}
-                height={"300px"}
+                width={"41vh"}
+                height={"29vh"}
                 playing={nowPlaying}
                 ref={playerRef}
                 config={{
@@ -241,8 +241,8 @@ export default function SpeechQuiz({ round }) {
               style={{
                 position: "absolute",
                 top: "5px",
-                width: "208px",
-                height: "90px",
+                width: "14vw",
+                height: "8.7vh",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
@@ -251,7 +251,11 @@ export default function SpeechQuiz({ round }) {
             >
               {onRec ? "녹음하기" : control ? "녹음 중지" : "녹음중"}
             </span>
-            <RecordBtn fill={onRec ? "#E7F5FF" : "#E2E2E2"} />
+            <RecordBtn
+              width="14vw"
+              height="8.7vh"
+              fill={onRec ? "#E7F5FF" : "#E2E2E2"}
+            />
           </Btn>
           <button onClick={onSubmitAudioFile}>들어보기</button>
         </Game>
@@ -275,27 +279,27 @@ const Game = styled.div`
   align-items: center;
 `;
 const Progress = styled.div`
-  font-size: 36px;
+  font-size: 3.5vh;
   font-family: UhBeeJung;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
 const QuizIndex = styled.div`
-  font-size: 90px;
+  font-size: 8.7vh;
   font-family: UhBeeJung;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
-  margin-bottom: 34px;
+  margin-bottom: 3.3vh;
 `;
 const Player = styled.div`
-  width: 600px;
-  height: 300px;
+  width: 41vh;
+  height: 29vh;
   display: flex;
   position: relative;
 `;
 const Cover = styled.div`
-  width: 600px;
-  height: 300px;
+  width: 41vh;
+  height: 29vh;
   position: absolute;
 `;
 const Hider = styled.div`
@@ -305,6 +309,8 @@ const Btn = styled.div`
   position: relative;
   font-family: Gaegu;
   font-size: 30px;
+  width: 14vw;
+  height: 8.7vh;
 `;
 const NextBtn = styled.button`
   border: none;
