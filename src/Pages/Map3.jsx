@@ -6,9 +6,15 @@ import bgImage from "../sources/images/Map/map3/map3.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import characterImage from "../sources/images/Map/girl.png";
 import loading1 from "../sources/images/icettaeng.gif";
+import chickManBorderImage from "../sources/images/Map/map3/chickManBorder.png";
+import chickImage from "../sources/images/Map/map3/chick.png";
+import moneyImage from "../sources/images/Map/map3/money.png";
 import lampOffImage from "../sources/images/Map/map3/lampOff.png";
 import lampOnImage from "../sources/images/Map/map3/lampOn.png";
 import shopImage from "../sources/images/Map/map3/shop.png";
+import shopBorderImage from "../sources/images/Map/map3/shopBorder.png";
+import sugarSnackImage from "../sources/images/Map/map3/sugarSnack.png";
+import busImage from "../sources/images/Map/map3/bus.png";
 import snack1Image from "../sources/images/Map/map3/snack1.png";
 import snack2Image from "../sources/images/Map/map3/snack2.png";
 import houseImage from "../sources/images/Map/map3/house.png";
@@ -40,10 +46,16 @@ export default function Map2() {
   const [loading, setLoading] = useState(false);
   const [lamp1Status, setLamp1Status] = useState(false);
   const [lamp2Status, setLamp2Status] = useState(false);
+  const [chickStatus, setChickStatus] = useState(false);
+  const [sugarSnackStatus, setSugarSnackStatus] = useState(false);
+  const [bus, setBus] = useState({ x: 3143, y: 374 });
+  const [busAnimation, setBusAnimation] = useState(true);
   const [snackStatus, setSnackStatus] = useState(false);
+  const [stop, setStop] = useState(false);
   const navigator = useNavigate();
   const canvasRef = useRef(null);
   const requestAnimationRef = useRef(null);
+
   // canvas가 정의되었다면 애니메이션 그리기
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -61,6 +73,28 @@ export default function Map2() {
       const context = canvas.getContext("2d");
       let x = e.clientX - context.canvas.offsetLeft;
       let y = e.clientY - context.canvas.offsetTop;
+
+      // 병아리 아저씨 클릭 확인
+      const chickMan = new Image();
+      chickMan.src = chickManBorderImage;
+      if (
+        x >=
+          background.x +
+            (687 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
+        y >= background.y + (396 / 1024) * canvasRef.current.height &&
+        x <=
+          background.x +
+            (687 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
+            (chickMan.width / 5000) *
+              bg.width *
+              (canvasRef.current.height / bg.height) &&
+        y <=
+          background.y +
+            (396 / 1024) * canvasRef.current.height +
+            (chickMan.height / 1024) * canvasRef.current.height
+      ) {
+        setChickStatus(true);
+      }
 
       // 포장마차 클릭 확인
       const shop = new Image();
@@ -124,6 +158,7 @@ export default function Map2() {
     }
   }, [round]);
 
+  // 램프 켜기
   useEffect(() => {
     if (
       background.x <
@@ -138,10 +173,24 @@ export default function Map2() {
       setLamp2Status(true);
     }
   }, [background]);
+
+  // 달고나 보이기
+  useEffect(() => {
+    if (
+      background.x <
+      (-1300 / 5000) * bg.width * (canvasRef.current.height / bg.height)
+    ) {
+      setSugarSnackStatus(true);
+    }
+  }, [background]);
+
   // 렌더링 함수
   const render = () => {
     if (!canvasRef.current) return;
     drawBg();
+    if (busAnimation) {
+      drawBus();
+    }
     drawCharacter();
     handleMove();
     requestAnimationRef.current = requestAnimationFrame(render);
@@ -195,6 +244,61 @@ export default function Map2() {
         (lamp2.height / 1024) * canvasRef.current.height
       );
     };
+
+    // 병아리 아저씨 테두리 그리기
+    const chickManBorder = new Image();
+    chickManBorder.src = chickManBorderImage;
+    if (!chickStatus) {
+      chickManBorder.onload = () => {
+        context.drawImage(
+          chickManBorder,
+          background.x +
+            (687 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (396 / 1024) * canvasRef.current.height,
+          (chickManBorder.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (chickManBorder.height / 1024) * canvasRef.current.height
+        );
+      };
+    }
+    // 돈 그리기
+    const money = new Image();
+    money.src = moneyImage;
+
+    money.onload = () => {
+      if (chickStatus) {
+        context.drawImage(
+          money,
+          background.x +
+            (874 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (276 / 1024) * canvasRef.current.height,
+          (money.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (money.height / 1024) * canvasRef.current.height
+        );
+      }
+    };
+
+    // 병아리 그리기
+    const chick = new Image();
+    chick.src = chickImage;
+
+    chick.onload = () => {
+      if (chickStatus) {
+        context.drawImage(
+          chick,
+          background.x +
+            (916 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (548 / 1024) * canvasRef.current.height,
+          (chick.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (chick.height / 1024) * canvasRef.current.height
+        );
+      }
+    };
     // 포장마차 그리기
     const shop = new Image();
     shop.src = shopImage;
@@ -204,11 +308,29 @@ export default function Map2() {
         shop,
         background.x +
           (1643 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (264 / 1024) * canvasRef.current.height,
+        background.y + (288 / 1024) * canvasRef.current.height,
         (shop.width / 5000) * bg.width * (canvasRef.current.height / bg.height),
         (shop.height / 1024) * canvasRef.current.height
       );
     };
+
+    // 포장마차 테두리 그리기
+    const shopBorder = new Image();
+    shopBorder.src = shopBorderImage;
+    if (!snackStatus) {
+      shopBorder.onload = () => {
+        context.drawImage(
+          shopBorder,
+          background.x +
+            (1643 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (288 / 1024) * canvasRef.current.height,
+          (shopBorder.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (shopBorder.height / 1024) * canvasRef.current.height
+        );
+      };
+    }
 
     // 간식 그리기
     const snack1 = new Image();
@@ -241,6 +363,25 @@ export default function Map2() {
         );
       };
     }
+
+    // 달고나 그리기
+    const sugarSnack = new Image();
+    sugarSnack.src = sugarSnackImage;
+
+    sugarSnack.onload = () => {
+      if (sugarSnackStatus) {
+        context.drawImage(
+          sugarSnack,
+          background.x +
+            (2230 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (312 / 1024) * canvasRef.current.height,
+          (sugarSnack.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (sugarSnack.height / 1024) * canvasRef.current.height
+        );
+      }
+    };
 
     // 집 그리기
     const house = new Image();
@@ -306,11 +447,63 @@ export default function Map2() {
     };
   };
 
+  const drawBus = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    const busImg = new Image();
+    busImg.src = busImage;
+
+    busImg.onload = () => {
+      if (
+        background.x <
+        (-2000 / 5000) * bg.width * (canvasRef.current.height / bg.height)
+      ) {
+        setStop(true);
+        context.drawImage(
+          busImg,
+          background.x +
+            (bus.x / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (bus.y / 1024) * canvasRef.current.height,
+          (busImg.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (busImg.height / 1024) * canvasRef.current.height
+        );
+
+        if (
+          background.x +
+            (bus.x / 5000) * bg.width * (canvasRef.current.height / bg.height) >
+          canvas.width
+        ) {
+          console.log("fkasjd");
+          setBusAnimation(false);
+          setStop(false);
+        }
+        setBus({ ...bus, x: bus.x + 5 });
+      } else {
+        context.drawImage(
+          busImg,
+          background.x +
+            (bus.x / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (bus.y / 1024) * canvasRef.current.height,
+          (busImg.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (busImg.height / 1024) * canvasRef.current.height
+        );
+      }
+    };
+  };
   const handleMove = () => {
     switch (pressedKey) {
       case "ArrowLeft":
         if (background.x < 0) {
-          setBackground({ ...background, x: background.x + 5 });
+          if (stop) {
+            setBackground({ ...background });
+          } else {
+            setBackground({ ...background, x: background.x + 5 });
+          }
         }
         return;
       case "ArrowRight":
@@ -318,8 +511,13 @@ export default function Map2() {
           background.x + bg.width * (canvasRef.current.height / bg.height) >
           canvasRef.current.width
         ) {
-          setBackground({ ...background, x: background.x - 5 });
+          if (stop) {
+            setBackground({ ...background });
+          } else {
+            setBackground({ ...background, x: background.x - 5 });
+          }
         } else {
+          setStop(true);
         }
         return;
     }
