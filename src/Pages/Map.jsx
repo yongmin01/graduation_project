@@ -36,6 +36,7 @@ export default function Map({}) {
     };
   });
   const canvasRef = useRef(null);
+  const canvas2Ref = useRef(null);
   const requestAnimationRef = useRef(null);
   const navigator = useNavigate();
 
@@ -51,7 +52,7 @@ export default function Map({}) {
   const [pressedKey, setPressedKey] = useState(null);
   const [stop, setStop] = useState(false);
   const [lightStatus, setLgithStatus] = useState("red");
-
+  const [smogPos, setSmogPos] = useState(0);
   const bg = new Image();
   bg.src = bgImage;
 
@@ -116,8 +117,10 @@ export default function Map({}) {
     // navigator 실행되면 canvasRef.current가 null이 되므로 이때는 함수 종료
     if (!canvasRef.current) return;
     drawBg();
+    // drawSmog();
     drawCharacter();
     drawCar();
+    setSmogPos(background.x);
     handleMove();
     requestAnimationRef.current = requestAnimationFrame(render);
   };
@@ -141,37 +144,37 @@ export default function Map({}) {
     };
 
     // 연기 그리기
-    const smog1 = new Image();
-    smog1.src = smog1Img;
+    // const smog1 = new Image();
+    // smog1.src = smog1Img;
 
-    smog1.onload = () => {
-      context.drawImage(
-        smog1,
-        background.x +
-          (298 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (320 / 1024) * canvasRef.current.height,
-        (smog1.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (smog1.height / 1024) * canvasRef.current.height
-      );
-    };
+    // smog1.onload = () => {
+    //   context.drawImage(
+    //     smog1,
+    //     background.x +
+    //       (298 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+    //     background.y + (320 / 1024) * canvasRef.current.height,
+    //     (smog1.width / 5000) *
+    //       bg.width *
+    //       (canvasRef.current.height / bg.height),
+    //     (smog1.height / 1024) * canvasRef.current.height
+    //   );
+    // };
 
-    const smog2 = new Image();
-    smog2.src = smog2Img;
+    // const smog2 = new Image();
+    // smog2.src = smog2Img;
 
-    smog2.onload = () => {
-      context.drawImage(
-        smog2,
-        background.x +
-          (238 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (282 / 1024) * canvasRef.current.height,
-        (smog2.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (smog2.height / 1024) * canvasRef.current.height
-      );
-    };
+    // smog2.onload = () => {
+    //   context.drawImage(
+    //     smog2,
+    //     background.x +
+    //       (238 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+    //     background.y + (282 / 1024) * canvasRef.current.height,
+    //     (smog2.width / 5000) *
+    //       bg.width *
+    //       (canvasRef.current.height / bg.height),
+    //     (smog2.height / 1024) * canvasRef.current.height
+    //   );
+    // };
 
     // 신호등 그리기
     let trafficLight = trafficLightHandler();
@@ -296,7 +299,7 @@ export default function Map({}) {
           carImage,
           background.x +
             (2602 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          car.y,
+          background.y + (car.y / 1024) * canvasRef.current.height,
           (carImage.width / 5000) *
             bg.width *
             (canvasRef.current.height / bg.height),
@@ -306,13 +309,55 @@ export default function Map({}) {
     };
   };
 
+  const [smogAni, setSmogAni] = useState(true);
+  useEffect(() => {
+    drawSmog();
+  }, [smogAni]);
+  const drawSmog = () => {
+    const canvass = canvas2Ref.current;
+    const contextt = canvass.getContext("2d");
+    const smog1 = new Image();
+    smog1.src = smog1Img;
+
+    smog1.onload = () => {
+      setTimeout(() => {
+        contextt.drawImage(
+          smog1,
+          background.x + (298 / 5000) * bg.width * (canvass.height / bg.height),
+          (320 / 1024) * canvass.height,
+          (smog1.width / 5000) * bg.width * (canvass.height / bg.height),
+          (smog1.height / 1024) * canvass.height
+        );
+      }, 500);
+    };
+
+    const smog2 = new Image();
+    smog2.src = smog2Img;
+
+    smog2.onload = () => {
+      setTimeout(() => {
+        contextt.drawImage(
+          smog2,
+          background.x + (238 / 5000) * bg.width * (canvass.height / bg.height),
+          (282 / 1024) * canvass.height,
+          (smog2.width / 5000) * bg.width * (canvass.height / bg.height),
+          (smog2.height / 1024) * canvass.height
+        );
+      }, 1000);
+    };
+    setTimeout(() => {
+      contextt.clearRect(0, 0, canvass.width, canvass.height);
+      setSmogAni((current) => !current);
+    }, 1500);
+  };
+
   // 캐릭터 이동 속도
   const v = 5;
   const handleMove = () => {
     switch (pressedKey) {
       case "ArrowLeft":
         if (background.x < 0) {
-          if (stop === true) {
+          if (stop) {
             setBackground({ ...background });
           } else {
             setBackground({ ...background, x: background.x + v });
@@ -342,20 +387,33 @@ export default function Map({}) {
           <LoadingImg src={loading1} />
         </Loading>
       ) : (
-        <Canvas
-          ref={canvasRef}
-          width={windowSize.width}
-          height={windowSize.height}
-          tabIndex={0}
-        />
+        <CanvasContainer>
+          <Canvas
+            ref={canvasRef}
+            width={windowSize.width}
+            height={windowSize.height}
+            tabIndex={0}
+          />
+          <Canvas
+            ref={canvas2Ref}
+            width={windowSize.width}
+            height={windowSize.height}
+          />
+        </CanvasContainer>
       )}
     </>
   );
 }
+const CanvasContainer = styled.div`
+  position: relative;
+`;
 const Canvas = styled.canvas`
-  width: 100%;
-  height: 100%;
-  background-color: brown;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
   overflow-y: hidden;
 `;
 const Loading = styled.div`
