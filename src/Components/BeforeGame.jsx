@@ -90,10 +90,31 @@ export default function BeforeGame({ go, title, round }) {
                 이상 정답을 맞춰야 일기장을 <br /> 획득할 수 있습니다. 한 번
                 도전해보세요!
               </Line>
+            ) : window.location.pathname === "/guess" ? (
+              <Line>
+                AI와의 대화를 통해 추억의 간식을 맞춰보세요! <br />
+                AI는 <Word color="#FAD51C">"네"</Word>,{" "}
+                <Word color="#08C832">"아니요"</Word> 두 가지의 답변만 할 수
+                있어요. <br />
+                <SmallLine color="#F00E0E">
+                  네, 아니요로 답변할 수 없는 질문에는 AI가 대답하지 않습니다.
+                  <br />이 경우에도 도전 횟수가 차감되니 질문을 신중히
+                  정해주세요! <br />
+                </SmallLine>
+                질문, 답안 제출 기회는 <Word color="#2697FF">총 10번</Word>
+                입니다.
+                <br />
+                10번의 대화 안에 정답을 정확히 입력해주세요. <br />총{" "}
+                <Word color="#9736F7">3라운드</Word>의 게임, 2라운드 이상 정답을
+                맞춰야 일기장을
+                <br /> 획득할 수 있습니다. 한 번 도전해보세요!
+              </Line>
             ) : null}
           </Description>
           <Sprinkle src={sprinkle} />
-          <Flower src={flower} />
+          {window.location.pathname === "/music" ? (
+            <Flower src={flower} />
+          ) : null}
           <GameStartDiv>
             <OptionBtn>
               <PlayIconSt />
@@ -208,6 +229,7 @@ const SmallLine = styled.div`
   font-size: 3.5vh;
   margin-left: 25px;
   margin-bottom: 10px;
+  color: ${(props) => (props.color ? props.color : "#151B26")};
 `;
 const Word = styled.span`
   color: ${(props) => (props.color ? props.color : "#151B26")};
