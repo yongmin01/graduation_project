@@ -8,6 +8,11 @@ import characterImage from "../sources/images/Map/girl.png";
 import loading1 from "../sources/images/plate.gif";
 import boy1Image from "../sources/images/Map/map4/boy1.png";
 import boy2Image from "../sources/images/Map/map4/boy2.png";
+import milkBoxImage from "../sources/images/Map/map4/milkBox.png";
+import milkBoxBorderImage from "../sources/images/Map/map4/milkBoxBorder.png";
+import milkImage from "../sources/images/Map/map4/milk.png";
+import cartImage from "../sources/images/Map/map4/cart.png";
+import cartBorderImage from "../sources/images/Map/map4/cartBorder.png";
 import plateImage from "../sources/images/Map/map4/plate.png";
 import speakerSoundImage from "../sources/images/Map/map4/speakerSound.png";
 import doorImage from "../sources/images/Map/map4/door.png";
@@ -42,8 +47,7 @@ export default function Map2() {
   const [boy1, setBoy1] = useState({ x: 2000, y: 404 });
   const [boy2, setBoy2] = useState({ x: 2775, y: 404 });
   const [boysAnimation, setBoysAnimation] = useState(true);
-  const [lamp1Status, setLamp1Status] = useState(false);
-  const [lamp2Status, setLamp2Status] = useState(false);
+  const [milkStatus, setmilkStatus] = useState(false);
   const [plateStatus, setPlateStatus] = useState(false);
   const navigator = useNavigate();
   const canvasRef = useRef(null);
@@ -66,27 +70,49 @@ export default function Map2() {
       let x = e.clientX - context.canvas.offsetLeft;
       let y = e.clientY - context.canvas.offsetTop;
 
+      //   우유상자 클릭 확인
+      const milkBox = new Image();
+      milkBox.src = milkBoxImage;
+      if (
+        x >=
+          background.x +
+            (2830 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
+        y >= background.y + (560 / 1024) * canvasRef.current.height &&
+        x <=
+          background.x +
+            (2830 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
+            (milkBox.width / 5000) *
+              bg.width *
+              (canvasRef.current.height / bg.height) &&
+        y <=
+          background.y +
+            (560 / 1024) * canvasRef.current.height +
+            (milkBox.height / 1024) * canvasRef.current.height
+      ) {
+        setmilkStatus(true);
+      }
+
       //   급식차 클릭 확인
-      //   const mealCar = new Image();
-      //   mealCar.src = mealCarImage;
-      //   if (
-      //     x >=
-      //       background.x +
-      //         (1643 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-      //     y >= background.y + (264 / 1024) * canvasRef.current.height &&
-      //     x <=
-      //       background.x +
-      //         (1643 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-      //         (mealCar.width / 5000) *
-      //           bg.width *
-      //           (canvasRef.current.height / bg.height) &&
-      //     y <=
-      //       background.y +
-      //         (264 / 1024) * canvasRef.current.height +
-      //         (mealCar.height / 1024) * canvasRef.current.height
-      //   ) {
-      //     setPlateStatus(true);
-      //   }
+      const mealCart = new Image();
+      mealCart.src = cartImage;
+      if (
+        x >=
+          background.x +
+            (3390 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
+        y >= background.y + (382 / 1024) * canvasRef.current.height &&
+        x <=
+          background.x +
+            (3390 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
+            (mealCart.width / 5000) *
+              bg.width *
+              (canvasRef.current.height / bg.height) &&
+        y <=
+          background.y +
+            (382 / 1024) * canvasRef.current.height +
+            (mealCart.height / 1024) * canvasRef.current.height
+      ) {
+        setPlateStatus(true);
+      }
       // 문 클릭 확인
       const door = new Image();
       door.src = doorImage;
@@ -164,6 +190,123 @@ export default function Map2() {
       );
     };
 
+    // 우유박스 그리기
+    const milkBox = new Image();
+    milkBox.src = milkBoxImage;
+
+    milkBox.onload = () => {
+      context.drawImage(
+        milkBox,
+        background.x +
+          (2830 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        background.y + (560 / 1024) * canvasRef.current.height,
+        (milkBox.width / 5000) *
+          bg.width *
+          (canvasRef.current.height / bg.height),
+        (milkBox.height / 1024) * canvasRef.current.height
+      );
+    };
+
+    // 우유 말풍선 그리기
+    const milk = new Image();
+    milk.src = milkImage;
+    if (milkStatus) {
+      milk.onload = () => {
+        context.drawImage(
+          milk,
+          background.x +
+            (3001 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (358 / 1024) * canvasRef.current.height,
+          (milk.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (milk.height / 1024) * canvasRef.current.height
+        );
+      };
+    }
+
+    // 우유 박스 테두리 그리기
+    const milkBoxBorder = new Image();
+    milkBoxBorder.src = milkBoxBorderImage;
+    if (!milkStatus) {
+      milkBoxBorder.onload = () => {
+        context.drawImage(
+          milkBoxBorder,
+          background.x +
+            (2814 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (540 / 1024) * canvasRef.current.height,
+          (milkBoxBorder.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (milkBoxBorder.height / 1024) * canvasRef.current.height
+        );
+      };
+    }
+
+    // 급식차 그리기
+    const cart = new Image();
+    cart.src = cartImage;
+
+    cart.onload = () => {
+      context.drawImage(
+        cart,
+        background.x +
+          (3390 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        background.y + (382 / 1024) * canvasRef.current.height,
+        (cart.width / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        (cart.height / 1024) * canvasRef.current.height
+      );
+    };
+    // 급식차 테두리 그리기
+    const cartBorder = new Image();
+    cartBorder.src = cartBorderImage;
+    if (!plateStatus) {
+      cartBorder.onload = () => {
+        context.drawImage(
+          cartBorder,
+          background.x +
+            (3335 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (327 / 1024) * canvasRef.current.height,
+          (cartBorder.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (cartBorder.height / 1024) * canvasRef.current.height
+        );
+      };
+    }
+
+    // 급식 말풍선 그리기
+    const plate = new Image();
+    plate.src = plateImage;
+    if (plateStatus) {
+      plate.onload = () => {
+        context.drawImage(
+          plate,
+          background.x +
+            (3437 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          0,
+          (plate.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (plate.height / 1024) * canvasRef.current.height
+        );
+      };
+    }
+
+    // 집 그리기
+    const door = new Image();
+    door.src = doorImage;
+
+    door.onload = () => {
+      context.drawImage(
+        door,
+        background.x +
+          (4511 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        background.y + (122 / 1024) * canvasRef.current.height,
+        (door.width / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        (door.height / 1024) * canvasRef.current.height
+      );
+    };
     // 날짜 그리기
     const date = new Image();
     date.src = dateFormatImg;
