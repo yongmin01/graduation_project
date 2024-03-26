@@ -6,12 +6,15 @@ import bgImage from "../sources/images/Map/map2/map2.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import characterImage from "../sources/images/Map/girl.png";
 import frameImage from "../sources/images/Map/map2/frame.png";
+import frameBorderImage from "../sources/images/Map/map2/frameBorder.png";
 import panelImage from "../sources/images/Map/map2/electricPanel.png";
 import interphoneImage from "../sources/images/Map/map2/interphone.png";
 import nintendoImage from "../sources/images/Map/map2/nintendo.png";
+import nintendoBorderImage from "../sources/images/Map/map2/nintendoBorder.png";
 import speechbubbleImage from "../sources/images/Map/map2/game.png";
 import controllerImage from "../sources/images/Map/map2/controller.png";
 import noteImage from "../sources/images/Map/map2/note.png";
+import noteBorderImage from "../sources/images/Map/map2/noteBorder.png";
 import practiceNoteImage from "../sources/images/Map/map2/practiceNote.png";
 import loading1 from "../sources/images/MP3.gif";
 export default function Map2() {
@@ -212,6 +215,24 @@ export default function Map2() {
         (frame.height / 1024) * canvasRef.current.height
       );
     };
+    // 액자 테두리 그리기
+    const frameBorder = new Image();
+    frameBorder.src = frameBorderImage;
+
+    frameBorder.onload = () => {
+      if (!panel) {
+        context.drawImage(
+          frameBorder,
+          background.x +
+            (257 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (142 / 1024) * canvasRef.current.height,
+          (frameBorder.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (frameBorder.height / 1024) * canvasRef.current.height
+        );
+      }
+    };
     // 인터폰 그리기
     const interphone = new Image();
     interphone.src = interphoneImage;
@@ -246,6 +267,24 @@ export default function Map2() {
       );
     };
 
+    // 닌텐도 테두리 그리기
+    const nintendoBorder = new Image();
+    nintendoBorder.src = nintendoBorderImage;
+
+    nintendoBorder.onload = () => {
+      if (!nintendoClicked) {
+        context.drawImage(
+          nintendoBorder,
+          background.x +
+            (1963 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (599 / 1024) * canvasRef.current.height,
+          (nintendoBorder.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (nintendoBorder.height / 1024) * canvasRef.current.height
+        );
+      }
+    };
     // 게임 말풍선 그리기
     const gamesppechbubble = new Image();
     gamesppechbubble.src = speechbubbleImage;
@@ -296,6 +335,23 @@ export default function Map2() {
       );
     };
 
+    // 악보 테두리 그리기
+    const noteBorder = new Image();
+    noteBorder.src = noteBorderImage;
+    noteBorder.onload = () => {
+      if (!noteClicked) {
+        context.drawImage(
+          noteBorder,
+          background.x +
+            (2718 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+          background.y + (284 / 1024) * canvasRef.current.height,
+          (noteBorder.width / 5000) *
+            bg.width *
+            (canvasRef.current.height / bg.height),
+          (noteBorder.height / 1024) * canvasRef.current.height
+        );
+      }
+    };
     // 악보 확대 말풍선 그리기
     const practiceNote = new Image();
     practiceNote.src = practiceNoteImage;
