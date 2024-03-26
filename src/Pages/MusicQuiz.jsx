@@ -13,7 +13,7 @@ import { ReactComponent as ReplayIcon } from "../sources/images/Game/replay.svg"
 import { ReactComponent as PlayMoreIcon } from "../sources/images/Game/playmore.svg";
 import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
 
-export default function MusicQuiz({ round }) {
+export default function MusicQuiz({ round, endHandler }) {
   const [game, setGame] = useState("before");
   const [counter, setCounter] = useState(true);
   const [nowPlaying, setNowPlaying] = useState(false);
@@ -282,6 +282,7 @@ export default function MusicQuiz({ round }) {
           result={score.current}
           total={musics.length}
           round={round}
+          end={endHandler}
         />
       )}
     </>

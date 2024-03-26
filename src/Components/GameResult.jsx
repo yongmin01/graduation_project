@@ -4,11 +4,10 @@ import styled from "styled-components";
 import Bg from "../sources/images/Game/gameEndingBg.png";
 import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
 import { ReactComponent as BackToMapPath } from "../sources/images/Game/backtomapPath.svg";
-export default function GameResult({ result, total, round }) {
+export default function GameResult({ result, total, round, end }) {
   const navigator = useNavigate();
   const backToMap = () => {
-    navigator("/");
-    round(2);
+    navigator("/npc1");
   };
   return (
     <Result>
