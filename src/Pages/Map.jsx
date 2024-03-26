@@ -1,9 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { throttle } from "lodash";
 
 import bgImage from "../sources/images/Map/map1/map1.png";
 import characterImage from "../sources/images/Map/girl.png";
+import CharacterMoveArr from "../utils/CharacterMoveArr";
+// import characterImageR from "../sources/images/Map/girlR.png";
+// import characterImageL from "../sources/images/Map/girlL.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import smog1Img from "../sources/images/Map/map1/smog1.png";
 import smog2Img from "../sources/images/Map/map1/smog2.png";
@@ -16,7 +20,8 @@ import speakerImage from "../sources/images/Map/map1/speaker.png";
 import notesImg from "../sources/images/Map/map1/notes.png";
 import loading1 from "../sources/images/MP3.gif";
 
-export default function Map({}) {
+const FRAMES_LENGTH = 40;
+export default function Map() {
   // 캔버스 크기 관련
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -37,11 +42,13 @@ export default function Map({}) {
   });
   const canvasRef = useRef(null);
   const canvas2Ref = useRef(null);
+  const canvas3Ref = useRef(null);
   const requestAnimationRef = useRef(null);
   const navigator = useNavigate();
 
   const [background, setBackground] = useState({ x: 0, y: 0 });
   const [character, setCharacter] = useState({ x: 500, y: 950 });
+  const [ca, setCa] = useState(0);
   const [round, setRound] = useState(false);
   const [smogStop, setSmogStop] = useState(false);
   const [trafficLightStatus, setTrafficLightStatus] = useState("red");
@@ -59,6 +66,10 @@ export default function Map({}) {
   useEffect(() => {
     if (!canvasRef.current) return;
     canvasRef.current.focus();
+    throttle(() => {
+      drawSmog();
+      console.log("hi");
+    }, 2000);
     canvasRef.current.addEventListener("keydown", (e) => {
       e.preventDefault();
       setPressedKey(e.key);
@@ -73,7 +84,8 @@ export default function Map({}) {
       let x = e.clientX - context.canvas.offsetLeft;
       let y = e.clientY - context.canvas.offsetTop;
 
-      // 리모컨 클릭 확인
+      console.log(x, y);
+      // 스피커 클릭 확인
       const speaker = new Image();
       speaker.src = speakerImage;
       if (
@@ -116,8 +128,11 @@ export default function Map({}) {
   const render = () => {
     // navigator 실행되면 canvasRef.current가 null이 되므로 이때는 함수 종료
     if (!canvasRef.current) return;
+    setCa((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
     drawBg();
-    // drawSmog();
+    // throttle(() => {
+    //   drawSmog();
+    // }, 2000);
     drawCharacter();
     drawCar();
     setSmogPos(background.x);
@@ -142,39 +157,6 @@ export default function Map({}) {
         canvasRef.current.height
       );
     };
-
-    // 연기 그리기
-    // const smog1 = new Image();
-    // smog1.src = smog1Img;
-
-    // smog1.onload = () => {
-    //   context.drawImage(
-    //     smog1,
-    //     background.x +
-    //       (298 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-    //     background.y + (320 / 1024) * canvasRef.current.height,
-    //     (smog1.width / 5000) *
-    //       bg.width *
-    //       (canvasRef.current.height / bg.height),
-    //     (smog1.height / 1024) * canvasRef.current.height
-    //   );
-    // };
-
-    // const smog2 = new Image();
-    // smog2.src = smog2Img;
-
-    // smog2.onload = () => {
-    //   context.drawImage(
-    //     smog2,
-    //     background.x +
-    //       (238 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-    //     background.y + (282 / 1024) * canvasRef.current.height,
-    //     (smog2.width / 5000) *
-    //       bg.width *
-    //       (canvasRef.current.height / bg.height),
-    //     (smog2.height / 1024) * canvasRef.current.height
-    //   );
-    // };
 
     // 신호등 그리기
     let trafficLight = trafficLightHandler();
@@ -207,6 +189,22 @@ export default function Map({}) {
       );
     };
 
+    // 스피커 그리기
+    const speaker = new Image();
+    speaker.src = speakerImage;
+
+    speaker.onload = () => {
+      context.drawImage(
+        speaker,
+        background.x +
+          (4693 / 5000) * bg.width * (canvasRef.current.height / bg.height),
+        background.y + (486 / 1024) * canvasRef.current.height,
+        (speaker.width / 5000) *
+          bg.width *
+          (canvasRef.current.height / bg.height),
+        (speaker.height / 1024) * canvasRef.current.height
+      );
+    };
     // 날짜 그리기
     const date = new Image();
     date.src = dateFormatImg;
@@ -245,14 +243,20 @@ export default function Map({}) {
     return woman;
   };
   // 캐릭터 그리기
-  const drawCharacter = () => {
+
+  const drawCharacter = (a) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
     const characterImg = new Image();
-    characterImg.src = characterImage;
+    if (pressedKey !== null) {
+      characterImg.src = CharacterMoveArr[ca];
+    } else {
+      characterImg.src = characterImage;
+    }
 
     characterImg.onload = () => {
+      // context.rotate((angle * Math.PI) / 180);
       context.drawImage(
         characterImg,
         (300 / 5000) * bg.width * (canvasRef.current.height / bg.height),
@@ -265,6 +269,17 @@ export default function Map({}) {
     };
   };
 
+  // const changeCharAngle = () => {
+  //   const character = new Image();
+  //   if (ca % 3 === 1) {
+  //     character.src = characterImageL;
+  //   } else if (ca % 3 === 0) {
+  //     character.src = characterImage;
+  //   } else if (ca % 3 === 2) {
+  //     character.src = characterImageR;
+  //   }
+  //   return character;
+  // };
   const drawCar = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -310,9 +325,21 @@ export default function Map({}) {
   };
 
   const [smogAni, setSmogAni] = useState(true);
-  useEffect(() => {
-    drawSmog();
-  }, [smogAni]);
+  // useEffect(() => {
+  //   // if (pressedKey === null) {
+  //   drawSmog();
+  //   throttle(() => {
+  //     const canvass = canvas2Ref.current;
+  //     const contextt = canvass.getContext("2d");
+  //     contextt.clearRect(0, 0, canvass.width, canvass.height);
+  //     setSmogAni((current) => !current);
+  //     console.log("tq");
+  //   }, 2000);
+  //   // }
+  // }, [smogAni]);
+  // const throttled = useRef(throttle(() => drawSmog(), 2000));
+
+  // useEffect(() => throttled.current(), [smogAni]);
   const drawSmog = () => {
     const canvass = canvas2Ref.current;
     const contextt = canvass.getContext("2d");
@@ -396,6 +423,11 @@ export default function Map({}) {
           />
           <Canvas
             ref={canvas2Ref}
+            width={windowSize.width}
+            height={windowSize.height}
+          />
+          <Canvas
+            ref={canvas3Ref}
             width={windowSize.width}
             height={windowSize.height}
           />
