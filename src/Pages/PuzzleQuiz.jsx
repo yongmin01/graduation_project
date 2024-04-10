@@ -97,7 +97,7 @@ const Card = ({ round, card, onClick, isFlipped }) => {
 export default function PuzzleQuiz() {
   const [game, setGame] = useState("before");
   const [counter, setCounter] = useState(true); // 라운드 시작 전 3, 2, 1
-  const timeLimit = 2;
+  const timeLimit = 30;
   const [time, setTime] = useState(timeLimit); // 제한 시간 (단위: 초)
   const [urgent, setUrgent] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
