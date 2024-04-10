@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import afterGameMap from "../sources/images/Map/map1/afterGame.png";
-import afterGameFrame from "../sources/images/afterGameFrame.png";
-import nextBtnImage from "../sources/images/nextBtn.png";
+import nextBtnImage from "../sources/images/nextBtn.svg";
 
 export default function Npc1() {
+  const videoRef = useRef();
+  const [videoStart, setVideoStart] = useState(false);
   const [videoEnd, setVideoEnd] = useState(false);
 
   const navigator = useNavigate();
@@ -15,6 +16,16 @@ export default function Npc1() {
       navigator("/map2");
     }, 1000);
   };
+
+  const playVideo = () => {
+    if (videoRef.current) {
+      setTimeout(() => {
+        videoRef.current.play();
+      }, 300);
+      setVideoStart(true);
+    }
+  };
+
   return (
     <>
       <Npc>
@@ -25,15 +36,12 @@ export default function Npc1() {
               <img src={nextBtnImage} />
             </Button>
           ) : null}
-          <video
-            width="780px"
-            height="596px"
-            muted
-            autoPlay
-            onEnded={() => setVideoEnd(true)}
-          >
-            <source src="/videos/npc_musicQuiz.mp4" />
-          </video>
+          {videoStart ? null : (
+            <UseItem onClick={playVideo}>아이템 사용하기</UseItem>
+          )}
+          <Video ref={videoRef} onEnded={() => setVideoEnd(true)}>
+            <source src="/videos/npc_cd.mov" />
+          </Video>
         </Modal>
       </Npc>
     </>
@@ -43,37 +51,51 @@ export default function Npc1() {
 const Npc = styled.div`
   width: 100vw;
   height: 100vh;
-  background-image: url(${afterGameMap});
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(${afterGameMap});
   background-size: 100% 100%;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;
 `;
 const Modal = styled.div`
-  width: 100%;
-  height: 100%;
-  /* object-fit: cover; */
-  text-align: center;
-  background-image: url(${afterGameFrame});
-  background-size: 84% 77%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed;
+  position: relative;
+  width: 68vw;
+  height: 66vh;
+  border-radius: 41px;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+const Video = styled.video`
+  width: 54vw;
+  height: 57vh;
 `;
 const Button = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   position: absolute;
-  top: 155px;
-  right: 196px;
+  top: 6.7%;
+  right: 4.6%;
   font-size: 50px;
   font-family: UhbeeJung;
   cursor: pointer;
+`;
+const UseItem = styled.div`
+  position: absolute;
+  margin: 0 auto;
+  width: 40%;
+  background-color: yellow;
+  border-radius: 50px;
+  text-align: center;
+  font-family: Uhbee Jung;
+  z-index: 10;
 `;
 const Text = styled.div``;
