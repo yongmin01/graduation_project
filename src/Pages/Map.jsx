@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { throttle } from "lodash";
 
-import bgImage from "../sources/images/Map/map1/map1.png";
-import characterImage from "../sources/images/Map/girl.png";
-import CharacterMoveArr from "../utils/CharacterMoveArr";
-// import characterImageR from "../sources/images/Map/girlR.png";
-// import characterImageL from "../sources/images/Map/girlL.png";
+// import bgImage from "../sources/images/Map/map1/map1.webp";
+import bgImage2 from "../sources/images/Map/map1/greenBg.webp";
+import bgImage3 from "../sources/images/Map/map1/redBg.webp";
+
+import characterImageSh from "../sources/images/Map/girl/girlShadow2.png";
+
+import characterImage from "../sources/images/Map/girl/girl.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import smog1Img from "../sources/images/Map/map1/smog1.png";
 import smog2Img from "../sources/images/Map/map1/smog2.png";
@@ -20,7 +22,11 @@ import speakerImage from "../sources/images/Map/map1/speaker.png";
 import notesImg from "../sources/images/Map/map1/notes.png";
 import loading1 from "../sources/images/MP3.gif";
 
+import CharacterMoveArr from "../utils/CharacterMoveArr";
 const FRAMES_LENGTH = 40;
+const CW = 5000;
+const CH = 1024;
+
 export default function Map() {
   // 캔버스 크기 관련
   const [windowSize, setWindowSize] = useState({
@@ -33,6 +39,7 @@ export default function Map() {
       height: window.innerHeight,
     });
   }, []);
+
   useEffect(() => {
     window.addEventListener("resize", resizeHandler);
     return () => {
@@ -40,36 +47,74 @@ export default function Map() {
       window.removeEventListener("resize", resizeHandler);
     };
   });
+
   const canvasRef = useRef(null);
-  const canvas2Ref = useRef(null);
-  const canvas3Ref = useRef(null);
+  const canvasRef2 = useRef(null);
   const requestAnimationRef = useRef(null);
+
   const navigator = useNavigate();
 
-  const [background, setBackground] = useState({ x: 0, y: 0 });
-  const [character, setCharacter] = useState({ x: 500, y: 950 });
-  const [ca, setCa] = useState(0);
   const [round, setRound] = useState(false);
+  const [moveStart, setMoveStart] = useState(false);
   const [smogStop, setSmogStop] = useState(false);
+
+  const [background, setBackground] = useState({ x: 0, y: 0 });
+  const bg = new Image();
+  bg.src = bgImage2;
+
+  const [characterFrame, setCharacterFrame] = useState(0);
+  const characterCoor = { x: 188 / CW, y: 498 / CH };
+
+  const characterSize = {
+    w: 330 / CW,
+    h: 392 / CH,
+  };
+
   const [trafficLightStatus, setTrafficLightStatus] = useState("red");
+  const trafficLightCoor = { x: 2366 / CW, y: 370 / CH };
+  const trafficLight = new Image();
+  trafficLight.src = greenlightImg;
+  const trafficLightSize = {
+    w: trafficLight.width / CW,
+    h: trafficLight.height / CH,
+  };
+
   const [womanYPos, setWomanYPos] = useState(448);
-  const [car, setCar] = useState({ x: 1600, y: 468 });
+  const womanCoor = 3004 / CW;
+  const woman = new Image();
+  woman.src = goWomanImg;
+  const womanSize = { w: woman.width / CW, h: woman.height / CH };
+
+  const [carCoor, setCarCoor] = useState({ x: 1600, y: 468 });
+  const carCoorX = 2602 / CW;
+
+  const carSize = { w: 272 / CW, h: 286 / CH };
+
+  const speakerCoor = { x: 4693 / CW, y: 486 / CH };
+  const speaker = new Image();
+  speaker.src = speakerImage;
+  const speakerSize = { w: speaker.width / CW, h: speaker.height / CH };
   const [loading, setLoading] = useState(false);
   // 캐릭터 이동 관련 state
   const [pressedKey, setPressedKey] = useState(null);
   const [stop, setStop] = useState(false);
-  const [lightStatus, setLgithStatus] = useState("red");
   const [smogPos, setSmogPos] = useState(0);
-  const bg = new Image();
-  bg.src = bgImage;
+
+  // 계산 줄이기용 변수
+  const bgWidth = bg.width;
+  const bgHeight = bg.height;
+  const canvasWidth = windowSize.width;
+  const canvasHeight = windowSize.height;
+  const ratio = canvasHeight / bgHeight;
+  const val = bgWidth * ratio;
 
   useEffect(() => {
     if (!canvasRef.current) return;
     canvasRef.current.focus();
-    throttle(() => {
-      drawSmog();
-      console.log("hi");
-    }, 2000);
+    // throttle(() => {
+    //   drawSmog();
+    //   console.log("hi");
+    // }, 2000);
     canvasRef.current.addEventListener("keydown", (e) => {
       e.preventDefault();
       setPressedKey(e.key);
@@ -81,28 +126,24 @@ export default function Map() {
     const handleCanvasClick = (e) => {
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
+      // const canvasHeight = canvas.height;
+      // const ratio = canvasHeight / bgHeight;
+      // const val = bgWidth * ratio;
+
       let x = e.clientX - context.canvas.offsetLeft;
       let y = e.clientY - context.canvas.offsetTop;
 
-      console.log(x, y);
+      console.log("마우스 클릭 위치 : ", x, y);
       // 스피커 클릭 확인
-      const speaker = new Image();
-      speaker.src = speakerImage;
+
       if (
-        x >=
-          background.x +
-            (4693 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-        x <=
-          background.x +
-            (4693 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-            (speaker.width / 5000) *
-              bg.width *
-              (canvasRef.current.height / bg.height) &&
-        y >= background.y + (486 / 1024) * canvasRef.current.height &&
+        x >= background.x + speakerCoor.x * val &&
+        x <= background.x + speakerCoor.x * val + speakerSize.w * val &&
+        y >= background.y + speakerCoor.y * canvasHeight &&
         y <=
           background.y +
-            (486 / 1024) * canvasRef.current.height +
-            (speaker.height / 1024) * canvasRef.current.height
+            speakerCoor.y * canvasHeight +
+            speakerSize.h * canvasHeight
       ) {
         setRound(true);
       }
@@ -118,9 +159,10 @@ export default function Map() {
     if (round) {
       cancelAnimationFrame(requestAnimationRef.current);
       setLoading(true);
+      setRound(false);
       setInterval(() => {
         navigator("/music");
-      }, 5000);
+      }, 1000);
     }
   }, [round]);
 
@@ -128,12 +170,13 @@ export default function Map() {
   const render = () => {
     // navigator 실행되면 canvasRef.current가 null이 되므로 이때는 함수 종료
     if (!canvasRef.current) return;
-    setCa((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
+
+    setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
     drawBg();
     // throttle(() => {
     //   drawSmog();
     // }, 2000);
-    drawCharacter();
+    // drawCharacter();
     drawCar();
     setSmogPos(background.x);
     handleMove();
@@ -143,143 +186,117 @@ export default function Map() {
   // 배경 그리기
   const drawBg = () => {
     const bg = new Image();
-    bg.src = bgImage;
+    if (trafficLightStatus === "green") {
+      bg.src = bgImage2;
+    } else {
+      bg.src = bgImage3;
+    }
 
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
     bg.onload = () => {
-      context.drawImage(
-        bg,
-        background.x,
-        background.y,
-        bg.width * (canvasRef.current.height / bg.height),
-        canvasRef.current.height
-      );
+      context.drawImage(bg, background.x, background.y, val, canvasHeight);
     };
 
     // 신호등 그리기
-    let trafficLight = trafficLightHandler();
+    // let trafficLight = trafficLightHandler();
 
-    trafficLight.onload = () => {
-      context.drawImage(
-        trafficLight,
-        background.x +
-          (2366 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (370 / 1024) * canvasRef.current.height,
-        (trafficLight.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (trafficLight.height / 1024) * canvasRef.current.height
-      );
-    };
+    // trafficLight.onload = () => {
+    //   context.drawImage(
+    //     trafficLight,
+    //     background.x + trafficLightCoor.x * val,
+    //     background.y + trafficLightCoor.y * canvasHeight,
+    //     trafficLightSize.w * val,
+    //     trafficLightSize.h * canvasHeight
+    //   );
+    // };
 
     // 녹색어머니 그리기
-    let woman = womanHandler();
-    woman.onload = () => {
-      context.drawImage(
-        woman,
-        background.x +
-          (3004 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (womanYPos / 1024) * canvasRef.current.height,
-        (woman.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (woman.height / 1024) * canvasRef.current.height
-      );
-    };
+    // let woman = womanHandler();
+    // woman.onload = () => {
+    //   context.drawImage(
+    //     woman,
+    //     background.x + womanCoor * val,
+    //     background.y + (womanYPos / CH) * canvasHeight,
+    //     womanSize.w * val,
+    //     womanSize.h * canvasHeight
+    //   );
+    // };
 
     // 스피커 그리기
-    const speaker = new Image();
-    speaker.src = speakerImage;
+    // const speaker = new Image();
+    // speaker.src = speakerImage;
 
-    speaker.onload = () => {
-      context.drawImage(
-        speaker,
-        background.x +
-          (4693 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (486 / 1024) * canvasRef.current.height,
-        (speaker.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (speaker.height / 1024) * canvasRef.current.height
-      );
-    };
-    // 날짜 그리기
-    const date = new Image();
-    date.src = dateFormatImg;
-    if (!pressedKey) {
-      date.onload = () => {
-        context.drawImage(
-          date,
-          0,
-          0,
-          (date.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (date.height / 1024) * canvasRef.current.height
-        );
-      };
-    }
+    // speaker.onload = () => {
+    //   context.drawImage(
+    //     speaker,
+    //     background.x + speakerCoor.x * val,
+    //     background.y + speakerCoor.y * canvasHeight,
+    //     speakerSize.w * val,
+    //     speakerSize.h * canvasHeight
+    //   );
+    // };
+    // // 날짜 그리기
+    // const date = new Image();
+    // date.src = dateFormatImg;
+    // if (!pressedKey) {
+    //   date.onload = () => {
+    //     context.drawImage(
+    //       date,
+    //       0,
+    //       0,
+    //       (date.width / CW) * val,
+    //       (date.height / CH) * canvasHeight
+    //     );
+    //   };
+    // }
 
     // 스피커 음표 애니메이션
     const notesImage = new Image();
     notesImage.src = notesImg;
   };
 
-  const trafficLightHandler = () => {
-    const trafficLight = new Image();
-    if (trafficLightStatus === "green") trafficLight.src = greenlightImg;
-    else trafficLight.src = redlightImg;
-    return trafficLight;
-  };
+  // const trafficLightHandler = () => {
+  //   const trafficLight = new Image();
+  //   if (trafficLightStatus === "green") trafficLight.src = greenlightImg;
+  //   else trafficLight.src = redlightImg;
+  //   return trafficLight;
+  // };
 
-  const womanHandler = () => {
-    const woman = new Image();
-    if (womanYPos === 414) {
-      woman.src = goWomanImg;
-    } else woman.src = stopWomanImg;
+  // const womanHandler = () => {
+  //   const woman = new Image();
+  //   if (womanYPos === 414) {
+  //     woman.src = goWomanImg;
+  //   } else woman.src = stopWomanImg;
 
-    return woman;
-  };
+  //   return woman;
+  // };
+
   // 캐릭터 그리기
-
-  const drawCharacter = (a) => {
+  const drawCharacter = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
     const characterImg = new Image();
     if (pressedKey !== null) {
-      characterImg.src = CharacterMoveArr[ca];
+      characterImg.src = CharacterMoveArr[characterFrame];
     } else {
       characterImg.src = characterImage;
     }
 
     characterImg.onload = () => {
-      // context.rotate((angle * Math.PI) / 180);
       context.drawImage(
         characterImg,
-        (300 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        (500 / 1024) * canvasRef.current.height,
-        (characterImg.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (characterImg.height / 1024) * canvasRef.current.height
+        characterCoor.x * val,
+        characterCoor.y * canvasHeight,
+        characterSize.w * val,
+        characterSize.h * canvasHeight
       );
     };
   };
 
-  // const changeCharAngle = () => {
-  //   const character = new Image();
-  //   if (ca % 3 === 1) {
-  //     character.src = characterImageL;
-  //   } else if (ca % 3 === 0) {
-  //     character.src = characterImage;
-  //   } else if (ca % 3 === 2) {
-  //     character.src = characterImageR;
-  //   }
-  //   return character;
-  // };
+  // 차 그리기
   const drawCar = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -288,97 +305,85 @@ export default function Map() {
     carImage.src = carImg;
 
     carImage.onload = () => {
-      if (
-        background.x <
-        (-1500 / 5000) * bg.width * (canvasRef.current.height / bg.height)
-      ) {
+      if (background.x < (-1500 / CW) * val) {
         setStop(true);
         context.drawImage(
           carImage,
-          background.x +
-            (2602 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          car.y,
-          (carImage.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (carImage.height / 1024) * canvasRef.current.height
+          background.x + carCoorX * val,
+          carCoor.y,
+          carSize.w * val,
+          carSize.h * canvasHeight
         );
-        if (car.y > canvas.height) {
+        if (carCoor.y > canvas.height) {
           setTrafficLightStatus("green");
           setWomanYPos(414);
           setStop(false);
         }
-        setCar({ ...car, y: car.y + 2 });
+        setCarCoor({ ...carCoor, y: carCoor.y + 2 });
       } else {
         context.drawImage(
           carImage,
-          background.x +
-            (2602 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (car.y / 1024) * canvasRef.current.height,
-          (carImage.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (carImage.height / 1024) * canvasRef.current.height
+          background.x + carCoorX * val,
+          background.y + (carCoor.y / CH) * canvasHeight,
+          carSize.w * val,
+          carSize.h * canvasHeight
         );
       }
     };
   };
 
-  const [smogAni, setSmogAni] = useState(true);
+  // 연기 그리기
+  // const [smogAni, setSmogAni] = useState(true);
   // useEffect(() => {
-  //   // if (pressedKey === null) {
-  //   drawSmog();
-  //   throttle(() => {
-  //     const canvass = canvas2Ref.current;
-  //     const contextt = canvass.getContext("2d");
+  //   if (pressedKey !== null) {
+  //     setMoveStart(true);
+  //   }
+  // }, [pressedKey]);
+  // useEffect(() => {
+  //   if (!moveStart) {
+  //     drawSmog();
+  //   }
+  // }, [smogAni]);
+
+  // const drawSmog = () => {
+  //   const canvass = canvasRef2.current;
+  //   const contextt = canvass.getContext("2d");
+  //   const smog1 = new Image();
+  //   smog1.src = smog1Img;
+
+  //   smog1.onload = () => {
+  //     setTimeout(() => {
+  //       contextt.drawImage(
+  //         smog1,
+  //         background.x + (298 / CW) * bg.width * (canvass.height / bg.height),
+  //         (320 / CH) * canvass.height,
+  //         (smog1.width / CW) * bg.width * (canvass.height / bg.height),
+  //         (smog1.height / CH) * canvass.height
+  //       );
+  //     }, 500);
+  //   };
+
+  //   const smog2 = new Image();
+  //   smog2.src = smog2Img;
+
+  //   smog2.onload = () => {
+  //     setTimeout(() => {
+  //       contextt.drawImage(
+  //         smog2,
+  //         background.x + (238 / CW) * bg.width * (canvass.height / bg.height),
+  //         (282 / CH) * canvass.height,
+  //         (smog2.width / CW) * bg.width * (canvass.height / bg.height),
+  //         (smog2.height / CH) * canvass.height
+  //       );
+  //     }, 1000);
+  //   };
+  //   setTimeout(() => {
   //     contextt.clearRect(0, 0, canvass.width, canvass.height);
   //     setSmogAni((current) => !current);
-  //     console.log("tq");
-  //   }, 2000);
-  //   // }
-  // }, [smogAni]);
-  // const throttled = useRef(throttle(() => drawSmog(), 2000));
+  //   }, 1500);
+  // };
 
-  // useEffect(() => throttled.current(), [smogAni]);
-  const drawSmog = () => {
-    const canvass = canvas2Ref.current;
-    const contextt = canvass.getContext("2d");
-    const smog1 = new Image();
-    smog1.src = smog1Img;
-
-    smog1.onload = () => {
-      setTimeout(() => {
-        contextt.drawImage(
-          smog1,
-          background.x + (298 / 5000) * bg.width * (canvass.height / bg.height),
-          (320 / 1024) * canvass.height,
-          (smog1.width / 5000) * bg.width * (canvass.height / bg.height),
-          (smog1.height / 1024) * canvass.height
-        );
-      }, 500);
-    };
-
-    const smog2 = new Image();
-    smog2.src = smog2Img;
-
-    smog2.onload = () => {
-      setTimeout(() => {
-        contextt.drawImage(
-          smog2,
-          background.x + (238 / 5000) * bg.width * (canvass.height / bg.height),
-          (282 / 1024) * canvass.height,
-          (smog2.width / 5000) * bg.width * (canvass.height / bg.height),
-          (smog2.height / 1024) * canvass.height
-        );
-      }, 1000);
-    };
-    setTimeout(() => {
-      contextt.clearRect(0, 0, canvass.width, canvass.height);
-      setSmogAni((current) => !current);
-    }, 1500);
-  };
-
-  // 캐릭터 이동 속도
+  // 캐릭터 이동
   const v = 5;
   const handleMove = () => {
     switch (pressedKey) {
@@ -392,10 +397,7 @@ export default function Map() {
         }
         return;
       case "ArrowRight":
-        if (
-          background.x + bg.width * (canvasRef.current.height / bg.height) >
-          canvasRef.current.width
-        ) {
+        if (background.x + val > canvasRef.current.width) {
           if (stop) {
             setBackground({ ...background });
           } else {
@@ -414,28 +416,49 @@ export default function Map() {
           <LoadingImg src={loading1} />
         </Loading>
       ) : (
-        <CanvasContainer>
-          <Canvas
-            ref={canvasRef}
-            width={windowSize.width}
-            height={windowSize.height}
-            tabIndex={0}
+        <MapContainer>
+          {pressedKey ? null : <Date src={dateFormatImg} />}
+          <Character
+            src={characterImageSh}
+            width={characterSize.w * val}
+            style={{
+              transform: `rotate(${pressedKey ? characterFrame * 0.5 : 0}deg)`,
+            }}
           />
-          <Canvas
-            ref={canvas2Ref}
-            width={windowSize.width}
-            height={windowSize.height}
-          />
-          <Canvas
-            ref={canvas3Ref}
-            width={windowSize.width}
-            height={windowSize.height}
-          />
-        </CanvasContainer>
+          <CanvasContainer>
+            <Canvas
+              ref={canvasRef}
+              width={windowSize.width}
+              height={windowSize.height}
+              tabIndex={0}
+            />
+            {/* <Canvas
+              ref={canvasRef2}
+              width={windowSize.width}
+              height={windowSize.height}
+            /> */}
+          </CanvasContainer>
+        </MapContainer>
       )}
     </>
   );
 }
+
+const MapContainer = styled.div``;
+const Date = styled.img`
+  width: 50vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+`;
+
+const Character = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 100;
+`;
 const CanvasContainer = styled.div`
   position: relative;
 `;
