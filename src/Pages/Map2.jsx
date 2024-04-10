@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { throttle } from "lodash";
-// import Lottie from "lottie-react";
-import loadingLottie from "../sources/lottie/testlottie.json";
 
 import bgImage from "../sources/images/Map/map2/map2.webp";
 import clickImage from "../sources/images/Map/click.png";
