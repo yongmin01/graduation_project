@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import afterGameMap from "../sources/images/Map/map1/afterGame.png";
+import afterGameMap from "../sources/images/Map/map4/afterGame.png";
 import nextBtnImage from "../sources/images/nextBtn.svg";
 
 export default function Npc4() {
@@ -40,7 +40,7 @@ export default function Npc4() {
             <UseItem onClick={playVideo}>아이템 사용하기</UseItem>
           )}
           <Video ref={videoRef} onEnded={() => setVideoEnd(true)}>
-            <source src="/videos/npc_cd.mov" />
+            <source src="/videos/npc_tv.mp4" />
           </Video>
         </Modal>
       </Npc>
