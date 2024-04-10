@@ -303,7 +303,7 @@ export default function MusicQuiz({}) {
         <>
           <BeforeGame go={setGame} title="전주 듣고 노래 맞추기" round={1} />
         </>
-      ) : (
+      ) : game === "end" ? (
         <GameResult
           pass={pass.current}
           score={score.current}
@@ -311,7 +311,7 @@ export default function MusicQuiz({}) {
           round={1}
           end={setGame}
         />
-      )}
+      ) : null}
     </>
   );
 }

@@ -228,7 +228,7 @@ export default function SpeechQuiz({}) {
         <>
           <BeforeGame go={setGame} title="대사 이어말하기" round={2} />
         </>
-      ) : (
+      ) : game === "end" ? (
         <GameResult
           pass={pass.current}
           score={score.current}
@@ -236,7 +236,7 @@ export default function SpeechQuiz({}) {
           round={2}
           end={setGame}
         />
-      )}
+      ) : null}
     </>
   );
 }

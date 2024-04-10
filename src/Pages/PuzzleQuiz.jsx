@@ -400,15 +400,15 @@ export default function PuzzleQuiz() {
         <>
           <BeforeGame go={setGame} title="추억의 물건 짝 맞추기" round={3} />
         </>
-      ) : (
+      ) : game === "end" ? (
         <GameResult
           pass={pass.current}
           score={score.current}
-          total={3}
-          round={3}
+          total={5}
+          round={1}
           end={setGame}
         />
-      )}
+      ) : null}
     </>
   );
 }

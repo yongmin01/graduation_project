@@ -13,7 +13,6 @@ export default function GameResult({ pass, score, total, round, end }) {
   const items = [cd, jetty, seal, deadDiary];
   const navigator = useNavigate();
   const route = () => {
-    end("end");
     if (pass) {
       navigator(`/npc${round}`);
     } else {
