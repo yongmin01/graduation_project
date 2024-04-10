@@ -37,6 +37,15 @@ export default function Npc1() {
     }
   }, [videoEnd]);
 
+  const playVideo = () => {
+    if (videoRef.current) {
+      setTimeout(() => {
+        videoRef.current.play();
+      }, 300);
+      setVideoStart(true);
+    }
+  };
+
   return (
     <>
       <Npc>
@@ -170,6 +179,7 @@ const Video = styled.video`
   width: 54vw;
   height: 57vh;
 `;
+
 const Button = styled.div`
   visibility: ${({ show }) => (show ? "visible" : "hidden")};
   display: flex;
