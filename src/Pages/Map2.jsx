@@ -1,23 +1,31 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import { throttle } from "lodash";
+// import Lottie from "lottie-react";
+import loadingLottie from "../sources/lottie/testlottie.json";
 
-import bgImage from "../sources/images/Map/map2/map2.png";
+import bgImage from "../sources/images/Map/map2/map2.webp";
+import clickImage from "../sources/images/Map/click.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
-import characterImage from "../sources/images/Map/girl.png";
-import frameImage from "../sources/images/Map/map2/frame.png";
-import frameBorderImage from "../sources/images/Map/map2/frameBorder.png";
-import panelImage from "../sources/images/Map/map2/electricPanel.png";
-import interphoneImage from "../sources/images/Map/map2/interphone.png";
-import nintendoImage from "../sources/images/Map/map2/nintendo.png";
-import nintendoBorderImage from "../sources/images/Map/map2/nintendoBorder.png";
-import speechbubbleImage from "../sources/images/Map/map2/game.png";
-import controllerImage from "../sources/images/Map/map2/controller.png";
-import noteImage from "../sources/images/Map/map2/note.png";
-import noteBorderImage from "../sources/images/Map/map2/noteBorder.png";
-import practiceNoteImage from "../sources/images/Map/map2/practiceNote.png";
-import loading1 from "../sources/images/MP3.gif";
-export default function Map2() {
+import characterImage from "../sources/images/Map/girl/girl.png";
+import loading1 from "../sources/images/plate.gif";
+import boy1Image from "../sources/images/Map/map2/boy1.png";
+import boy2Image from "../sources/images/Map/map2/boy2.png";
+import milkBoxImage from "../sources/images/Map/map2/milkBox.png";
+import milkBoxBorderImage from "../sources/images/Map/map2/milkBoxBorder.png";
+import milkImage from "../sources/images/Map/map2/milk.png";
+import cartImage from "../sources/images/Map/map2/cart.png";
+import cartBorderImage from "../sources/images/Map/map2/cartBorder.png";
+import plateImage from "../sources/images/Map/map2/plate.png";
+import speakerSoundImage from "../sources/images/Map/map2/speakerSound.png";
+
+import CharacterMoveArr from "../utils/CharacterMoveArr";
+const FRAMES_LENGTH = 40;
+const CW = 5000;
+const CH = 1024;
+
+export default function Map2({ sex }) {
   // 캔버스 크기 관련
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -37,17 +45,79 @@ export default function Map2() {
     };
   });
 
-  const [pressedKey, setPressedKey] = useState(null);
-  const [background, setBackground] = useState({ x: 0, y: 0 });
-  const [character, setCharacter] = useState({ x: 500, y: 1000 });
-  const [round, setRound] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [panel, setPanel] = useState(false);
-  const [noteClicked, setNoteClicked] = useState(false);
-  const [nintendoClicked, setNintendoClicked] = useState(false);
-  const navigator = useNavigate();
   const canvasRef = useRef(null);
+  const canvasRef2 = useRef(null);
   const requestAnimationRef = useRef(null);
+
+  const navigator = useNavigate();
+
+  const [round, setRound] = useState(false);
+  const [pressedKey, setPressedKey] = useState(null);
+  const [stop, setStop] = useState(false);
+
+  const [background, setBackground] = useState({ x: 0, y: 0 });
+  const bg = new Image();
+  bg.src = bgImage;
+
+  const [characterFrame, setCharacterFrame] = useState(0);
+
+  const [showBorder, setShowBorder] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+
+  const [boysAnimation, setBoysAnimation] = useState(true);
+  const [boy1Coor, setBoy1Coor] = useState({ x: 2000, y: 404 });
+  const [boy2Coor, setBoy2Coor] = useState({ x: 2775, y: 404 });
+
+  const [milkStatus, setmilkStatus] = useState(false);
+
+  // 계산 줄이기용 변수
+  const bgWidth = bg.width;
+  const bgHeight = bg.height;
+  const canvasWidth = windowSize.width;
+  const canvasHeight = windowSize.height;
+  const ratio = canvasHeight / bgHeight;
+  const val = bgWidth * ratio;
+
+  const character = [
+    (288 / CW) * val,
+    (498 / CH) * canvasHeight,
+    (330 / CW) * val,
+    (392 / CH) * canvasHeight,
+  ];
+  const characterSex = sex;
+
+  const [characterMove, setCharacterMove] = useState(0);
+  const handleAnimation = () => {
+    setCharacterMove(2);
+  };
+
+  const milkBoxBorderSize = {
+    w: (416 / CW) * val,
+    h: (362 / CH) * canvasHeight,
+  };
+  const milkBoxBorderCoor = {
+    x: (2814 / CW) * val,
+    y: (540 / CH) * canvasHeight,
+  };
+
+  const [plateStatus, setPlateStatus] = useState(false);
+
+  const cartBorderSize = { w: (778 / CW) * val, h: (615 / CH) * canvasHeight };
+  const cartBorderCoor = { x: (3335 / CW) * val, y: (327 / CH) * canvasHeight };
+
+  const milkCoor = { x: (3001 / CW) * val, y: (358 / CH) * canvasHeight };
+  const milkSize = { w: (214 / CW) * val, h: (186 / CH) * canvasHeight };
+  const plateSize = { w: (550 / CW) * val, h: (436 / CH) * canvasHeight };
+  const plateCoor = (3437 / CW) * val;
+  const boy1Size = { w: (341 / CW) * val, h: (472 / CH) * canvasHeight };
+  const boy2Size = { w: (343 / CW) * val, h: (450 / CH) * canvasHeight };
+  const boysStartPoint = (404 / CH) * canvasHeight;
+
+  const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
+  const clickCoor1 = { x: (2974 / CW) * val, y: (522 / CH) * canvasHeight };
+  const clickCoor2 = { x: (3673 / CW) * val, y: (349 / CH) * canvasHeight };
+
   // canvas가 정의되었다면 애니메이션 그리기
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -61,98 +131,32 @@ export default function Map2() {
 
     // 클릭 감지
     const handleCanvasClick = (e) => {
-      const canvas = canvasRef.current;
+      const canvas = canvasRef2.current;
       const context = canvas.getContext("2d");
       let x = e.clientX - context.canvas.offsetLeft;
       let y = e.clientY - context.canvas.offsetTop;
 
-      // 액자 클릭 확인
-      const frame = new Image();
-      frame.src = frameImage;
+      //   우유상자 클릭 확인
       if (
-        x >=
-          background.x +
-            (281 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-        y >= background.y + (134 / 1024) * canvasRef.current.height &&
-        x <=
-          background.x +
-            (281 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-            (frame.width / 5000) *
-              bg.width *
-              (canvasRef.current.height / bg.height) &&
-        y <=
-          background.y +
-            (134 / 1024) * canvasRef.current.height +
-            (frame.height / 1024) * canvasRef.current.height
+        x >= background.x + milkBoxBorderCoor.x &&
+        y >= milkBoxBorderCoor.y &&
+        x <= background.x + milkBoxBorderCoor.x + milkBoxBorderSize.w &&
+        y <= milkBoxBorderCoor.y + milkBoxBorderSize.h
       ) {
-        setPanel(true);
-      }
-      // 닌텐도 클릭 확인
-      const nintendo = new Image();
-      nintendo.src = nintendoImage;
-      if (
-        x >=
-          background.x +
-            (1969 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-        x <=
-          background.x +
-            (1969 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-            (nintendo.width / 5000) *
-              bg.width *
-              (canvasRef.current.height / bg.height) &&
-        y >= background.y + (615 / 1024) * canvasRef.current.height &&
-        y <=
-          background.y +
-            (615 / 1024) * canvasRef.current.height +
-            (nintendo.height / 1024) * canvasRef.current.height
-      ) {
-        setNintendoClicked(true);
-      }
-      // 악보 클릭 확인
-      const note = new Image();
-      note.src = noteImage;
-      if (
-        x >=
-          background.x +
-            (2733 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-        x <=
-          background.x +
-            (2733 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-            (note.width / 5000) *
-              bg.width *
-              (canvasRef.current.height / bg.height) &&
-        y >= background.y + (276 / 1024) * canvasRef.current.height &&
-        y <=
-          background.y +
-            (276 / 1024) * canvasRef.current.height +
-            (note.height / 1024) * canvasRef.current.height
-      ) {
-        setNoteClicked(true);
+        setmilkStatus(true);
       }
 
-      // 리모컨 클릭 확인
-      const controller = new Image();
-      controller.src = controllerImage;
+      //   급식차 클릭 확인
       if (
-        x >=
-          background.x +
-            (4484 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-        x <=
-          background.x +
-            (4484 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-            (controller.width / 5000) *
-              bg.width *
-              (canvasRef.current.height / bg.height) &&
-        y >= background.y + (724 / 1024) * canvasRef.current.height &&
-        y <=
-          background.y +
-            (724 / 1024) * canvasRef.current.height +
-            (controller.height / 1024) * canvasRef.current.height
+        x >= background.x + cartBorderCoor.x &&
+        y >= cartBorderCoor.y &&
+        x <= background.x + (cartBorderCoor.x + cartBorderSize.w) &&
+        y <= cartBorderCoor.y + cartBorderSize.h
       ) {
-        setRound(true);
+        setPlateStatus(true);
       }
     };
-    canvasRef.current.addEventListener("click", handleCanvasClick);
+    canvasRef2.current.addEventListener("click", handleCanvasClick);
     return () => {
       cancelAnimationFrame(requestAnimationRef.current);
       // canvasRef.current.removeEventListener("click", handleCanvasClick);
@@ -160,6 +164,18 @@ export default function Map2() {
   });
 
   // 게임 화면 라우팅
+  useEffect(() => {
+    if (background.x <= -(val - windowSize.width)) {
+      setStop(true);
+      setCharacterMove(1);
+    }
+  }, [background]);
+  useEffect(() => {
+    if (characterMove === 2) {
+      navigator("/puzzle");
+    }
+  }, [characterMove]);
+
   useEffect(() => {
     if (round) {
       cancelAnimationFrame(requestAnimationRef.current);
@@ -170,19 +186,34 @@ export default function Map2() {
       }, 5000);
     }
   }, [round]);
+
+  useEffect(() => {
+    if (showBorder) {
+      setInterval(() => {
+        setShowBorder((prev) => !prev);
+      }, 500);
+    }
+  }, [showBorder]);
+
   // 렌더링 함수
   const render = () => {
     if (!canvasRef.current) return;
+    setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
     drawBg();
-    drawCharacter();
-    handleMove();
+    drawBorder();
+    if (boysAnimation) {
+      drawBoys();
+    }
+    if (!characterMove) {
+      drawCharacter();
+    }
+    if (characterMove !== 1) {
+      handleMove();
+    }
     requestAnimationRef.current = requestAnimationFrame(render);
   };
 
   // 배경 그리기
-  const bg = new Image();
-  bg.src = bgImage;
-
   const drawBg = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -191,209 +222,98 @@ export default function Map2() {
     bg.src = bgImage;
 
     bg.onload = () => {
-      context.drawImage(
-        bg,
-        background.x,
-        background.y,
-        bg.width * (canvasRef.current.height / bg.height),
-        canvasRef.current.height
-      );
+      context.drawImage(bg, background.x, 0, val, canvasHeight);
     };
 
-    // 액자 그리기
-    let frame = framepanel();
-
-    frame.onload = () => {
-      context.drawImage(
-        frame,
-        background.x +
-          (281 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (134 / 1024) * canvasRef.current.height,
-        (frame.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (frame.height / 1024) * canvasRef.current.height
-      );
-    };
-    // 액자 테두리 그리기
-    const frameBorder = new Image();
-    frameBorder.src = frameBorderImage;
-
-    frameBorder.onload = () => {
-      if (!panel) {
+    // 우유 말풍선 그리기
+    const milk = new Image();
+    milk.src = milkImage;
+    if (milkStatus) {
+      milk.onload = () => {
         context.drawImage(
-          frameBorder,
-          background.x +
-            (257 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (142 / 1024) * canvasRef.current.height,
-          (frameBorder.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (frameBorder.height / 1024) * canvasRef.current.height
-        );
-      }
-    };
-    // 인터폰 그리기
-    const interphone = new Image();
-    interphone.src = interphoneImage;
-
-    interphone.onload = () => {
-      context.drawImage(
-        interphone,
-        background.x +
-          (777 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (102 / 1024) * canvasRef.current.height,
-        (interphone.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (interphone.height / 1024) * canvasRef.current.height
-      );
-    };
-
-    // 닌텐도 그리기
-    const nintendo = new Image();
-    nintendo.src = nintendoImage;
-
-    nintendo.onload = () => {
-      context.drawImage(
-        nintendo,
-        background.x +
-          (1969 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (615 / 1024) * canvasRef.current.height,
-        (nintendo.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (nintendo.height / 1024) * canvasRef.current.height
-      );
-    };
-
-    // 닌텐도 테두리 그리기
-    const nintendoBorder = new Image();
-    nintendoBorder.src = nintendoBorderImage;
-
-    nintendoBorder.onload = () => {
-      if (!nintendoClicked) {
-        context.drawImage(
-          nintendoBorder,
-          background.x +
-            (1963 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (599 / 1024) * canvasRef.current.height,
-          (nintendoBorder.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (nintendoBorder.height / 1024) * canvasRef.current.height
-        );
-      }
-    };
-    // 게임 말풍선 그리기
-    const gamesppechbubble = new Image();
-    gamesppechbubble.src = speechbubbleImage;
-
-    if (nintendoClicked) {
-      gamesppechbubble.onload = () => {
-        context.drawImage(
-          gamesppechbubble,
-          background.x +
-            (1813 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (28 / 1024) * canvasRef.current.height,
-          (gamesppechbubble.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (gamesppechbubble.height / 1024) * canvasRef.current.height
+          milk,
+          background.x + milkCoor.x,
+          milkCoor.y,
+          milkSize.w,
+          milkSize.h
         );
       };
     }
 
-    // 리모컨 그리기
-    const controller = new Image();
-    controller.src = controllerImage;
-
-    controller.onload = () => {
-      context.drawImage(
-        controller,
-        background.x +
-          (4484 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (724 / 1024) * canvasRef.current.height,
-        (controller.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (controller.height / 1024) * canvasRef.current.height
-      );
-    };
-
-    // 악보 그리기
-    const note = new Image();
-    note.src = noteImage;
-    note.onload = () => {
-      context.drawImage(
-        note,
-        background.x +
-          (2733 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (276 / 1024) * canvasRef.current.height,
-        (note.width / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        (note.height / 1024) * canvasRef.current.height
-      );
-    };
-
-    // 악보 테두리 그리기
-    const noteBorder = new Image();
-    noteBorder.src = noteBorderImage;
-    noteBorder.onload = () => {
-      if (!noteClicked) {
+    // 급식 말풍선 그리기
+    const plate = new Image();
+    plate.src = plateImage;
+    if (plateStatus) {
+      plate.onload = () => {
         context.drawImage(
-          noteBorder,
-          background.x +
-            (2718 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (284 / 1024) * canvasRef.current.height,
-          (noteBorder.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (noteBorder.height / 1024) * canvasRef.current.height
-        );
-      }
-    };
-    // 악보 확대 말풍선 그리기
-    const practiceNote = new Image();
-    practiceNote.src = practiceNoteImage;
-    if (noteClicked) {
-      practiceNote.onload = () => {
-        context.drawImage(
-          practiceNote,
-          background.x +
-            (3015 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (22 / 1024) * canvasRef.current.height,
-          (practiceNote.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (practiceNote.height / 1024) * canvasRef.current.height
-        );
-      };
-    }
-
-    // 날짜 그리기
-    const date = new Image();
-    date.src = dateFormatImg;
-
-    if (!pressedKey) {
-      date.onload = () => {
-        context.drawImage(
-          date,
+          plate,
+          background.x + plateCoor,
           0,
-          0,
-          (date.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (date.height / 1024) * canvasRef.current.height
+          plateSize.w,
+          plateSize.h
         );
       };
     }
+
+    const click = new Image();
+    click.src = clickImage;
+
+    click.onload = () => {
+      if (!milkStatus) {
+        context.drawImage(
+          click,
+          background.x + clickCoor1.x,
+          clickCoor1.y,
+          clickSize.w,
+          clickSize.h
+        );
+      }
+      if (!plateStatus) {
+        context.drawImage(
+          click,
+          background.x + clickCoor2.x,
+          clickCoor2.y,
+          clickSize.w,
+          clickSize.h
+        );
+      }
+    };
   };
 
-  const framepanel = () => {
-    const framepanel = new Image();
-    if (panel) framepanel.src = panelImage;
-    else framepanel.src = frameImage;
-    return framepanel;
+  // 테두리 그리기
+  const drawBorder = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    // 우유 박스 테두리 그리기
+    const milkBoxBorder = new Image();
+    milkBoxBorder.src = milkBoxBorderImage;
+    if (!milkStatus && showBorder) {
+      milkBoxBorder.onload = () => {
+        context.drawImage(
+          milkBoxBorder,
+          background.x + milkBoxBorderCoor.x,
+          milkBoxBorderCoor.y,
+          milkBoxBorderSize.w,
+          milkBoxBorderSize.h
+        );
+      };
+    }
+
+    // 급식차 테두리 그리기
+    const cartBorder = new Image();
+    cartBorder.src = cartBorderImage;
+    cartBorder.onload = () => {
+      if (!plateStatus && showBorder) {
+        context.drawImage(
+          cartBorder,
+          background.x + cartBorderCoor.x,
+          cartBorderCoor.y,
+          cartBorderSize.w,
+          cartBorderSize.h
+        );
+      }
+    };
   };
 
   // 캐릭터 그리기
@@ -402,35 +322,84 @@ export default function Map2() {
     const context = canvas.getContext("2d");
 
     const characterImg = new Image();
-    characterImg.src = characterImage;
+    if (pressedKey !== null) {
+      characterImg.src = CharacterMoveArr[characterFrame];
+    } else {
+      characterImg.src = characterImage;
+    }
 
     characterImg.onload = () => {
       context.drawImage(
         characterImg,
-        (300 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        (500 / 1024) * canvasRef.current.height,
-        (characterImg.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (characterImg.height / 1024) * canvasRef.current.height
+        character[0],
+        character[1],
+        character[2],
+        character[3]
       );
     };
   };
 
+  // 뛰어가는 남자아이들 그리기
+  const drawBoys = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    const boy1mg = new Image();
+    boy1mg.src = boy1Image;
+
+    const boy2Img = new Image();
+    boy2Img.src = boy2Image;
+
+    boy1mg.onload = () => {
+      if (background.x < (-1595 / 5000) * val) {
+        setStop(true);
+        context.drawImage(
+          boy1mg,
+          boy1Coor.x,
+          boysStartPoint,
+          boy1Size.w,
+          boy1Size.h
+        );
+        context.drawImage(
+          boy2Img,
+          boy2Coor.x,
+          boysStartPoint,
+          boy2Size.w,
+          boy2Size.h
+        );
+
+        if (boy2Coor.x + boy2Size.w <= 0) {
+          setStop(false);
+          setBoysAnimation(false);
+        }
+        setBoy1Coor({ ...boy1Coor, x: boy1Coor.x - 6 });
+        setBoy2Coor({ ...boy2Coor, x: boy2Coor.x - 7 });
+      }
+    };
+  };
+
+  // 캐릭터 이동
+  const v = 5;
   const handleMove = () => {
     switch (pressedKey) {
       case "ArrowLeft":
         if (background.x < 0) {
-          setBackground({ ...background, x: background.x + 5 });
+          if (stop === true) {
+            setBackground({ ...background });
+          } else {
+            setBackground({ ...background, x: background.x + v });
+          }
         }
         return;
       case "ArrowRight":
-        if (
-          background.x + bg.width * (canvasRef.current.height / bg.height) >
-          canvasRef.current.width
-        ) {
-          setBackground({ ...background, x: background.x - 5 });
+        if (background.x + val > canvasRef.current.width) {
+          if (stop) {
+            setBackground({ ...background });
+          } else {
+            setBackground({ ...background, x: background.x - v });
+          }
         } else {
+          setStop(true);
         }
         return;
     }
@@ -443,21 +412,81 @@ export default function Map2() {
           <LoadingImg src={loading1} />
         </Loading>
       ) : (
-        <Canvas
-          ref={canvasRef}
-          width={windowSize.width}
-          height={windowSize.height}
-          tabIndex={0}
-        ></Canvas>
+        <MapContainer>
+          {pressedKey ? null : <Date src={dateFormatImg} />}
+          {characterMove === 1 ? (
+            <Character
+              src={CharacterMoveArr[characterFrame]}
+              width={character[2]}
+              onAnimationEnd={handleAnimation}
+            />
+          ) : null}
+          <CanvasContainer>
+            <Canvas
+              ref={canvasRef}
+              width={windowSize.width}
+              height={windowSize.height}
+              tabIndex={0}
+            ></Canvas>
+            <Canvas
+              ref={canvasRef2}
+              width={windowSize.width}
+              height={windowSize.height}
+              tabIndex={0}
+            ></Canvas>
+          </CanvasContainer>
+          {/* <Lottie animationData={loadingLottie} /> */}
+        </MapContainer>
       )}
     </>
   );
 }
 
+const MapContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+`;
+const Date = styled.img`
+  width: 50vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+`;
+const translate = keyframes`
+  0%{
+    transform:  translateX(0px);
+    opacity: 100%;
+  }
+  50%{
+    transform:  translateX(750px);
+    opacity: 100%;
+  }
+  100% {
+    transform:  translateX(800px);
+    opacity: 0;
+  }
+  
+`;
+const Character = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 20vw;
+  z-index: 100;
+  animation: ${translate} 2.5s linear forwards;
+  animation-delay: 2s;
+`;
+const CanvasContainer = styled.div`
+  position: relative;
+`;
+
 const Canvas = styled.canvas`
-  width: 100%;
-  height: 100%;
-  background-color: brown;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
   overflow-y: hidden;
 `;
 const Loading = styled.div`
