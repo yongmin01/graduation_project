@@ -1,6 +1,5 @@
 import { createGlobalStyle } from "styled-components";
 import SangSangShinb7 from "../sources/font/SSShinb7.ttf";
-import GangwonEduAll from "../sources/font/강원교육모두 LIGHT.ttf";
 import Gaegu from "../sources/font/J개구쟁이-Medium.otf";
 const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
@@ -26,10 +25,7 @@ button {
         font-family: 'SangSangShinb7';
         src: url(${SangSangShinb7}) format('truetype');
   }
-  @font-face {
-        font-family: 'GangwonEduAll';
-        src: url(${GangwonEduAll}) format('truetype');
-  }
+
   @font-face {
         font-family: 'Gaegu';
         src: url(${Gaegu}) format('opentype');
