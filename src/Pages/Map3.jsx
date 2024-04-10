@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-import bgImage from "../sources/images/Map/map3/map3.png";
+import bgImage from "../sources/images/Map/map3/map3.webp";
+import leftLightOnBg from "../sources/images/Map/map3/leftLightOnBg.webp";
+import rightLightOnBg from "../sources/images/Map/map3/rightLightOnBg.webp";
+import clickImage from "../sources/images/Map/click.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
-import characterImage from "../sources/images/Map/girl.png";
+import characterImage from "../sources/images/Map/girl/girl.png";
 import loading1 from "../sources/images/icettaeng.gif";
 import chickManBorderImage from "../sources/images/Map/map3/chickManBorder.png";
 import chickImage from "../sources/images/Map/map3/chick.png";
@@ -19,7 +22,12 @@ import snack1Image from "../sources/images/Map/map3/snack1.png";
 import snack2Image from "../sources/images/Map/map3/snack2.png";
 import houseImage from "../sources/images/Map/map3/house.png";
 
-export default function Map2() {
+import CharacterMoveArr from "../utils/CharacterMoveArr";
+const FRAMES_LENGTH = 40;
+const CW = 5000;
+const CH = 1024;
+
+export default function Map2({ sex }) {
   // 캔버스 크기 관련
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -39,22 +47,133 @@ export default function Map2() {
     };
   });
 
-  const [pressedKey, setPressedKey] = useState(null);
-  const [background, setBackground] = useState({ x: 0, y: 0 });
-  const [character, setCharacter] = useState({ x: 500, y: 1000 });
-  const [round, setRound] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [lamp1Status, setLamp1Status] = useState(false);
-  const [lamp2Status, setLamp2Status] = useState(false);
-  const [chickStatus, setChickStatus] = useState(false);
-  const [sugarSnackStatus, setSugarSnackStatus] = useState(false);
-  const [bus, setBus] = useState({ x: 3143, y: 374 });
-  const [busAnimation, setBusAnimation] = useState(true);
-  const [snackStatus, setSnackStatus] = useState(false);
-  const [stop, setStop] = useState(false);
-  const navigator = useNavigate();
   const canvasRef = useRef(null);
   const requestAnimationRef = useRef(null);
+
+  const navigator = useNavigate();
+
+  const [round, setRound] = useState(false);
+  const [pressedKey, setPressedKey] = useState(null);
+  const [stop, setStop] = useState(false);
+
+  const [background, setBackground] = useState({ x: 0, y: 0 });
+  const bg = new Image();
+  bg.src = bgImage;
+
+  const [characterFrame, setCharacterFrame] = useState(0);
+
+  const [showBorder, setShowBorder] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+
+  const [streetLightStatus, setStreetLightStatus] = useState(0);
+
+  const [busAnimation, setBusAnimation] = useState(true);
+
+  // 계산 줄이기용 변수
+  const bgWidth = bg.width;
+  const bgHeight = bg.height;
+  const canvasWidth = windowSize.width;
+  const canvasHeight = windowSize.height;
+  const ratio = canvasHeight / bgHeight;
+  const val = bgWidth * ratio;
+
+  const character = [
+    (418 / CW) * val,
+    (498 / CH) * canvasHeight,
+    (330 / CW) * val,
+    (392 / CH) * canvasHeight,
+  ];
+  const characterSex = sex;
+
+  const [characterMove, setCharacterMove] = useState(0);
+  const handleAnimation = () => {
+    setCharacterMove(2);
+  };
+
+  const [chickStatus, setChickStatus] = useState(false);
+  const chicksManBorderSize = {
+    w: (252 / CW) * val,
+    h: (330 / CH) * canvasHeight,
+  };
+  const chicksManBorderCoor = {
+    x: (687 / CW) * val,
+    y: (396 / CH) * canvasHeight,
+  };
+  const chicksSize = {
+    w: (214 / CW) * val,
+    h: (172 / CH) * canvasHeight,
+  };
+  const chicksCoor = {
+    x: (918 / CW) * val,
+    y: (548 / CH) * canvasHeight,
+  };
+
+  const moneySize = {
+    w: (228 / CW) * val,
+    h: (176 / CH) * canvasHeight,
+  };
+  const moneyCoor = {
+    x: (874 / CW) * val,
+    y: (256 / CH) * canvasHeight,
+  };
+
+  const [snackStatus, setSnackStatus] = useState(false);
+  const shopBorderSize = {
+    w: (436 / CW) * val,
+    h: (424 / CH) * canvasHeight,
+  };
+  const shopBorderCoor = {
+    x: (1644 / CW) * val,
+    y: (288 / CH) * canvasHeight,
+  };
+
+  const snack1Size = {
+    w: (274 / CW) * val,
+    h: (306 / CH) * canvasHeight,
+  };
+  const snack1Coor = {
+    x: (1591 / CW) * val,
+    y: (20 / CH) * canvasHeight,
+  };
+
+  const snack2Size = {
+    w: (232 / CW) * val,
+    h: (260 / CH) * canvasHeight,
+  };
+  const snack2Coor = {
+    x: (1916 / CW) * val,
+    y: (52 / CH) * canvasHeight,
+  };
+
+  const [sugarSnackStatus, setSugarSnackStatus] = useState(false);
+  const sugarSnackSize = {
+    w: (223 / CW) * val,
+    h: (188 / CH) * canvasHeight,
+  };
+  const sugarSnackCoor = {
+    x: (2230 / CW) * val,
+    y: (312 / CH) * canvasHeight,
+  };
+  const [busCoorX, setBusCoorX] = useState((3143 / CW) * val);
+  const busCoorY = (374 / CH) * canvasHeight;
+  const busSize = {
+    w: (450 / CW) * val,
+    h: (352 / CH) * canvasHeight,
+  };
+
+  const houseSize = {
+    w: (438 / CW) * val,
+    h: (430 / CH) * canvasHeight,
+  };
+  const houseCoor = {
+    x: (4542 / CW) * val,
+    y: (410 / CH) * canvasHeight,
+  };
+
+  const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
+  const clickCoor1 = { x: (797 / CW) * val, y: (386 / CH) * canvasHeight };
+  const clickCoor2 = { x: (1814 / CW) * val, y: (260 / CH) * canvasHeight };
 
   // canvas가 정의되었다면 애니메이션 그리기
   useEffect(() => {
@@ -78,20 +197,10 @@ export default function Map2() {
       const chickMan = new Image();
       chickMan.src = chickManBorderImage;
       if (
-        x >=
-          background.x +
-            (687 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-        y >= background.y + (396 / 1024) * canvasRef.current.height &&
-        x <=
-          background.x +
-            (687 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-            (chickMan.width / 5000) *
-              bg.width *
-              (canvasRef.current.height / bg.height) &&
-        y <=
-          background.y +
-            (396 / 1024) * canvasRef.current.height +
-            (chickMan.height / 1024) * canvasRef.current.height
+        x >= background.x + chicksManBorderCoor.x &&
+        y >= chicksManBorderCoor.y &&
+        x <= background.x + (chicksManBorderCoor.x + chicksManBorderSize.w) &&
+        y <= chicksManBorderCoor.y + chicksManBorderSize.h
       ) {
         setChickStatus(true);
       }
@@ -100,20 +209,10 @@ export default function Map2() {
       const shop = new Image();
       shop.src = shopImage;
       if (
-        x >=
-          background.x +
-            (1643 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-        y >= background.y + (264 / 1024) * canvasRef.current.height &&
-        x <=
-          background.x +
-            (1643 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-            (shop.width / 5000) *
-              bg.width *
-              (canvasRef.current.height / bg.height) &&
-        y <=
-          background.y +
-            (264 / 1024) * canvasRef.current.height +
-            (shop.height / 1024) * canvasRef.current.height
+        x >= background.x + shopBorderCoor.x &&
+        y >= shopBorderCoor.y &&
+        x <= background.x + shopBorderCoor.x + shopBorderSize.w &&
+        y <= shopBorderCoor.y + shopBorderSize.h
       ) {
         setSnackStatus(true);
       }
@@ -121,20 +220,10 @@ export default function Map2() {
       const house = new Image();
       house.src = houseImage;
       if (
-        x >=
-          background.x +
-            (4542 / 5000) * bg.width * (canvasRef.current.height / bg.height) &&
-        y >= background.y + (410 / 1024) * canvasRef.current.height &&
-        x <=
-          background.x +
-            (4542 / 5000) * bg.width * (canvasRef.current.height / bg.height) +
-            (house.width / 5000) *
-              bg.width *
-              (canvasRef.current.height / bg.height) &&
-        y <=
-          background.y +
-            (410 / 1024) * canvasRef.current.height +
-            (house.height / 1024) * canvasRef.current.height
+        x >= background.x + houseCoor.x &&
+        y >= houseCoor.y &&
+        x <= background.x + houseCoor.x + houseSize.w &&
+        y <= houseCoor.y + houseSize.h
       ) {
         setRound(true);
       }
@@ -148,117 +237,122 @@ export default function Map2() {
 
   // 게임 화면 라우팅
   useEffect(() => {
+    if (background.x <= -(val - windowSize.width)) {
+      setStop(true);
+      setCharacterMove(1);
+    }
+  }, [background]);
+  useEffect(() => {
+    if (characterMove === 2) {
+      navigator("/puzzle");
+    }
+  }, [characterMove]);
+  useEffect(() => {
     if (round) {
       cancelAnimationFrame(requestAnimationRef.current);
 
       setLoading(true);
       setInterval(() => {
-        navigator("/speech");
+        navigator("/puzzle");
       }, 5000);
     }
   }, [round]);
 
   // 램프 켜기
   useEffect(() => {
-    if (
-      background.x <
-      (-200 / 5000) * bg.width * (canvasRef.current.height / bg.height)
-    ) {
-      setLamp1Status(true);
+    if (background.x < (-200 / 5000) * val) {
+      setStreetLightStatus(1);
     }
-    if (
-      background.x <
-      (-3000 / 5000) * bg.width * (canvasRef.current.height / bg.height)
-    ) {
-      setLamp2Status(true);
+    if (background.x < (-2600 / 5000) * val) {
+      setStreetLightStatus(2);
     }
   }, [background]);
 
   // 달고나 보이기
   useEffect(() => {
-    if (
-      background.x <
-      (-1300 / 5000) * bg.width * (canvasRef.current.height / bg.height)
-    ) {
+    if (background.x < (-1300 / 5000) * val) {
       setSugarSnackStatus(true);
     }
   }, [background]);
 
+  useEffect(() => {
+    if (showBorder) {
+      setInterval(() => {
+        setShowBorder((prev) => !prev);
+      }, 500);
+    }
+  }, [showBorder]);
   // 렌더링 함수
   const render = () => {
     if (!canvasRef.current) return;
+    setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
     drawBg();
     if (busAnimation) {
       drawBus();
     }
-    drawCharacter();
-    handleMove();
+    if (!characterMove) {
+      drawCharacter();
+    }
+    if (characterMove !== 1) {
+      handleMove();
+    }
     requestAnimationRef.current = requestAnimationFrame(render);
   };
 
   // 배경 그리기
-  const bg = new Image();
-  bg.src = bgImage;
 
   const drawBg = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
     const bg = new Image();
-    bg.src = bgImage;
+    if (streetLightStatus === 0) {
+      bg.src = bgImage;
+    } else if (streetLightStatus === 1) {
+      bg.src = leftLightOnBg;
+    } else {
+      bg.src = rightLightOnBg;
+    }
 
     bg.onload = () => {
-      context.drawImage(
-        bg,
-        background.x,
-        background.y,
-        bg.width * (canvasRef.current.height / bg.height),
-        canvasRef.current.height
-      );
+      context.drawImage(bg, background.x, 0, val, canvasHeight);
     };
 
-    // 램프 그리기
-    let lamp1 = lampOn(lamp1Status);
-    let lamp2 = lampOn(lamp2Status);
-    lamp1.onload = () => {
-      context.drawImage(
-        lamp1,
-        background.x +
-          (1156 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (276 / 1024) * canvasRef.current.height,
-        (lamp1.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (lamp1.height / 1024) * canvasRef.current.height
-      );
-    };
-    lamp2.onload = () => {
-      context.drawImage(
-        lamp2,
-        background.x +
-          (3573 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (282 / 1024) * canvasRef.current.height,
-        (lamp2.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (lamp2.height / 1024) * canvasRef.current.height
-      );
+    const click = new Image();
+    click.src = clickImage;
+
+    click.onload = () => {
+      if (!chickStatus) {
+        context.drawImage(
+          click,
+          background.x + clickCoor1.x,
+          clickCoor1.y,
+          clickSize.w,
+          clickSize.h
+        );
+      }
+      if (!snackStatus) {
+        context.drawImage(
+          click,
+          background.x + clickCoor2.x,
+          clickCoor2.y,
+          clickSize.w,
+          clickSize.h
+        );
+      }
     };
 
     // 병아리 아저씨 테두리 그리기
     const chickManBorder = new Image();
     chickManBorder.src = chickManBorderImage;
-    if (!chickStatus) {
+    if (!chickStatus && showBorder) {
       chickManBorder.onload = () => {
         context.drawImage(
           chickManBorder,
-          background.x +
-            (687 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (396 / 1024) * canvasRef.current.height,
-          (chickManBorder.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (chickManBorder.height / 1024) * canvasRef.current.height
+          background.x + chicksManBorderCoor.x,
+          chicksManBorderCoor.y,
+          chicksManBorderSize.w,
+          chicksManBorderSize.h
         );
       };
     }
@@ -270,13 +364,10 @@ export default function Map2() {
       if (chickStatus) {
         context.drawImage(
           money,
-          background.x +
-            (874 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (276 / 1024) * canvasRef.current.height,
-          (money.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (money.height / 1024) * canvasRef.current.height
+          background.x + moneyCoor.x,
+          moneyCoor.y,
+          moneySize.w,
+          moneySize.h
         );
       }
     };
@@ -289,45 +380,25 @@ export default function Map2() {
       if (chickStatus) {
         context.drawImage(
           chick,
-          background.x +
-            (916 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (548 / 1024) * canvasRef.current.height,
-          (chick.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (chick.height / 1024) * canvasRef.current.height
+          background.x + chicksCoor.x,
+          chicksCoor.y,
+          chicksSize.w,
+          chicksSize.h
         );
       }
-    };
-    // 포장마차 그리기
-    const shop = new Image();
-    shop.src = shopImage;
-
-    shop.onload = () => {
-      context.drawImage(
-        shop,
-        background.x +
-          (1643 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (288 / 1024) * canvasRef.current.height,
-        (shop.width / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        (shop.height / 1024) * canvasRef.current.height
-      );
     };
 
     // 포장마차 테두리 그리기
     const shopBorder = new Image();
     shopBorder.src = shopBorderImage;
-    if (!snackStatus) {
+    if (!snackStatus && showBorder) {
       shopBorder.onload = () => {
         context.drawImage(
           shopBorder,
-          background.x +
-            (1643 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (288 / 1024) * canvasRef.current.height,
-          (shopBorder.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (shopBorder.height / 1024) * canvasRef.current.height
+          background.x + shopBorderCoor.x,
+          shopBorderCoor.y,
+          shopBorderSize.w,
+          shopBorderSize.h
         );
       };
     }
@@ -341,25 +412,19 @@ export default function Map2() {
       snack1.onload = () => {
         context.drawImage(
           snack1,
-          background.x +
-            (1591 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (20 / 1024) * canvasRef.current.height,
-          (snack1.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (snack1.height / 1024) * canvasRef.current.height
+          background.x + snack1Coor.x,
+          snack1Coor.y,
+          snack1Size.w,
+          snack1Size.h
         );
       };
       snack2.onload = () => {
         context.drawImage(
           snack2,
-          background.x +
-            (1916 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (52 / 1024) * canvasRef.current.height,
-          (snack2.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (snack2.height / 1024) * canvasRef.current.height
+          background.x + snack2Coor.x,
+          snack2Coor.y,
+          snack2Size.w,
+          snack2Size.h
         );
       };
     }
@@ -372,58 +437,13 @@ export default function Map2() {
       if (sugarSnackStatus) {
         context.drawImage(
           sugarSnack,
-          background.x +
-            (2230 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (312 / 1024) * canvasRef.current.height,
-          (sugarSnack.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (sugarSnack.height / 1024) * canvasRef.current.height
+          background.x + sugarSnackCoor.x,
+          sugarSnackCoor.y,
+          sugarSnackSize.w,
+          sugarSnackSize.h
         );
       }
     };
-
-    // 집 그리기
-    const house = new Image();
-    house.src = houseImage;
-
-    house.onload = () => {
-      context.drawImage(
-        house,
-        background.x +
-          (4542 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        background.y + (410 / 1024) * canvasRef.current.height,
-        (house.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (house.height / 1024) * canvasRef.current.height
-      );
-    };
-
-    // 날짜 그리기
-    const date = new Image();
-    date.src = dateFormatImg;
-
-    if (!pressedKey) {
-      date.onload = () => {
-        context.drawImage(
-          date,
-          0,
-          0,
-          (date.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (date.height / 1024) * canvasRef.current.height
-        );
-      };
-    }
-  };
-
-  const lampOn = (lampStatus) => {
-    const lamp = new Image();
-    if (lampStatus) lamp.src = lampOnImage;
-    else lamp.src = lampOffImage;
-    return lamp;
   };
 
   // 캐릭터 그리기
@@ -432,17 +452,19 @@ export default function Map2() {
     const context = canvas.getContext("2d");
 
     const characterImg = new Image();
-    characterImg.src = characterImage;
+    if (pressedKey !== null) {
+      characterImg.src = CharacterMoveArr[characterFrame];
+    } else {
+      characterImg.src = characterImage;
+    }
 
     characterImg.onload = () => {
       context.drawImage(
         characterImg,
-        (300 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-        (500 / 1024) * canvasRef.current.height,
-        (characterImg.width / 5000) *
-          bg.width *
-          (canvasRef.current.height / bg.height),
-        (characterImg.height / 1024) * canvasRef.current.height
+        character[0],
+        character[1],
+        character[2],
+        character[3]
       );
     };
   };
@@ -455,66 +477,52 @@ export default function Map2() {
     busImg.src = busImage;
 
     busImg.onload = () => {
-      if (
-        background.x <
-        (-2000 / 5000) * bg.width * (canvasRef.current.height / bg.height)
-      ) {
+      if (background.x < (-2000 / 5000) * val) {
         setStop(true);
         context.drawImage(
           busImg,
-          background.x +
-            (bus.x / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (bus.y / 1024) * canvasRef.current.height,
-          (busImg.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (busImg.height / 1024) * canvasRef.current.height
+          background.x + busCoorX,
+          busCoorY,
+          busSize.w,
+          busSize.h
         );
 
-        if (
-          background.x +
-            (bus.x / 5000) * bg.width * (canvasRef.current.height / bg.height) >
-          canvas.width
-        ) {
-          console.log("fkasjd");
+        if (background.x + busCoorX > canvasWidth) {
           setBusAnimation(false);
           setStop(false);
         }
-        setBus({ ...bus, x: bus.x + 5 });
+        setBusCoorX(busCoorX + 5);
       } else {
         context.drawImage(
           busImg,
-          background.x +
-            (bus.x / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (bus.y / 1024) * canvasRef.current.height,
-          (busImg.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (busImg.height / 1024) * canvasRef.current.height
+          background.x + busCoorX,
+          busCoorY,
+          busSize.w,
+          busSize.h
         );
       }
     };
   };
+
+  // 캐릭터 이동
+  const v = 3;
   const handleMove = () => {
     switch (pressedKey) {
       case "ArrowLeft":
         if (background.x < 0) {
-          if (stop) {
+          if (stop === true) {
             setBackground({ ...background });
           } else {
-            setBackground({ ...background, x: background.x + 5 });
+            setBackground({ ...background, x: background.x + v });
           }
         }
         return;
       case "ArrowRight":
-        if (
-          background.x + bg.width * (canvasRef.current.height / bg.height) >
-          canvasRef.current.width
-        ) {
+        if (background.x + val > canvasRef.current.width) {
           if (stop) {
             setBackground({ ...background });
           } else {
-            setBackground({ ...background, x: background.x - 5 });
+            setBackground({ ...background, x: background.x - v });
           }
         } else {
           setStop(true);
@@ -530,16 +538,66 @@ export default function Map2() {
           <LoadingImg src={loading1} />
         </Loading>
       ) : (
-        <Canvas
-          ref={canvasRef}
-          width={windowSize.width}
-          height={windowSize.height}
-          tabIndex={0}
-        ></Canvas>
+        <MapContainer>
+          {pressedKey ? null : <Date src={dateFormatImg} />}
+          {characterMove === 1 ? (
+            <Character
+              src={CharacterMoveArr[characterFrame]}
+              width={character[2]}
+              onAnimationEnd={handleAnimation}
+            />
+          ) : null}
+          <CanvasContainer>
+            <Canvas
+              ref={canvasRef}
+              width={windowSize.width}
+              height={windowSize.height}
+              tabIndex={0}
+            ></Canvas>
+          </CanvasContainer>
+        </MapContainer>
       )}
     </>
   );
 }
+
+const MapContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+`;
+const Date = styled.img`
+  width: 50vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+`;
+const translate = keyframes`
+  0%{
+    transform:  translateX(0px);
+    opacity: 100%;
+  }
+  50%{
+    transform:  translateX(750px);
+    opacity: 100%;
+  }
+  100% {
+    transform:  translateX(800px);
+    opacity: 0;
+  }
+  
+`;
+const Character = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 29vw;
+  z-index: 100;
+  animation: ${translate} 2.5s linear forwards;
+  animation-delay: 2s;
+`;
+const CanvasContainer = styled.div`
+  position: relative;
+`;
 
 const Canvas = styled.canvas`
   width: 100%;
