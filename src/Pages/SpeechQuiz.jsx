@@ -1,90 +1,52 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSpeechRecognition } from "react-speech-kit";
 import styled from "styled-components";
 import GameCommonStyle from "../utils/GameCommonStyle";
 import BeforeGame from "../Components/BeforeGame";
 import GameResult from "../Components/GameResult";
 import Chance from "../Components/Chance";
-import ReactPlayer from "react-player";
 import speech from "../speechData";
 import { ReactComponent as RecordBtn } from "../sources/images/Game/recordBtn.svg";
 import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
 import { ReactComponent as InputPath } from "../sources/images/Game/inputPath.svg";
+import startBtn from "../sources/images/Game/startBtn.svg";
+import stopBtn from "../sources/images/Game/stopBtn.svg";
+import { useNavigate } from "react-router-dom";
 
-export default function SpeechQuiz({ round }) {
+export default function SpeechQuiz({}) {
   const [game, setGame] = useState("before");
   const [nowPlaying, setNowPlaying] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
   const [roundEnd, setRoundEnd] = useState(false);
-  const [userAnswer, setUserAnswer] = useState();
+  const [userAnswer, setUserAnswer] = useState(null);
   const [chance, setChance] = useState(2);
   const [correct, setCorrect] = useState();
-
+  const [endAlert, setEndAlert] = useState(false);
   const playerRef = useRef();
   const inputRef = useRef();
   const score = useRef(0);
+  const pass = useRef();
 
-  // 녹음 관련 로직
-  const [stream, setStream] = useState();
-  const [media, setMedia] = useState();
-  const [onRec, setOnRec] = useState(true);
-  const [source, setSource] = useState();
-  const [analyser, setAnalyser] = useState();
-  const [audioUrl, setAudioUrl] = useState();
-  const [control, setControl] = useState();
-  const onRecAudio = () => {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioCtx.createScriptProcessor(0, 1, 1);
-    setAnalyser(analyser);
-    setUserAnswer("");
-    function makeSound(stream) {
-      const source = audioCtx.createMediaStreamSource(stream);
-      setSource(source);
-
-      source.connect(analyser);
-      analyser.connect(audioCtx.destination);
-    }
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecoder = new MediaRecorder(stream);
-      mediaRecoder.start();
-      setStream(stream);
-      setMedia(mediaRecoder);
-      makeSound(stream);
-      analyser.onaudioprocess = function (e) {
-        setOnRec(false);
-      };
-      setTimeout(() => {
-        setControl(true);
-      }, 3000);
-    });
-  };
-  const offRecAudio = () => {
-    media.ondataavailable = function (e) {
-      setAudioUrl(e.data);
-      setOnRec(true);
-    };
-    stream.getAudioTracks().forEach(function (track) {
-      track.stop();
-    });
-    media.stop();
-    analyser.disconnect();
-    source.disconnect();
-  };
-
-  const onSubmitAudioFile = useCallback(() => {
-    if (audioUrl) {
-      console.log(URL.createObjectURL(audioUrl));
-      setUserAnswer("녹음 완료");
-    }
-    const sound = new File([audioUrl], "soundBlob", {
-      lastModified: new Date().getTime(),
-    });
-    console.log(sound);
-  }, [audioUrl]);
+  // 음성 전환 로직
+  const { listen, listening, stop } = useSpeechRecognition({
+    onResult: (result) => {
+      setUserAnswer(result);
+    },
+  });
 
   // 문제 관련 로직
   const play = () => {
-    playerRef.current.seekTo(speech[quizIndex].start);
-    setNowPlaying(true);
+    playerRef.current.currentTime = 0;
+    playerRef.current.play();
+  };
+  const replay = () => {
+    playerRef.current.currentTime = 0;
+    playerRef.current.play();
+  };
+  const pauseVideo = () => {
+    if (playerRef.current.currentTime >= speech[quizIndex].end && !roundEnd) {
+      playerRef.current.pause();
+    }
   };
   const next = () => {
     if (quizIndex === 3 - 1) {
@@ -97,31 +59,53 @@ export default function SpeechQuiz({ round }) {
     setChance(2);
   };
 
-  const replay = () => {
-    playerRef.current.seekTo(speech[quizIndex].start);
-
-    setNowPlaying(true);
-    setTimeout(() => {
-      setNowPlaying(false);
-    }, (speech[quizIndex].end - speech[quizIndex].start) * 1000);
-  };
-
   useEffect(() => {
     if (chance === 0) {
-      play();
       setRoundEnd(true);
     }
   }, [chance]);
 
-  const clickSubmit = () => {
-    if (nowPlaying) {
-      setNowPlaying(false);
+  useEffect(() => {
+    if (roundEnd) {
+      play();
     }
-    if (userAnswer === "녹음 완료") {
+  }, [roundEnd]);
+
+  useEffect(() => {
+    if (quizIndex === 3 - 1 && roundEnd) {
+      setTimeout(() => {
+        setEndAlert(true);
+      }, 3000);
+    }
+  }, [quizIndex, roundEnd]);
+
+  const handleEnd = () => {
+    if (score.current >= 2) {
+      pass.current = true;
+    } else {
+      pass.current = false;
+    }
+    setGame("end");
+  };
+
+  const normalization = (s) => {
+    let answer = s;
+    if (s !== undefined) {
+      let reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
+      answer = answer.replace(reg, "");
+    }
+    return answer;
+  };
+  const clickSubmit = () => {
+    if (userAnswer === null) return;
+    if (!playerRef.current.paused) {
+      playerRef.current.pause();
+    }
+    if (normalization(userAnswer) === normalization(speech[quizIndex].answer)) {
       setCorrect("정답입니다!^ㅇ^");
       score.current = score.current + 1;
       setRoundEnd(true);
-      play();
+
       setTimeout(() => {
         setCorrect(null);
       }, 650);
@@ -131,14 +115,14 @@ export default function SpeechQuiz({ round }) {
         setCorrect(null);
       }, 900);
       setChance(chance - 1);
+      setUserAnswer("");
       console.log("틀림");
     }
   };
-
   function makeBlank(answer) {
     let blank = [];
     let i = 0;
-    const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+    const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9]/;
     for (i; i <= answer.length; i++) {
       if (korean.test(answer[i])) {
         blank.push("O");
@@ -162,33 +146,23 @@ export default function SpeechQuiz({ round }) {
           <Progress>{quizIndex + 1}/3</Progress>
           <QuizIndex>문제 {quizIndex + 1}</QuizIndex>
           {roundEnd ? (
-            <NextBtn onClick={next}>
-              <PlayIcon />
-            </NextBtn>
+            quizIndex !== 2 ? (
+              <NextBtn onClick={next}>
+                <PlayIcon />
+              </NextBtn>
+            ) : null
           ) : null}
           <QuizDiv>
             <Player>
-              <Cover onClick={replay} />
+              {/* <Cover onClick={replay} /> */}
               {/* <Hider> */}
-              <ReactPlayer
-                url={`https://www.youtube.com/watch?v=${speech[quizIndex].id}
-                   ?shoinfo="0"&rel="0"`}
-                width={"41vh"}
-                height={"29vh"}
-                playing={nowPlaying}
+              <video
+                src={`/videos/speechQuiz${quizIndex}.mov#t,${speech[quizIndex].end}`}
                 ref={playerRef}
-                config={{
-                  youtube: {
-                    playerVars: {
-                      start: speech[quizIndex].start,
-                      disablekb: 1,
-                    },
-                  },
-                }}
+                onTimeUpdate={pauseVideo}
+                onClick={replay}
               />
-              {/* </Hider> */}
             </Player>
-
             {correct != null ? (
               <Correct
                 color={correct === "정답입니다!^ㅇ^" ? "#13BF33" : "#FF3E3E"}
@@ -204,7 +178,9 @@ export default function SpeechQuiz({ round }) {
             ) : roundEnd ? (
               <AnswerInfo>
                 <span>
-                  {speech[quizIndex].quiz + " " + speech[quizIndex].answer}
+                  {speech[quizIndex].quiz !== undefined
+                    ? speech[quizIndex].quiz + " " + speech[quizIndex].answer
+                    : speech[quizIndex].answer}
                 </span>
                 {/* <span>
                   {speech[quizIndex].title}-{speech[quizIndex].year}
@@ -212,9 +188,11 @@ export default function SpeechQuiz({ round }) {
               </AnswerInfo>
             ) : (
               <Quiz>
-                {speech[quizIndex].quiz +
-                  " " +
-                  makeBlank(speech[quizIndex].answer)}
+                {speech[quizIndex].quiz !== undefined
+                  ? speech[quizIndex].quiz +
+                    " " +
+                    makeBlank(speech[quizIndex].answer)
+                  : makeBlank(speech[quizIndex].answer)}
               </Quiz>
             )}
           </QuizDiv>
@@ -226,7 +204,6 @@ export default function SpeechQuiz({ round }) {
                 placeholder="정답을 입력하세요"
                 value={userAnswer || ""}
                 onChange={(e) => setUserAnswer(e.target.value)}
-                disabled={nowPlaying}
               ></InputTagBox>
               <InputPath />
             </InputBox>
@@ -236,35 +213,29 @@ export default function SpeechQuiz({ round }) {
               </SubmitBtn>
             </SubmitDiv>
           </InputDiv>
-          <Btn onClick={onRec ? onRecAudio : offRecAudio}>
-            <span
-              style={{
-                position: "absolute",
-                top: "5px",
-                width: "14vw",
-                height: "8.7vh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {onRec ? "녹음하기" : control ? "녹음 중지" : "녹음중"}
-            </span>
-            <RecordBtn
-              width="14vw"
-              height="8.7vh"
-              fill={onRec ? "#E7F5FF" : "#E2E2E2"}
-            />
+          <Btn onClick={listening ? stop : listen}>
+            <BtnContent>
+              {listening ? <img src={stopBtn} /> : <img src={startBtn} />}
+              <span>{listening ? "녹음 완료" : "녹음하기"}</span>
+            </BtnContent>
+            <RecordBtn width="14vw" height="8.7vh" fill="#E7F5FF" />
           </Btn>
-          <button onClick={onSubmitAudioFile}>들어보기</button>
+          {endAlert ? (
+            <EndAlert onClick={handleEnd}>게임 종료!</EndAlert>
+          ) : null}
         </Game>
       ) : game === "before" ? (
         <>
-          <BeforeGame go={setGame} title="대사 이어말하기" round={round} />
+          <BeforeGame go={setGame} title="대사 이어말하기" round={2} />
         </>
       ) : (
-        <GameResult result={score.current} total={3} round={round} />
+        <GameResult
+          pass={pass.current}
+          score={score.current}
+          total={3}
+          round={2}
+          end={setGame}
+        />
       )}
     </>
   );
@@ -292,23 +263,35 @@ const QuizIndex = styled.div`
   margin-bottom: 3.3vh;
 `;
 const Player = styled.div`
-  width: 41vh;
+  width: 58vh;
   height: 29vh;
   display: flex;
   position: relative;
+  justify-content: center;
 `;
 const Cover = styled.div`
-  width: 41vh;
   height: 29vh;
   position: absolute;
 `;
-const Hider = styled.div`
-  padding-top: 60px;
-`;
+
 const Btn = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   position: relative;
   font-family: Gaegu;
   font-size: 30px;
+  width: 14vw;
+  height: 8.7vh;
+`;
+const BtnContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  position: absolute;
+  top: 5px;
   width: 14vw;
   height: 8.7vh;
 `;
@@ -399,4 +382,21 @@ const QuizDiv = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
+  height: 35vh;
+  margin-bottom: 0.5vh;
+`;
+
+const EndAlert = styled.div`
+  width: 85vw;
+  height: 78vh;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: UhBeejungBold;
+  font-size: 120px;
+  font-weight: 700;
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
