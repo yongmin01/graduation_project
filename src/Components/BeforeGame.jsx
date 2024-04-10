@@ -9,7 +9,6 @@ import { ReactComponent as RecordBtn } from "../sources/images/Game/recordBtn.sv
 
 // 음악퀴즈 장식
 import radioImg from "../sources/images/Game/radio.png";
-import megaphone from "../sources/images/Game/megaphone.png";
 import speaker from "../sources/images/Game/speaker.png";
 import flower from "../sources/images/Game/flower.png";
 import sprinkle from "../sources/images/Game/sprinkle.png";
@@ -132,7 +131,6 @@ export default function BeforeGame({ go, title, round }) {
         <>
           {window.location.pathname === "/music" ? (
             <>
-              <LeftDecoImg src={megaphone} />
               <Decoration1>귀 기울여 집중!!</Decoration1>
               <Radio src={radioImg} />
             </>
@@ -195,13 +193,7 @@ const DescTitleText = styled.div`
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   z-index: 1;
 `;
-const LeftDecoImg = styled.img`
-  height: 151px;
-  transform: rotate(-5.759deg);
-  position: absolute;
-  top: 19vh;
-  left: 12vw;
-`;
+
 const Decoration = styled.div`
   display: flex;
   flex-direction: row;
