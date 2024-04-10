@@ -12,8 +12,9 @@ import { ReactComponent as InputPath } from "../sources/images/Game/inputPath.sv
 import { ReactComponent as ReplayIcon } from "../sources/images/Game/replay.svg";
 import { ReactComponent as PlayMoreIcon } from "../sources/images/Game/playmore.svg";
 import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
+import { useNavigate } from "react-router-dom";
 
-export default function MusicQuiz({ round, endHandler }) {
+export default function MusicQuiz({}) {
   const [game, setGame] = useState("before");
   const [counter, setCounter] = useState(true);
   const [nowPlaying, setNowPlaying] = useState(false);
@@ -30,7 +31,8 @@ export default function MusicQuiz({ round, endHandler }) {
   const playerRef = useRef();
   const inputRef = useRef();
   const score = useRef(0);
-
+  const pass = useRef();
+  const [endAlert, setEndAlert] = useState(false);
   useEffect(() => {
     if (counter === false) {
       play3Secs();
@@ -61,7 +63,7 @@ export default function MusicQuiz({ round, endHandler }) {
     }, 1800);
   };
   const next = () => {
-    if (nowPlayingIndex === musics.length - 1) {
+    if (nowPlayingIndex === 5 - 1) {
       setGame("end");
     }
     setRoundEnd(false);
@@ -129,8 +131,6 @@ export default function MusicQuiz({ round, endHandler }) {
       setCorrect();
       setHint(2);
       play3Secs();
-    } else if (nowPlayingIndex === musics.length - 1) {
-      setGame("end");
     }
   }, [nowPlayingIndex]);
 
@@ -163,6 +163,31 @@ export default function MusicQuiz({ round, endHandler }) {
     }
   }, [chance]);
 
+  useEffect(() => {
+    if (nowPlayingIndex === 5 - 1 && roundEnd) {
+      setTimeout(() => {
+        setEndAlert(true);
+      }, 3000);
+    }
+  }, [nowPlayingIndex, roundEnd]);
+
+  const handleEnd = () => {
+    if (score.current >= 3) {
+      pass.current = true;
+    } else {
+      pass.current = false;
+    }
+    setGame("end");
+  };
+
+  useEffect(() => {
+    if (inputRef.current) {
+      if (!nowPlaying) {
+        inputRef.current.focus();
+      }
+    }
+  }, [nowPlaying]);
+
   return (
     <>
       <GameCommonStyle color={"#ffedb3"} />
@@ -184,9 +209,11 @@ export default function MusicQuiz({ round, endHandler }) {
           </Progress>
           <QuizIndex>문제 {nowPlayingIndex + 1}</QuizIndex>
           {roundEnd ? (
-            <NextBtn onClick={next}>
-              <PlayIcon />
-            </NextBtn>
+            nowPlayingIndex !== 4 ? (
+              <NextBtn onClick={next}>
+                <PlayIcon />
+              </NextBtn>
+            ) : null
           ) : null}
           {/* 문제 상자 */}
           <QuizDiv>
@@ -267,22 +294,22 @@ export default function MusicQuiz({ round, endHandler }) {
                 </HintBtn>
               </>
             )}
+            {endAlert ? (
+              <EndAlert onClick={handleEnd}>게임 종료!</EndAlert>
+            ) : null}
           </>
         </Game>
       ) : game === "before" ? (
         <>
-          <BeforeGame
-            go={setGame}
-            title="전주 듣고 노래 맞추기"
-            round={round}
-          />
+          <BeforeGame go={setGame} title="전주 듣고 노래 맞추기" round={1} />
         </>
       ) : (
         <GameResult
-          result={score.current}
-          total={musics.length}
-          round={round}
-          end={endHandler}
+          pass={pass.current}
+          score={score.current}
+          total={5}
+          round={1}
+          end={setGame}
         />
       )}
     </>
@@ -442,4 +469,18 @@ const AnswerInfo = styled.div`
   align-items: center;
   font-size: 30px;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+const EndAlert = styled.div`
+  width: 85vw;
+  height: 78vh;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: UhBeejungBold;
+  font-size: 120px;
+  font-weight: 700;
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
