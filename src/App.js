@@ -16,6 +16,7 @@ import Npc1 from "./Pages/Npc1";
 import Npc2 from "./Pages/Npc2";
 import Npc3 from "./Pages/Npc3";
 import Npc4 from "./Pages/Npc4";
+import Diary from "./Pages/Diary";
 
 function App() {
   const handle = useFullScreenHandle();
@@ -48,6 +49,8 @@ function App() {
 
             <Route path="/map4" element={<Map4 sex={character} />} />
             <Route path="/npc4" element={<Npc4 />} />
+
+            <Route path="/diary" element={<Diary />} />
           </Routes>
         </BrowserRouter>
         <button onClick={handle.enter}>전체화면 전환</button>
