@@ -17,9 +17,21 @@ html, body {
     font-size: 60px;
     line-height: 1.5;
     margin: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-use-select: none;
+    user-select: none;
 }
+
 button {
       cursor: pointer;
+}
+img {
+ -webkit-user-drag: none;
+ -khtml-user-drag: none;
+ -moz-user-drag: none;
+ -o-user-drag: none;
+
 }
   @font-face {
         font-family: 'SangSangShinb7';
