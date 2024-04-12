@@ -12,7 +12,7 @@ export default function Intro() {
   };
   const navigator = useNavigate();
   const goToTutorial = () => {
-    setInterval(() => {
+    setTimeout(() => {
       navigator("/tutorial");
     }, 1000);
   };
