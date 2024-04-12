@@ -105,7 +105,7 @@ export default function SpeechQuiz({}) {
       setCorrect("정답입니다!^ㅇ^");
       score.current = score.current + 1;
       setRoundEnd(true);
-
+      stop();
       setTimeout(() => {
         setCorrect(null);
       }, 650);
@@ -157,7 +157,7 @@ export default function SpeechQuiz({}) {
               {/* <Cover onClick={replay} /> */}
               {/* <Hider> */}
               <video
-                src={`/videos/speechQuiz${quizIndex}.mov#t,${speech[quizIndex].end}`}
+                src={`/videos/speechQuiz${quizIndex}.mp4#t,${speech[quizIndex].end}`}
                 ref={playerRef}
                 onTimeUpdate={pauseVideo}
                 onClick={replay}
@@ -201,14 +201,17 @@ export default function SpeechQuiz({}) {
             <InputBox>
               <InputTagBox
                 ref={inputRef}
-                placeholder="정답을 입력하세요"
                 value={userAnswer || ""}
                 onChange={(e) => setUserAnswer(e.target.value)}
+                disabled
               ></InputTagBox>
               <InputPath />
             </InputBox>
             <SubmitDiv>
-              <SubmitBtn onClick={clickSubmit} disabled={nowPlaying}>
+              <SubmitBtn
+                onClick={clickSubmit}
+                disabled={nowPlaying || roundEnd}
+              >
                 제출
               </SubmitBtn>
             </SubmitDiv>
@@ -233,7 +236,7 @@ export default function SpeechQuiz({}) {
           pass={pass.current}
           score={score.current}
           total={3}
-          round={2}
+          round={3}
           end={setGame}
         />
       ) : null}
@@ -326,7 +329,7 @@ const InputTagBox = styled.input`
 const SubmitDiv = styled.div`
   position: relative;
 `;
-const SubmitBtn = styled.div`
+const SubmitBtn = styled.button`
   border: none;
   background-color: transparent;
   font-family: "UhbeeJung";
@@ -387,15 +390,15 @@ const QuizDiv = styled.div`
 `;
 
 const EndAlert = styled.div`
-  width: 85vw;
-  height: 78vh;
+  width: 100vw;
+  height: 100vh;
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.8);
   font-family: UhBeejungBold;
   font-size: 120px;
   font-weight: 700;
   position: absolute;
-  top: 0;
+  top: -12vh;
   display: flex;
   justify-content: center;
   align-items: center;
