@@ -404,8 +404,8 @@ export default function PuzzleQuiz() {
         <GameResult
           pass={pass.current}
           score={score.current}
-          total={5}
-          round={1}
+          total={3}
+          round={2}
           end={setGame}
         />
       ) : null}
@@ -481,7 +481,7 @@ const Cover = styled.div`
   position: absolute;
   z-index: 100;
   width: 80vw;
-  height: 74vh;
+  height: 76vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
