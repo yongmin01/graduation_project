@@ -20,7 +20,29 @@ import g18 from "../sources/images/Map/girl/girl18.png";
 import g19 from "../sources/images/Map/girl/girl19.png";
 import g20 from "../sources/images/Map/girl/girl20.png";
 
-const CharacterMoveArr = [
+import b0 from "../sources/images/Map/boy/boy.png";
+import b1 from "../sources/images/Map/boy/boy1.png";
+import b2 from "../sources/images/Map/boy/boy2.png";
+import b3 from "../sources/images/Map/boy/boy3.png";
+import b4 from "../sources/images/Map/boy/boy4.png";
+import b5 from "../sources/images/Map/boy/boy5.png";
+import b6 from "../sources/images/Map/boy/boy6.png";
+import b7 from "../sources/images/Map/boy/boy7.png";
+import b8 from "../sources/images/Map/boy/boy8.png";
+import b9 from "../sources/images/Map/boy/boy9.png";
+import b10 from "../sources/images/Map/boy/boy10.png";
+import b11 from "../sources/images/Map/boy/boy11.png";
+import b12 from "../sources/images/Map/boy/boy12.png";
+import b13 from "../sources/images/Map/boy/boy13.png";
+import b14 from "../sources/images/Map/boy/boy14.png";
+import b15 from "../sources/images/Map/boy/boy15.png";
+import b16 from "../sources/images/Map/boy/boy16.png";
+import b17 from "../sources/images/Map/boy/boy17.png";
+import b18 from "../sources/images/Map/boy/boy18.png";
+import b19 from "../sources/images/Map/boy/boy19.png";
+import b20 from "../sources/images/Map/boy/boy20.png";
+
+export const CharacterMoveArrGirl = [
   g0,
   g0,
   g1,
@@ -65,4 +87,47 @@ const CharacterMoveArr = [
   g20,
 ];
 
-export default CharacterMoveArr;
+export const CharacterMoveArrBoy = [
+  b0,
+  b0,
+  b1,
+  b1,
+  b2,
+  b2,
+  b3,
+  b3,
+  b4,
+  b4,
+  b5,
+  b5,
+  b6,
+  b6,
+  b7,
+  b7,
+  b8,
+  b8,
+  b9,
+  b9,
+  b10,
+  b10,
+  b11,
+  b11,
+  b12,
+  b12,
+  b13,
+  b13,
+  b14,
+  b14,
+  b15,
+  b15,
+  b16,
+  b16,
+  b17,
+  b17,
+  b18,
+  b18,
+  b19,
+  b19,
+  b20,
+  b20,
+];
