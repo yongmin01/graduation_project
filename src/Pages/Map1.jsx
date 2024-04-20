@@ -1,13 +1,12 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { throttle } from "lodash";
 
 // import bgImage from "../sources/images/Map/map1/map1.webp";
 import bgImage2 from "../sources/images/Map/map1/greenBg.webp";
 import bgImage3 from "../sources/images/Map/map1/redBg.webp";
 import characterImage from "../sources/images/Map/girl/girl.png";
-import characterImage2 from "../sources/images/Map/boy.png";
+import characterImage2 from "../sources/images/Map/boy/boy.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import smog1Img from "../sources/images/Map/map1/smog1.png";
 import smog2Img from "../sources/images/Map/map1/smog2.png";
@@ -15,10 +14,23 @@ import carImg from "../sources/images/Map/map1/car.png";
 import notesImg from "../sources/images/Map/map1/notes.png";
 import loading1 from "../sources/images/MP3.gif";
 
-import CharacterMoveArr from "../utils/CharacterMoveArr";
+import Lottie from "react-lottie";
+import girlLottie from "../sources/lottie/girl.json";
+
+import { CharacterMoveArrGirl } from "../utils/CharacterMoveArr";
+import { CharacterMoveArrBoy } from "../utils/CharacterMoveArr";
 const FRAMES_LENGTH = 40;
 const CW = 5000;
 const CH = 1024;
+
+const lottieOptions = {
+  loop: true, // 반복재생
+  autoplay: false, // 자동재생
+  animationData: girlLottie, // 로띠 파일
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 
 export default function Map1({ sex }) {
   // 캔버스 크기 관련
@@ -39,17 +51,12 @@ export default function Map1({ sex }) {
       // 중복 이벤트 방지용 클린업
       window.removeEventListener("resize", resizeHandler);
     };
-  });
+  }, []);
 
   const canvasRef = useRef(null);
-  const canvasRef2 = useRef(null);
   const requestAnimationRef = useRef(null);
 
   const navigator = useNavigate();
-
-  const [round, setRound] = useState(false);
-  const [moveStart, setMoveStart] = useState(false);
-  const [smogStop, setSmogStop] = useState(false);
 
   const [background, setBackground] = useState({ x: 0, y: 0 });
   const bg = new Image();
@@ -65,13 +72,18 @@ export default function Map1({ sex }) {
 
   const [characterFrame, setCharacterFrame] = useState(0);
 
+  let characterinMap = null;
+  if (sex === "girl") {
+    characterinMap = characterImage;
+  } else {
+    characterinMap = characterImage2;
+  }
   const character = [
     (188 / CW) * val,
     (498 / CH) * canvasHeight,
     (330 / CW) * val,
     (392 / CH) * canvasHeight,
   ];
-  const characterSex = sex;
 
   const [characterMoveX, setCharacterMoveX] = useState();
   const characterEndX = 188 / CW;
@@ -94,26 +106,30 @@ export default function Map1({ sex }) {
   useEffect(() => {
     if (!canvasRef.current) return;
     canvasRef.current.focus();
-    canvasRef.current.addEventListener("keydown", (e) => {
-      e.preventDefault();
-      setPressedKey(e.key);
-    });
-    canvasRef.current.addEventListener("keyup", () => setPressedKey(null));
+  }, []);
+
+  useEffect(() => {
     requestAnimationRef.current = requestAnimationFrame(render);
 
-    // 클릭 감지
-    const handleCanvasClick = (e) => {
-      const canvas = canvasRef.current;
-      const context = canvas.getContext("2d");
-
-      let x = e.clientX - context.canvas.offsetLeft;
-      let y = e.clientY - context.canvas.offsetTop;
-    };
-    canvasRef.current.addEventListener("click", handleCanvasClick);
     return () => {
       cancelAnimationFrame(requestAnimationRef.current);
     };
-  });
+  }, [requestAnimationRef.current]);
+
+  const keyDown = (e) => {
+    e.preventDefault();
+    setPressedKey(e.key);
+  };
+  const keyUp = () => {
+    setPressedKey(null);
+  };
+  const handleCanvasClick = (e) => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    let x = e.clientX - context.canvas.offsetLeft;
+    let y = e.clientY - context.canvas.offsetTop;
+  };
 
   // 게임 화면 라우팅
   useEffect(() => {
@@ -125,20 +141,14 @@ export default function Map1({ sex }) {
 
   useEffect(() => {
     if (characterMove === 2) {
-      navigator("/music");
-    }
-  }, [characterMove]);
-
-  useEffect(() => {
-    if (round) {
       cancelAnimationFrame(requestAnimationRef.current);
       setLoading(true);
 
-      setInterval(() => {
+      setTimeout(() => {
         navigator("/music");
-      }, 1000);
+      }, 3000);
     }
-  }, [round]);
+  }, [characterMove]);
 
   // 렌더링 함수
   const render = () => {
@@ -147,9 +157,9 @@ export default function Map1({ sex }) {
     setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
     drawBg();
 
-    if (!characterMove) {
-      drawCharacter();
-    }
+    // if (!characterMove) {
+    //   drawCharacter();
+    // }
     drawCar();
     setSmogPos(background.x);
     if (characterMove !== 1) {
@@ -186,9 +196,17 @@ export default function Map1({ sex }) {
 
     const characterImg = new Image();
     if (pressedKey !== null) {
-      characterImg.src = CharacterMoveArr[characterFrame];
+      if (sex === "girl") {
+        characterImg.src = CharacterMoveArrGirl[characterFrame];
+      } else {
+        characterImg.src = CharacterMoveArrBoy[characterFrame];
+      }
     } else {
-      characterImg.src = characterImage;
+      if (sex === "girl") {
+        characterImg.src = characterImage;
+      } else {
+        characterImg.src = characterImage2;
+      }
     }
 
     characterImg.onload = () => {
@@ -274,41 +292,66 @@ export default function Map1({ sex }) {
           <LoadingImg src={loading1} />
         </Loading>
       ) : (
+        // <MapContainer>
         <MapContainer>
           {pressedKey ? null : <Date src={dateFormatImg} />}
           {characterMove === 1 ? (
-            <Character
-              src={CharacterMoveArr[characterFrame]}
+            <CharacterAtEnd
+              src={characterinMap}
               width={character[2]}
               onAnimationEnd={handleAnimation}
             />
           ) : null}
-          <CanvasContainer>
-            <Canvas
-              ref={canvasRef}
-              width={windowSize.width}
-              height={windowSize.height}
-              tabIndex={0}
+          {pressedKey && characterMove !== 1 ? (
+            <LottieAnimation
+              options={lottieOptions}
+              width={character[2]}
+              height={character[3]}
+              isStopped={false}
+              ariaLabel={""}
+              ariaRole={"img"}
+              style={{
+                position: "absolute",
+                bottom: "13vh",
+                left: "13vw",
+                zIndex: "200",
+              }}
             />
-            {/* <Canvas
-              ref={canvasRef2}
-              width={windowSize.width}
-              height={windowSize.height}
-            /> */}
-          </CanvasContainer>
+          ) : characterMove !== 1 ? (
+            <Character
+              src={characterImage2}
+              width={character[2]}
+              onAnimationEnd={handleAnimation}
+            />
+          ) : null}
+
+          <Canvas
+            ref={canvasRef}
+            width={windowSize.width}
+            height={windowSize.height}
+            tabIndex={0}
+            onKeyDown={keyDown}
+            onKeyUp={keyUp}
+            onClick={handleCanvasClick}
+          />
         </MapContainer>
       )}
     </>
   );
 }
 
-const MapContainer = styled.div``;
+const MapContainer = styled.div`
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+`;
+
 const Date = styled.img`
   width: 50vw;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 100;
+  /* z-index: 100; */
 `;
 const translate = keyframes`
   0%{
@@ -325,17 +368,27 @@ const translate = keyframes`
   }
   
 `;
+const CharacterAtEnd = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
+  animation: ${translate} 2.5s linear forwards;
+  animation-delay: 2s;
+`;
 const Character = styled.img`
   position: absolute;
   bottom: 13vh;
   left: 13vw;
-  z-index: 100;
-  animation: ${translate} 2.5s linear forwards;
-  animation-delay: 2s;
+  z-index: 150;
 `;
-const CanvasContainer = styled.div`
-  position: relative;
+const LottieAnimation = styled(Lottie)`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
 `;
+
 const Canvas = styled.canvas`
   position: absolute;
   top: 0px;

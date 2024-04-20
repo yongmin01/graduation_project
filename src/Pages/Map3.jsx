@@ -8,6 +8,7 @@ import rightLightOnBg from "../sources/images/Map/map3/rightLightOnBg.webp";
 import clickImage from "../sources/images/Map/click.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import characterImage from "../sources/images/Map/girl/girl.png";
+import characterImage2 from "../sources/images/Map/boy/boy.png";
 import loading1 from "../sources/images/icettaeng.gif";
 import chickManBorderImage from "../sources/images/Map/map3/chickManBorder.png";
 import chickImage from "../sources/images/Map/map3/chick.png";
@@ -22,10 +23,24 @@ import snack1Image from "../sources/images/Map/map3/snack1.png";
 import snack2Image from "../sources/images/Map/map3/snack2.png";
 import houseImage from "../sources/images/Map/map3/house.png";
 
-import CharacterMoveArr from "../utils/CharacterMoveArr";
+import Lottie from "react-lottie";
+import girlLottie from "../sources/lottie/girl.json";
+
+import { CharacterMoveArrGirl } from "../utils/CharacterMoveArr";
+import { CharacterMoveArrBoy } from "../utils/CharacterMoveArr";
+
 const FRAMES_LENGTH = 40;
 const CW = 5000;
 const CH = 1024;
+
+const lottieOptions = {
+  loop: true, // 반복재생
+  autoplay: false, // 자동재생
+  animationData: girlLottie, // 로띠 파일
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 
 export default function Map2({ sex }) {
   // 캔버스 크기 관련
@@ -45,14 +60,13 @@ export default function Map2({ sex }) {
       // 중복 이벤트 방지용 클린업
       window.removeEventListener("resize", resizeHandler);
     };
-  });
+  }, []);
 
   const canvasRef = useRef(null);
   const requestAnimationRef = useRef(null);
 
   const navigator = useNavigate();
 
-  const [round, setRound] = useState(false);
   const [pressedKey, setPressedKey] = useState(null);
   const [stop, setStop] = useState(false);
 
@@ -84,8 +98,13 @@ export default function Map2({ sex }) {
     (330 / CW) * val,
     (392 / CH) * canvasHeight,
   ];
-  const characterSex = sex;
 
+  let characterinMap = null;
+  if (sex === "girl") {
+    characterinMap = characterImage;
+  } else {
+    characterinMap = characterImage2;
+  }
   const [characterMove, setCharacterMove] = useState(0);
   const handleAnimation = () => {
     setCharacterMove(2);
@@ -162,79 +181,60 @@ export default function Map2({ sex }) {
     h: (352 / CH) * canvasHeight,
   };
 
-  const houseSize = {
-    w: (438 / CW) * val,
-    h: (430 / CH) * canvasHeight,
-  };
-  const houseCoor = {
-    x: (4542 / CW) * val,
-    y: (410 / CH) * canvasHeight,
-  };
-
   const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
   const clickCoor1 = { x: (797 / CW) * val, y: (386 / CH) * canvasHeight };
   const clickCoor2 = { x: (1814 / CW) * val, y: (260 / CH) * canvasHeight };
 
   // canvas가 정의되었다면 애니메이션 그리기
+
   useEffect(() => {
     if (!canvasRef.current) return;
     canvasRef.current.focus();
-    canvasRef.current.addEventListener("keydown", (e) => {
-      e.preventDefault();
-      setPressedKey(e.key);
-    });
-    canvasRef.current.addEventListener("keyup", () => setPressedKey(null));
+  }, []);
+  useEffect(() => {
     requestAnimationRef.current = requestAnimationFrame(render);
 
-    // 클릭 감지
-    const handleCanvasClick = (e) => {
-      const canvas = canvasRef.current;
-      const context = canvas.getContext("2d");
-      let x = e.clientX - context.canvas.offsetLeft;
-      let y = e.clientY - context.canvas.offsetTop;
-
-      // 병아리 아저씨 클릭 확인
-      const chickMan = new Image();
-      chickMan.src = chickManBorderImage;
-      if (
-        x >= background.x + chicksManBorderCoor.x &&
-        y >= chicksManBorderCoor.y &&
-        x <= background.x + (chicksManBorderCoor.x + chicksManBorderSize.w) &&
-        y <= chicksManBorderCoor.y + chicksManBorderSize.h
-      ) {
-        setChickStatus(true);
-      }
-
-      // 포장마차 클릭 확인
-      const shop = new Image();
-      shop.src = shopImage;
-      if (
-        x >= background.x + shopBorderCoor.x &&
-        y >= shopBorderCoor.y &&
-        x <= background.x + shopBorderCoor.x + shopBorderSize.w &&
-        y <= shopBorderCoor.y + shopBorderSize.h
-      ) {
-        setSnackStatus(true);
-      }
-      // 집 클릭 확인
-      const house = new Image();
-      house.src = houseImage;
-      if (
-        x >= background.x + houseCoor.x &&
-        y >= houseCoor.y &&
-        x <= background.x + houseCoor.x + houseSize.w &&
-        y <= houseCoor.y + houseSize.h
-      ) {
-        setRound(true);
-      }
-    };
-    canvasRef.current.addEventListener("click", handleCanvasClick);
     return () => {
       cancelAnimationFrame(requestAnimationRef.current);
-      // canvasRef.current.removeEventListener("click", handleCanvasClick);
     };
-  });
+  }, [requestAnimationRef.current]);
+  const keyDown = (e) => {
+    e.preventDefault();
+    setPressedKey(e.key);
+  };
+  const keyUp = () => {
+    setPressedKey(null);
+  };
+  const handleCanvasClick = (e) => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    let x = e.clientX - context.canvas.offsetLeft;
+    let y = e.clientY - context.canvas.offsetTop;
 
+    // 병아리 아저씨 클릭 확인
+    const chickMan = new Image();
+    chickMan.src = chickManBorderImage;
+    if (
+      x >= background.x + chicksManBorderCoor.x &&
+      y >= chicksManBorderCoor.y &&
+      x <= background.x + (chicksManBorderCoor.x + chicksManBorderSize.w) &&
+      y <= chicksManBorderCoor.y + chicksManBorderSize.h
+    ) {
+      setChickStatus(true);
+    }
+
+    // 포장마차 클릭 확인
+    const shop = new Image();
+    shop.src = shopImage;
+    if (
+      x >= background.x + shopBorderCoor.x &&
+      y >= shopBorderCoor.y &&
+      x <= background.x + shopBorderCoor.x + shopBorderSize.w &&
+      y <= shopBorderCoor.y + shopBorderSize.h
+    ) {
+      setSnackStatus(true);
+    }
+  };
   // 게임 화면 라우팅
   useEffect(() => {
     if (background.x <= -(val - windowSize.width)) {
@@ -244,19 +244,14 @@ export default function Map2({ sex }) {
   }, [background]);
   useEffect(() => {
     if (characterMove === 2) {
-      navigator("/puzzle");
-    }
-  }, [characterMove]);
-  useEffect(() => {
-    if (round) {
       cancelAnimationFrame(requestAnimationRef.current);
 
       setLoading(true);
-      setInterval(() => {
-        navigator("/puzzle");
-      }, 5000);
+      setTimeout(() => {
+        navigator("/speech");
+      }, 3000);
     }
-  }, [round]);
+  }, [characterMove]);
 
   // 램프 켜기
   useEffect(() => {
@@ -285,14 +280,14 @@ export default function Map2({ sex }) {
   // 렌더링 함수
   const render = () => {
     if (!canvasRef.current) return;
-    setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
+    // setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
     drawBg();
     if (busAnimation) {
       drawBus();
     }
-    if (!characterMove) {
-      drawCharacter();
-    }
+    // if (!characterMove) {
+    //   drawCharacter();
+    // }
     if (characterMove !== 1) {
       handleMove();
     }
@@ -453,9 +448,17 @@ export default function Map2({ sex }) {
 
     const characterImg = new Image();
     if (pressedKey !== null) {
-      characterImg.src = CharacterMoveArr[characterFrame];
+      if (sex === "girl") {
+        characterImg.src = CharacterMoveArrGirl[characterFrame];
+      } else {
+        characterImg.src = CharacterMoveArrBoy[characterFrame];
+      }
     } else {
-      characterImg.src = characterImage;
+      if (sex === "girl") {
+        characterImg.src = characterImage;
+      } else {
+        characterImg.src = characterImage2;
+      }
     }
 
     characterImg.onload = () => {
@@ -541,20 +544,44 @@ export default function Map2({ sex }) {
         <MapContainer>
           {pressedKey ? null : <Date src={dateFormatImg} />}
           {characterMove === 1 ? (
-            <Character
-              src={CharacterMoveArr[characterFrame]}
+            <CharacterAtEnd
+              src={characterinMap}
               width={character[2]}
               onAnimationEnd={handleAnimation}
             />
           ) : null}
-          <CanvasContainer>
-            <Canvas
-              ref={canvasRef}
-              width={windowSize.width}
-              height={windowSize.height}
-              tabIndex={0}
-            ></Canvas>
-          </CanvasContainer>
+          {pressedKey && characterMove !== 1 ? (
+            <LottieAnimation
+              options={lottieOptions}
+              width={character[2]}
+              height={character[3]}
+              isStopped={false}
+              ariaLabel={""}
+              ariaRole={"img"}
+              style={{
+                position: "absolute",
+                bottom: "13vh",
+                left: "13vw",
+                zIndex: "200",
+              }}
+            />
+          ) : characterMove !== 1 ? (
+            <Character
+              src={characterImage2}
+              width={character[2]}
+              onAnimationEnd={handleAnimation}
+            />
+          ) : null}
+
+          <Canvas
+            ref={canvasRef}
+            width={windowSize.width}
+            height={windowSize.height}
+            tabIndex={0}
+            onKeyDown={keyDown}
+            onKeyUp={keyUp}
+            onClick={handleCanvasClick}
+          ></Canvas>
         </MapContainer>
       )}
     </>
@@ -578,27 +605,35 @@ const translate = keyframes`
     opacity: 100%;
   }
   50%{
-    transform:  translateX(750px);
+    transform:  translateX(650px);
     opacity: 100%;
   }
   100% {
-    transform:  translateX(800px);
+    transform:  translateX(700px);
     opacity: 0;
   }
   
 `;
-const Character = styled.img`
+const CharacterAtEnd = styled.img`
   position: absolute;
   bottom: 13vh;
-  left: 29vw;
-  z-index: 100;
+  left: 13vw;
+  z-index: 150;
   animation: ${translate} 2.5s linear forwards;
   animation-delay: 2s;
 `;
-const CanvasContainer = styled.div`
-  position: relative;
+const Character = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
 `;
-
+const LottieAnimation = styled(Lottie)`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
+`;
 const Canvas = styled.canvas`
   width: 100%;
   height: 100%;

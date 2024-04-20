@@ -7,6 +7,7 @@ import bgImage from "../sources/images/Map/map2/map2.webp";
 import clickImage from "../sources/images/Map/click.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import characterImage from "../sources/images/Map/girl/girl.png";
+import characterImage2 from "../sources/images/Map/boy/boy.png";
 import loading1 from "../sources/images/plate.gif";
 import boy1Image from "../sources/images/Map/map2/boy1.png";
 import boy2Image from "../sources/images/Map/map2/boy2.png";
@@ -18,7 +19,20 @@ import cartBorderImage from "../sources/images/Map/map2/cartBorder.png";
 import plateImage from "../sources/images/Map/map2/plate.png";
 import speakerSoundImage from "../sources/images/Map/map2/speakerSound.png";
 
-import CharacterMoveArr from "../utils/CharacterMoveArr";
+import { CharacterMoveArrGirl } from "../utils/CharacterMoveArr";
+import { CharacterMoveArrBoy } from "../utils/CharacterMoveArr";
+
+import Lottie from "react-lottie";
+import girlLottie from "../sources/lottie/girl.json";
+
+const lottieOptions = {
+  loop: true, // 반복재생
+  autoplay: false, // 자동재생
+  animationData: girlLottie, // 로띠 파일
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 const FRAMES_LENGTH = 40;
 const CW = 5000;
 const CH = 1024;
@@ -41,7 +55,7 @@ export default function Map2({ sex }) {
       // 중복 이벤트 방지용 클린업
       window.removeEventListener("resize", resizeHandler);
     };
-  });
+  }, []);
 
   const canvasRef = useRef(null);
   const canvasRef2 = useRef(null);
@@ -49,7 +63,6 @@ export default function Map2({ sex }) {
 
   const navigator = useNavigate();
 
-  const [round, setRound] = useState(false);
   const [pressedKey, setPressedKey] = useState(null);
   const [stop, setStop] = useState(false);
 
@@ -83,8 +96,13 @@ export default function Map2({ sex }) {
     (330 / CW) * val,
     (392 / CH) * canvasHeight,
   ];
-  const characterSex = sex;
 
+  let characterinMap = null;
+  if (sex === "girl") {
+    characterinMap = characterImage;
+  } else {
+    characterinMap = characterImage2;
+  }
   const [characterMove, setCharacterMove] = useState(0);
   const handleAnimation = () => {
     setCharacterMove(2);
@@ -120,46 +138,48 @@ export default function Map2({ sex }) {
   useEffect(() => {
     if (!canvasRef.current) return;
     canvasRef.current.focus();
-    canvasRef.current.addEventListener("keydown", (e) => {
-      e.preventDefault();
-      setPressedKey(e.key);
-    });
-    canvasRef.current.addEventListener("keyup", () => setPressedKey(null));
+  }, []);
+  useEffect(() => {
     requestAnimationRef.current = requestAnimationFrame(render);
 
-    // 클릭 감지
-    const handleCanvasClick = (e) => {
-      const canvas = canvasRef2.current;
-      const context = canvas.getContext("2d");
-      let x = e.clientX - context.canvas.offsetLeft;
-      let y = e.clientY - context.canvas.offsetTop;
-
-      //   우유상자 클릭 확인
-      if (
-        x >= background.x + milkBoxBorderCoor.x &&
-        y >= milkBoxBorderCoor.y &&
-        x <= background.x + milkBoxBorderCoor.x + milkBoxBorderSize.w &&
-        y <= milkBoxBorderCoor.y + milkBoxBorderSize.h
-      ) {
-        setmilkStatus(true);
-      }
-
-      //   급식차 클릭 확인
-      if (
-        x >= background.x + cartBorderCoor.x &&
-        y >= cartBorderCoor.y &&
-        x <= background.x + (cartBorderCoor.x + cartBorderSize.w) &&
-        y <= cartBorderCoor.y + cartBorderSize.h
-      ) {
-        setPlateStatus(true);
-      }
-    };
-    canvasRef2.current.addEventListener("click", handleCanvasClick);
     return () => {
       cancelAnimationFrame(requestAnimationRef.current);
-      // canvasRef.current.removeEventListener("click", handleCanvasClick);
     };
-  });
+  }, [requestAnimationRef.current]);
+
+  const keyDown = (e) => {
+    e.preventDefault();
+    setPressedKey(e.key);
+  };
+  const keyUp = () => {
+    setPressedKey(null);
+  };
+  const handleCanvasClick = (e) => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    let x = e.clientX - context.canvas.offsetLeft;
+    let y = e.clientY - context.canvas.offsetTop;
+
+    //   우유상자 클릭 확인
+    if (
+      x >= background.x + milkBoxBorderCoor.x &&
+      y >= milkBoxBorderCoor.y &&
+      x <= background.x + milkBoxBorderCoor.x + milkBoxBorderSize.w &&
+      y <= milkBoxBorderCoor.y + milkBoxBorderSize.h
+    ) {
+      setmilkStatus(true);
+    }
+
+    //   급식차 클릭 확인
+    if (
+      x >= background.x + cartBorderCoor.x &&
+      y >= cartBorderCoor.y &&
+      x <= background.x + (cartBorderCoor.x + cartBorderSize.w) &&
+      y <= cartBorderCoor.y + cartBorderSize.h
+    ) {
+      setPlateStatus(true);
+    }
+  };
 
   // 게임 화면 라우팅
   useEffect(() => {
@@ -170,20 +190,14 @@ export default function Map2({ sex }) {
   }, [background]);
   useEffect(() => {
     if (characterMove === 2) {
-      navigator("/puzzle");
-    }
-  }, [characterMove]);
-
-  useEffect(() => {
-    if (round) {
       cancelAnimationFrame(requestAnimationRef.current);
 
       setLoading(true);
-      setInterval(() => {
-        navigator("/speech");
-      }, 5000);
+      setTimeout(() => {
+        navigator("/puzzle");
+      }, 3000);
     }
-  }, [round]);
+  }, [characterMove]);
 
   useEffect(() => {
     if (showBorder) {
@@ -196,15 +210,15 @@ export default function Map2({ sex }) {
   // 렌더링 함수
   const render = () => {
     if (!canvasRef.current) return;
-    setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
+    // setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
     drawBg();
     drawBorder();
     if (boysAnimation) {
       drawBoys();
     }
-    if (!characterMove) {
-      drawCharacter();
-    }
+    // if (!characterMove) {
+    //   drawCharacter();
+    // }
     if (characterMove !== 1) {
       handleMove();
     }
@@ -321,9 +335,17 @@ export default function Map2({ sex }) {
 
     const characterImg = new Image();
     if (pressedKey !== null) {
-      characterImg.src = CharacterMoveArr[characterFrame];
+      if (sex === "girl") {
+        characterImg.src = CharacterMoveArrGirl[characterFrame];
+      } else {
+        characterImg.src = CharacterMoveArrBoy[characterFrame];
+      }
     } else {
-      characterImg.src = characterImage;
+      if (sex === "girl") {
+        characterImg.src = characterImage;
+      } else {
+        characterImg.src = characterImage2;
+      }
     }
 
     characterImg.onload = () => {
@@ -413,27 +435,43 @@ export default function Map2({ sex }) {
         <MapContainer>
           {pressedKey ? null : <Date src={dateFormatImg} />}
           {characterMove === 1 ? (
-            <Character
-              src={CharacterMoveArr[characterFrame]}
+            <CharacterAtEnd
+              src={characterinMap}
               width={character[2]}
               onAnimationEnd={handleAnimation}
             />
           ) : null}
-          <CanvasContainer>
-            <Canvas
-              ref={canvasRef}
-              width={windowSize.width}
-              height={windowSize.height}
-              tabIndex={0}
-            ></Canvas>
-            <Canvas
-              ref={canvasRef2}
-              width={windowSize.width}
-              height={windowSize.height}
-              tabIndex={0}
-            ></Canvas>
-          </CanvasContainer>
-          {/* <Lottie animationData={loadingLottie} /> */}
+          {pressedKey && characterMove !== 1 ? (
+            <LottieAnimation
+              options={lottieOptions}
+              width={character[2]}
+              height={character[3]}
+              isStopped={false}
+              ariaLabel={""}
+              ariaRole={"img"}
+              style={{
+                position: "absolute",
+                bottom: "13vh",
+                left: "13vw",
+                zIndex: "200",
+              }}
+            />
+          ) : characterMove !== 1 ? (
+            <Character
+              src={characterImage2}
+              width={character[2]}
+              onAnimationEnd={handleAnimation}
+            />
+          ) : null}
+          <Canvas
+            ref={canvasRef}
+            width={windowSize.width}
+            height={windowSize.height}
+            tabIndex={0}
+            onKeyDown={keyDown}
+            onKeyUp={keyUp}
+            onClick={handleCanvasClick}
+          ></Canvas>
         </MapContainer>
       )}
     </>
@@ -466,17 +504,6 @@ const translate = keyframes`
   }
   
 `;
-const Character = styled.img`
-  position: absolute;
-  bottom: 13vh;
-  left: 20vw;
-  z-index: 100;
-  animation: ${translate} 2.5s linear forwards;
-  animation-delay: 2s;
-`;
-const CanvasContainer = styled.div`
-  position: relative;
-`;
 
 const Canvas = styled.canvas`
   position: absolute;
@@ -498,4 +525,24 @@ const Loading = styled.div`
 
 const LoadingImg = styled.img`
   width: 100%;
+`;
+const CharacterAtEnd = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
+  animation: ${translate} 2.5s linear forwards;
+  animation-delay: 2s;
+`;
+const Character = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
+`;
+const LottieAnimation = styled(Lottie)`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
 `;

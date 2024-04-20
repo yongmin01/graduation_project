@@ -7,14 +7,27 @@ import panelBgImage from "../sources/images/Map/map4/panelBg.webp";
 import clickImage from "../sources/images/Map/click.png";
 import dateFormatImg from "../sources/images/Map/dateFormat.png";
 import characterImage from "../sources/images/Map/girl/girl.png";
+import characterImage2 from "../sources/images/Map/boy/boy.png";
 import frameBorderImage from "../sources/images/Map/map4/frameBorder.png";
 import nintendoBorderImage from "../sources/images/Map/map4/nintendoBorder.png";
 import speechbubbleImage from "../sources/images/Map/map4/game.png";
 import noteBorderImage from "../sources/images/Map/map4/noteBorder.png";
 import practiceNoteImage from "../sources/images/Map/map4/practiceNote.png";
-import loading1 from "../sources/images/MP3.gif";
 
-import CharacterMoveArr from "../utils/CharacterMoveArr";
+import { CharacterMoveArrGirl } from "../utils/CharacterMoveArr";
+import { CharacterMoveArrBoy } from "../utils/CharacterMoveArr";
+
+import Lottie from "react-lottie";
+import girlLottie from "../sources/lottie/girl.json";
+
+const lottieOptions = {
+  loop: true, // 반복재생
+  autoplay: false, // 자동재생
+  animationData: girlLottie, // 로띠 파일
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 const FRAMES_LENGTH = 40;
 const CW = 5000;
 const CH = 1024;
@@ -38,14 +51,13 @@ export default function Map4({ sex }) {
       // 중복 이벤트 방지용 클린업
       window.removeEventListener("resize", resizeHandler);
     };
-  });
+  }, []);
 
   const canvasRef = useRef(null);
   const requestAnimationRef = useRef(null);
 
   const navigator = useNavigate();
 
-  const [round, setRound] = useState(false);
   const [pressedKey, setPressedKey] = useState(null);
   const [stop, setStop] = useState(false);
 
@@ -76,7 +88,12 @@ export default function Map4({ sex }) {
     (392 / CH) * canvasHeight,
   ];
   const characterSex = sex;
-
+  let characterinMap = null;
+  if (sex === "girl") {
+    characterinMap = characterImage;
+  } else {
+    characterinMap = characterImage2;
+  }
   const [characterMove, setCharacterMove] = useState(0);
   const handleAnimation = () => {
     setCharacterMove(2);
@@ -102,6 +119,15 @@ export default function Map4({ sex }) {
     y: (599 / CH) * canvasHeight,
   };
 
+  const gameSpeechBubbleSize = {
+    w: (638 / CW) * val,
+    h: (608 / CH) * canvasHeight,
+  };
+  const gameSpeechBubbleCoor = {
+    x: (1813 / CW) * val,
+    y: (28 / CH) * canvasHeight,
+  };
+
   const [noteStatus, setNoteStatus] = useState(false);
   const noteBorderSize = {
     w: (314 / CW) * val,
@@ -112,6 +138,15 @@ export default function Map4({ sex }) {
     y: (284 / CH) * canvasHeight,
   };
 
+  const practiceNoteSize = {
+    w: (642 / CW) * val,
+    h: (442 / CH) * canvasHeight,
+  };
+  const practiceNoteCoor = {
+    x: (3015 / CW) * val,
+    y: (22 / CH) * canvasHeight,
+  };
+
   const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
   const clickCoor1 = { x: (2048 / CW) * val, y: (583 / CH) * canvasHeight };
   const clickCoor2 = { x: (2816 / CW) * val, y: (260 / CH) * canvasHeight };
@@ -120,56 +155,57 @@ export default function Map4({ sex }) {
   useEffect(() => {
     if (!canvasRef.current) return;
     canvasRef.current.focus();
-    canvasRef.current.addEventListener("keydown", (e) => {
-      e.preventDefault();
-      setPressedKey(e.key);
-    });
-    canvasRef.current.addEventListener("keyup", () => setPressedKey(null));
+  }, []);
+  useEffect(() => {
     requestAnimationRef.current = requestAnimationFrame(render);
 
-    // 클릭 감지
-    const handleCanvasClick = (e) => {
-      const canvas = canvasRef.current;
-      const context = canvas.getContext("2d");
-      let x = e.clientX - context.canvas.offsetLeft;
-      let y = e.clientY - context.canvas.offsetTop;
-
-      // 액자 클릭 확인
-      if (
-        x >= background.x + frameBorderCoor.x &&
-        y >= frameBorderCoor.y &&
-        x <= background.x + (frameBorderCoor.x + frameBorderSize.w) &&
-        y <= frameBorderCoor.y + frameBorderSize.h
-      ) {
-        alert("frame clicked");
-        setFrameStatus(false);
-      }
-      // 닌텐도 클릭 확인
-      if (
-        x >= background.x + nintendoBorderCoor.x &&
-        y >= nintendoBorderCoor.y &&
-        x <= background.x + (nintendoBorderCoor.x + nintendoBorderSize.w) &&
-        y <= nintendoBorderCoor.y + nintendoBorderSize.h
-      ) {
-        setNintendoStatus(true);
-      }
-      // 악보 클릭 확인
-      if (
-        x >= background.x + noteBorderCoor.x &&
-        y >= noteBorderCoor.y &&
-        x <= background.x + (noteBorderCoor.x + noteBorderSize.w) &&
-        y <= noteBorderCoor.y + noteBorderSize.h
-      ) {
-        setNoteStatus(true);
-      }
-    };
-    canvasRef.current.addEventListener("click", handleCanvasClick);
     return () => {
       cancelAnimationFrame(requestAnimationRef.current);
-      // canvasRef.current.removeEventListener("click", handleCanvasClick);
     };
-  });
+  }, [requestAnimationRef.current]);
+  const keyDown = (e) => {
+    e.preventDefault();
+    setPressedKey(e.key);
+  };
+  const keyUp = () => {
+    setPressedKey(null);
+  };
 
+  const handleCanvasClick = (e) => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    let x = e.clientX - context.canvas.offsetLeft;
+    let y = e.clientY - context.canvas.offsetTop;
+
+    // 액자 클릭 확인
+    if (
+      x >= background.x + frameBorderCoor.x &&
+      y >= frameBorderCoor.y &&
+      x <= background.x + (frameBorderCoor.x + frameBorderSize.w) &&
+      y <= frameBorderCoor.y + frameBorderSize.h
+    ) {
+      alert("frame clicked");
+      setFrameStatus(false);
+    }
+    // 닌텐도 클릭 확인
+    if (
+      x >= background.x + nintendoBorderCoor.x &&
+      y >= nintendoBorderCoor.y &&
+      x <= background.x + (nintendoBorderCoor.x + nintendoBorderSize.w) &&
+      y <= nintendoBorderCoor.y + nintendoBorderSize.h
+    ) {
+      setNintendoStatus(true);
+    }
+    // 악보 클릭 확인
+    if (
+      x >= background.x + noteBorderCoor.x &&
+      y >= noteBorderCoor.y &&
+      x <= background.x + (noteBorderCoor.x + noteBorderSize.w) &&
+      y <= noteBorderCoor.y + noteBorderSize.h
+    ) {
+      setNoteStatus(true);
+    }
+  };
   // 게임 화면 라우팅
   useEffect(() => {
     if (background.x <= -(val - windowSize.width)) {
@@ -179,20 +215,14 @@ export default function Map4({ sex }) {
   }, [background]);
   useEffect(() => {
     if (characterMove === 2) {
-      navigator("/npc3");
-    }
-  }, [characterMove]);
-
-  useEffect(() => {
-    if (round) {
       cancelAnimationFrame(requestAnimationRef.current);
 
-      setLoading(true);
-      setInterval(() => {
-        navigator("/speech");
-      }, 5000);
+      // setLoading(true);
+      setTimeout(() => {
+        navigator("/npc4");
+      }, 1000);
     }
-  }, [round]);
+  }, [characterMove]);
 
   useEffect(() => {
     if (showBorder) {
@@ -205,12 +235,12 @@ export default function Map4({ sex }) {
   // 렌더링 함수
   const render = () => {
     if (!canvasRef.current) return;
-    setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
+    // setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
     drawBg();
     drawBorder();
-    if (!characterMove) {
-      drawCharacter();
-    }
+    // if (!characterMove) {
+    //   drawCharacter();
+    // }
     if (characterMove !== 1) {
       handleMove();
     }
@@ -241,13 +271,10 @@ export default function Map4({ sex }) {
       gamesppechbubble.onload = () => {
         context.drawImage(
           gamesppechbubble,
-          background.x +
-            (1813 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (28 / 1024) * canvasRef.current.height,
-          (gamesppechbubble.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (gamesppechbubble.height / 1024) * canvasRef.current.height
+          background.x + gameSpeechBubbleCoor.x,
+          gameSpeechBubbleCoor.y,
+          gameSpeechBubbleSize.w,
+          gameSpeechBubbleSize.h
         );
       };
     }
@@ -259,13 +286,10 @@ export default function Map4({ sex }) {
       practiceNote.onload = () => {
         context.drawImage(
           practiceNote,
-          background.x +
-            (3015 / 5000) * bg.width * (canvasRef.current.height / bg.height),
-          background.y + (22 / 1024) * canvasRef.current.height,
-          (practiceNote.width / 5000) *
-            bg.width *
-            (canvasRef.current.height / bg.height),
-          (practiceNote.height / 1024) * canvasRef.current.height
+          background.x + practiceNoteCoor.x,
+          practiceNoteCoor.y,
+          practiceNoteSize.w,
+          practiceNoteSize.h
         );
       };
     }
@@ -353,9 +377,17 @@ export default function Map4({ sex }) {
 
     const characterImg = new Image();
     if (pressedKey !== null) {
-      characterImg.src = CharacterMoveArr[characterFrame];
+      if (sex === "girl") {
+        characterImg.src = CharacterMoveArrGirl[characterFrame];
+      } else {
+        characterImg.src = CharacterMoveArrBoy[characterFrame];
+      }
     } else {
-      characterImg.src = characterImage;
+      if (sex === "girl") {
+        characterImg.src = characterImage;
+      } else {
+        characterImg.src = characterImage2;
+      }
     }
 
     characterImg.onload = () => {
@@ -392,16 +424,39 @@ export default function Map4({ sex }) {
 
   return (
     <>
-      {loading ? (
-        <Loading>
-          <LoadingImg src={loading1} />
-        </Loading>
-      ) : (
+      {
+        // loading ? (
+        //   <Loading>
+        //     <LoadingImg src={loading1} />
+        //   </Loading>
+        // ) :
         <MapContainer>
           {pressedKey ? null : <Date src={dateFormatImg} />}
           {characterMove === 1 ? (
+            <CharacterAtEnd
+              src={characterinMap}
+              width={character[2]}
+              onAnimationEnd={handleAnimation}
+            />
+          ) : null}
+          {pressedKey && characterMove !== 1 ? (
+            <LottieAnimation
+              options={lottieOptions}
+              width={character[2]}
+              height={character[3]}
+              isStopped={false}
+              ariaLabel={""}
+              ariaRole={"img"}
+              style={{
+                position: "absolute",
+                bottom: "13vh",
+                left: "13vw",
+                zIndex: "200",
+              }}
+            />
+          ) : characterMove !== 1 ? (
             <Character
-              src={CharacterMoveArr[characterFrame]}
+              src={characterImage2}
               width={character[2]}
               onAnimationEnd={handleAnimation}
             />
@@ -411,9 +466,12 @@ export default function Map4({ sex }) {
             width={windowSize.width}
             height={windowSize.height}
             tabIndex={0}
+            onKeyDown={keyDown}
+            onKeyUp={keyUp}
+            onClick={handleCanvasClick}
           ></Canvas>
         </MapContainer>
-      )}
+      }
     </>
   );
 }
@@ -435,23 +493,16 @@ const translate = keyframes`
     opacity: 100%;
   }
   50%{
-    transform:  translateX(750px);
+    transform:  translateX(250px);
     opacity: 100%;
   }
   100% {
-    transform:  translateX(800px);
+    transform:  translateX(300px);
     opacity: 0;
   }
   
 `;
-const Character = styled.img`
-  position: absolute;
-  bottom: 13vh;
-  left: 47vw;
-  z-index: 100;
-  animation: ${translate} 2.5s linear forwards;
-  animation-delay: 2s;
-`;
+
 const Canvas = styled.canvas`
   width: 100%;
   height: 100%;
@@ -469,4 +520,24 @@ const Loading = styled.div`
 
 const LoadingImg = styled.img`
   width: 100%;
+`;
+const CharacterAtEnd = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
+  animation: ${translate} 2.5s linear forwards;
+  animation-delay: 2s;
+`;
+const Character = styled.img`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
+`;
+const LottieAnimation = styled(Lottie)`
+  position: absolute;
+  bottom: 13vh;
+  left: 13vw;
+  z-index: 150;
 `;
