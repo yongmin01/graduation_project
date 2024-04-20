@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { throttle } from "lodash";
 
 import bgImage from "../sources/images/Map/map2/map2.webp";
 import clickImage from "../sources/images/Map/click.png";
@@ -11,10 +10,8 @@ import characterImage2 from "../sources/images/Map/boy/boy.png";
 import loading1 from "../sources/images/plate.gif";
 import boy1Image from "../sources/images/Map/map2/boy1.png";
 import boy2Image from "../sources/images/Map/map2/boy2.png";
-import milkBoxImage from "../sources/images/Map/map2/milkBox.png";
 import milkBoxBorderImage from "../sources/images/Map/map2/milkBoxBorder.png";
 import milkImage from "../sources/images/Map/map2/milk.png";
-import cartImage from "../sources/images/Map/map2/cart.png";
 import cartBorderImage from "../sources/images/Map/map2/cartBorder.png";
 import plateImage from "../sources/images/Map/map2/plate.png";
 import speakerSoundImage from "../sources/images/Map/map2/speakerSound.png";
@@ -24,20 +21,13 @@ import { CharacterMoveArrBoy } from "../utils/CharacterMoveArr";
 
 import Lottie from "react-lottie";
 import girlLottie from "../sources/lottie/girl.json";
+import boyLottie from "../sources/lottie/boy.json";
 
-const lottieOptions = {
-  loop: true, // 반복재생
-  autoplay: false, // 자동재생
-  animationData: girlLottie, // 로띠 파일
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 const FRAMES_LENGTH = 40;
 const CW = 5000;
 const CH = 1024;
 
-export default function Map2({ sex }) {
+export default function Map2() {
   // 캔버스 크기 관련
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -90,19 +80,32 @@ export default function Map2({ sex }) {
   const ratio = canvasHeight / bgHeight;
   const val = bgWidth * ratio;
 
+  const characterSex = JSON.parse(localStorage.getItem("character"));
+  let characterLottie = null;
+  if (characterSex === "girl") characterLottie = girlLottie;
+  else characterLottie = boyLottie;
+
+  let characterinMap = null;
+  if (characterSex === "girl") {
+    characterinMap = characterImage;
+  } else if (characterSex === "boy") {
+    characterinMap = characterImage2;
+  }
   const character = [
-    (288 / CW) * val,
+    (188 / CW) * val,
     (498 / CH) * canvasHeight,
     (330 / CW) * val,
     (392 / CH) * canvasHeight,
   ];
 
-  let characterinMap = null;
-  if (sex === "girl") {
-    characterinMap = characterImage;
-  } else {
-    characterinMap = characterImage2;
-  }
+  const lottieOptions = {
+    loop: true, // 반복재생
+    autoplay: false, // 자동재생
+    animationData: characterLottie, // 로띠 파일
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   const [characterMove, setCharacterMove] = useState(0);
   const handleAnimation = () => {
     setCharacterMove(2);
@@ -335,13 +338,13 @@ export default function Map2({ sex }) {
 
     const characterImg = new Image();
     if (pressedKey !== null) {
-      if (sex === "girl") {
+      if (characterSex === "girl") {
         characterImg.src = CharacterMoveArrGirl[characterFrame];
       } else {
         characterImg.src = CharacterMoveArrBoy[characterFrame];
       }
     } else {
-      if (sex === "girl") {
+      if (characterSex === "girl") {
         characterImg.src = characterImage;
       } else {
         characterImg.src = characterImage2;
@@ -458,7 +461,7 @@ export default function Map2({ sex }) {
             />
           ) : characterMove !== 1 ? (
             <Character
-              src={characterImage2}
+              src={characterinMap}
               width={character[2]}
               onAnimationEnd={handleAnimation}
             />

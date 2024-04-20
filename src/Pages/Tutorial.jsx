@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
+
 import bgImg from "../sources/images/Map/map1/map2.png";
 import girlImg from "../sources/images/Intro/girl.svg";
 import boyImg from "../sources/images/Intro/boy.svg";
@@ -9,12 +10,18 @@ import keyboardImg from "../sources/images/Intro/keyboard.svg";
 import mouseImg from "../sources/images/Intro/mouse.svg";
 import diaryImg from "../sources/images/diary.svg";
 
-export default function Tutorial({ chooseCharacter }) {
+export default function Tutorial() {
   const [step, setStep] = useState(0);
   const [character, setCharacter] = useState(null);
   useEffect(() => {
-    chooseCharacter(character);
+    setCharacter(character);
   }, [character]);
+
+  useEffect(() => {
+    if (step === 2) {
+      localStorage.setItem("character", JSON.stringify(character));
+    }
+  }, [step]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -27,73 +34,77 @@ export default function Tutorial({ chooseCharacter }) {
   useEffect(() => {
     if (step === 4) {
       setTimeout(() => {
+        setStep(5);
         navigator("/map1");
-      }, 4000);
+      }, 3000);
     }
   }, [step]);
 
   return (
     <Wrapper>
-      {step === 0 ? <Cover /> : null}
-      <Content>
-        {step === 1 ? (
-          <>
-            게임을 진행할 캐릭터를 골라주세요.
-            <CharacterContainer>
-              <Character
-                src={girlImg}
-                onClick={() => setCharacter("girl")}
-                isSlected={character === "girl"}
-              />
-              <Character
-                src={boyImg}
-                onClick={() => setCharacter("boy")}
-                isSlected={character === "boy"}
-              />
-            </CharacterContainer>
-            {character !== null ? (
-              <Next onClick={() => setStep(2)}>
+      {step === 0 ? (
+        <Cover />
+      ) : (
+        <Content>
+          {step === 1 ? (
+            <>
+              게임을 진행할 캐릭터를 골라주세요.
+              <CharacterContainer>
+                <Character
+                  src={girlImg}
+                  onClick={() => setCharacter("girl")}
+                  isSlected={character === "girl"}
+                />
+                <Character
+                  src={boyImg}
+                  onClick={() => setCharacter("boy")}
+                  isSlected={character === "boy"}
+                />
+              </CharacterContainer>
+              {character !== null ? (
+                <Next onClick={() => setStep(2)}>
+                  다음 <NextBtnImg width="2.6vw" fill={"#FFF"} />
+                </Next>
+              ) : null}
+            </>
+          ) : step === 2 ? (
+            <>
+              <Story>
+                <div>어렸을 적 일상으로 다시 돌아온 당신,</div>
+                <div>오늘은 어떤 하루가 기다리고 있을까요?</div>
+                <Diary style={{ marginLeft: "-50px" }}>
+                  <img src={diaryImg} />
+                  <img src={diaryImg} />
+                  <img src={diaryImg} />
+                </Diary>
+                <div>미니게임을 통해 일기장을 하나씩 얻어가며</div>
+                <div>맵과 게임 속에서 과거의 추억을 천천히 구경해보세요.</div>
+              </Story>
+              <Next onClick={() => setStep(3)}>
                 다음 <NextBtnImg width="2.6vw" fill={"#FFF"} />
               </Next>
-            ) : null}
-          </>
-        ) : step === 2 ? (
-          <>
-            <Story>
-              <div>어렸을 적 일상으로 다시 돌아온 당신,</div>
-              <div>오늘은 어떤 하루가 기다리고 있을까요?</div>
-              <Diary style={{ marginLeft: "-50px" }}>
-                <img src={diaryImg} />
-                <img src={diaryImg} />
-                <img src={diaryImg} />
-              </Diary>
-              <div>미니게임을 통해 일기장을 하나씩 얻어가며</div>
-              <div>맵과 게임 속에서 과거의 추억을 천천히 구경해보세요.</div>
-            </Story>
-            <Next onClick={() => setStep(3)}>
-              다음 <NextBtnImg width="2.6vw" fill={"#FFF"} />
-            </Next>
-          </>
-        ) : step === 3 ? (
-          <>
-            <Order>
-              <IMG src={keyboardImg} height="22vh" />
-              이동은 좌, 우 방향키로 조작할 수 있습니다.
-            </Order>
-            <Order>
-              맵에서 궁금한 부분은 꼭 마우스로 클릭해보세요.
-              <IMG src={mouseImg} height="29vh" />
-            </Order>
-            <Next onClick={() => setStep(4)}>
-              다음 <NextBtnImg width="2.6vw" fill={"#FFF"} />
-            </Next>
-          </>
-        ) : step === 4 ? (
-          <End style={{ fontSize: "60px" }}>
-            이제부터 추억을 찾아 모험을 떠나보세요!
-          </End>
-        ) : null}
-      </Content>
+            </>
+          ) : step === 3 ? (
+            <>
+              <Order>
+                <IMG src={keyboardImg} height="22vh" />
+                이동은 좌, 우 방향키로 조작할 수 있습니다.
+              </Order>
+              <Order>
+                맵에서 궁금한 부분은 꼭 마우스로 클릭해보세요.
+                <IMG src={mouseImg} height="29vh" />
+              </Order>
+              <Next onClick={() => setStep(4)}>
+                다음 <NextBtnImg width="2.6vw" fill={"#FFF"} />
+              </Next>
+            </>
+          ) : step === 4 ? (
+            <End style={{ fontSize: "60px" }}>
+              이제부터 추억을 찾아 모험을 떠나보세요!
+            </End>
+          ) : null}
+        </Content>
+      )}
     </Wrapper>
   );
 }
@@ -106,7 +117,6 @@ const Wrapper = styled.div`
 const fadeIn = keyframes`
   from {
         opacity: 1;
-        
   }
   to {
     opacity: 0;
@@ -126,7 +136,7 @@ const Cover = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  animation: ${fadeIn} 2s ease-in-out forwards;
+  animation: ${fadeIn} 1s ease-in-out forwards;
   animation-delay: 2s;
   background-color: black;
   background-size: cover;
