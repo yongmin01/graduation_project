@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-
+import { Howl } from "howler";
+import useEffectSound from "../utils/EffectSound";
+import bgm from "../sources/sound/Map3/map3_bgm.mp3";
+import chickSound from "../sources/sound/Map3/chickSound.mp3";
 import bgImage from "../sources/images/Map/map3/map3.webp";
 import leftLightOnBg from "../sources/images/Map/map3/leftLightOnBg.webp";
 import rightLightOnBg from "../sources/images/Map/map3/rightLightOnBg.webp";
@@ -207,6 +210,17 @@ export default function Map2() {
   const keyUp = () => {
     setPressedKey(null);
   };
+
+  const chickEffect = useEffectSound(chickSound, 1);
+  useEffect(() => {
+    if (chickStatus === true) {
+      chickEffect.play();
+      setTimeout(() => {
+        chickEffect.pause();
+      }, 1500);
+    }
+  }, [chickStatus]);
+
   const handleCanvasClick = (e) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -510,7 +524,7 @@ export default function Map2() {
   };
 
   // 캐릭터 이동
-  const v = 3;
+  const v = 5;
   const handleMove = () => {
     switch (pressedKey) {
       case "ArrowLeft":
@@ -535,6 +549,28 @@ export default function Map2() {
         return;
     }
   };
+
+  // 사운드
+  const sound = new Howl({
+    // 2. sound라는 상수에 new Howl 생성자 생성하고 원하는 옵션을 추가한다.
+    src: [bgm],
+    // 2-1. 사용할 배경음 src에 추가
+    loop: true,
+    // 2-2. 반복재생값 true로 설정 (반복재생 on)
+    volume: 0.1,
+    // 2-3. 기본 볼륨은 0.1로 설정 (최소 0, 최대 1의 값을 가질 수 있다)
+  });
+  const soundStop = () => sound.stop();
+  // 3. soundStop이라는 함수가 실행되면 sound가 멈추도록 설정한다.
+
+  useEffect(() => {
+    sound.play();
+    // 4. 화면이 렌더링될 때 sound,play()를 통해 배경음악을 실행시킨다.
+    sound.on("play", () => {});
+    return soundStop;
+    // 4-5. sound.on() 두번째 매개변수인 익명 함수의 리턴값은 soundStop으로 설정한다.
+    // 4-6. loop을 true로 설정했기 때문에 soundStop이 실행될 일은 없을 듯.
+  }, []);
 
   return (
     <>
@@ -583,7 +619,7 @@ export default function Map2() {
             onKeyDown={keyDown}
             onKeyUp={keyUp}
             onClick={handleCanvasClick}
-          ></Canvas>
+          />
         </MapContainer>
       )}
     </>
