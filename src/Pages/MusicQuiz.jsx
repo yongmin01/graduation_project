@@ -8,34 +8,43 @@ import GameResult from "../Components/GameResult";
 import Chance from "../Components/Chance";
 import GameCommonStyle from "../utils/GameCommonStyle";
 import NowplayingGif from "../sources/images/Game/nowPlaying.gif";
-import { ReactComponent as InputPath } from "../sources/images/Game/inputPath.svg";
-import { ReactComponent as ReplayIcon } from "../sources/images/Game/replay.svg";
-import { ReactComponent as PlayMoreIcon } from "../sources/images/Game/playmore.svg";
-import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
-import { useNavigate } from "react-router-dom";
+import inputPath from "../sources/images/Game/inputPath.svg";
+import playIcon from "../sources/images/Game/playIcon_yellow.svg";
+import correctImg from "../sources/images/Game/correct.svg";
+import wrongImg from "../sources/images/Game/wrong.svg";
 
 export default function MusicQuiz({}) {
+  const totalQuiz = 5;
   const [game, setGame] = useState("before");
+  const [endAlert, setEndAlert] = useState(false);
   const [counter, setCounter] = useState(true);
   const [nowPlaying, setNowPlaying] = useState(false);
   const [nowPlayingIndex, setNowPlayingIndex] = useState(0);
-  // const [ready, setReady] = useState(false); 영상 처음 가져올 때 로딩되는 시간이 있어서 재생되는 노래 길이가 조금 다름
   const [chance, setChance] = useState(3);
-  const [correct, setCorrect] = useState();
+  const [correct, setCorrect] = useState(null);
   const [roundEnd, setRoundEnd] = useState(false);
-  const [userAnswer, setUserAnswer] = useState();
+  const [userAnswer, setUserAnswer] = useState("");
+  const [currentTime, setCurrentTime] = useState(0);
 
-  const [hint, setHint] = useState(2);
-  const [hint1, setHint1] = useState(true);
-  const [hint2, setHint2] = useState(true);
+  const [showPass, setShowPass] = useState(false);
+  const [showArtist, setShowArtist] = useState(false);
+  const [hint1Left, setHint1Left] = useState(3);
+  const [hint2Left, setHint2Left] = useState(true);
+  const [usingHint2, setUsingHint2] = useState(false);
+  const [hint3Left, setHint3Left] = useState(true);
+
   const playerRef = useRef();
   const inputRef = useRef();
   const score = useRef(0);
   const pass = useRef();
-  const [endAlert, setEndAlert] = useState(false);
+
   useEffect(() => {
     if (counter === false) {
-      play3Secs();
+      playerRef.current.seekTo(0);
+      setNowPlaying(true);
+      setTimeout(() => {
+        setShowPass(true);
+      }, 5000);
     }
   }, [counter]);
 
@@ -45,47 +54,67 @@ export default function MusicQuiz({}) {
     setNowPlaying(true);
   };
 
-  const replay = () => {
-    setHint(1);
-    setHint1(true);
-    playerRef.current.seekTo(0);
-    play3Secs();
-  };
-  const playMore = () => {
-    setHint(0);
-    setHint2(true);
-    play3Secs();
-  };
-  const play3Secs = () => {
-    setNowPlaying(true);
-    setTimeout(() => {
-      setNowPlaying(false);
-    }, 1800);
-  };
-  const next = () => {
-    if (nowPlayingIndex === 5 - 1) {
-      setGame("end");
+  useEffect(() => {
+    if (usingHint2) {
+      if (currentTime.playedSeconds >= 5) {
+        setNowPlaying(false);
+        setUsingHint2(false);
+      }
+    } else if (currentTime.playedSeconds >= 2) {
+      if (!roundEnd) {
+        setNowPlaying(false);
+      }
     }
+  }, [currentTime]);
+
+  const next = () => {
     setRoundEnd(false);
     setUserAnswer("");
     setNowPlayingIndex(nowPlayingIndex + 1);
-    setHint(1);
+    setHint1Left(3);
+    setHint2Left(true);
+    setHint3Left(true);
+    setShowArtist(false);
     setChance(3);
-    play3Secs();
+    play();
   };
 
-  // 답안 제출 관련 함수
-  const normalization = (s) => {
-    let answer = s;
-    if (s !== undefined) {
-      answer = s.replace(/ /g, "");
-      const en = /[a-zA-Z]/;
-      if (en.test(answer)) {
-        answer = answer.toLowerCase();
-      }
-    }
-    return answer;
+  const handlePass = () => {
+    setRoundEnd(true);
+    setShowPass(false);
+
+    setCorrect(false);
+    setTimeout(() => {
+      setCorrect(null);
+    }, 2000);
   };
+  // 힌트 사용 함수
+  const useHint1 = () => {
+    if (hint1Left > 0 && !nowPlaying) {
+      setHint1Left(hint1Left - 1);
+      play();
+    }
+  };
+  const useHint2 = () => {
+    if (hint2Left && !nowPlaying) {
+      setHint2Left(false);
+      setUsingHint2(true);
+    }
+  };
+  useEffect(() => {
+    if (usingHint2) {
+      playerRef.current.seekTo(0);
+      setNowPlaying(true);
+    }
+  }, [usingHint2]);
+  const useHint3 = () => {
+    if (hint3Left && !roundEnd) {
+      setShowArtist(true);
+      setHint3Left(false);
+    }
+  };
+  // 답안 제출 관련 함수
+
   const clickSubmit = () => {
     if (nowPlaying) {
       setNowPlaying(false);
@@ -100,60 +129,63 @@ export default function MusicQuiz({}) {
       checkAnswer(normalization(userAnswer));
     }
   };
-
+  const normalization = (s) => {
+    let answer = s;
+    if (s !== undefined) {
+      answer = s.replace(/ /g, "");
+      const en = /[a-zA-Z]/;
+      if (en.test(answer)) {
+        answer = answer.toLowerCase();
+      }
+    }
+    return answer;
+  };
   const checkAnswer = (value) => {
-    setNowPlaying(false);
+    // setNowPlaying(false);
     const answer1 = normalization(musics[nowPlayingIndex].title[0]);
     const answer2 = normalization(musics[nowPlayingIndex].title[1]);
     if (value === answer1 || value === answer2) {
       score.current = score.current + 1;
-      setChance(0);
-      setCorrect("정답입니다!^ㅇ^");
+      setCorrect(true);
+      setShowArtist(true);
+      setUserAnswer(musics[nowPlayingIndex].title[0]);
+      setShowPass(false);
       setRoundEnd(true);
       setTimeout(() => {
         setCorrect(null);
-      }, 450);
+      }, 2000);
     } else {
       if (chance !== 0) {
         setUserAnswer("");
       }
       setChance((chance) => chance - 1);
-      setCorrect("오답입니다! -.-");
+      setCorrect(false);
       setTimeout(() => {
         setCorrect(null);
-      }, 450);
+      }, 2000);
     }
   };
 
   useEffect(() => {
-    if (nowPlayingIndex !== 0) {
+    if (game === "start") {
       setChance(3);
       setCorrect();
-      setHint(2);
-      play3Secs();
+      setHint1Left(3);
+      setHint2Left(true);
+      setHint3Left(true);
+      setShowPass(false);
+      setTimeout(() => {
+        setShowPass(true);
+      }, 5000);
+      setNowPlaying(true);
     }
   }, [nowPlayingIndex]);
 
   useEffect(() => {
-    if (counter) {
-      setHint1(true);
-    } else if (nowPlaying === true) {
-      setHint1(true);
-      setHint2(true);
-    } else if (nowPlaying === false && hint === 2) {
-      setHint1(false);
-    } else if (nowPlaying === false && hint === 1) {
-      setHint2(false);
-    } else if (nowPlaying === false && hint === 0) {
-      setHint2(true);
-    }
-  }, [counter, nowPlaying, hint]);
-
-  useEffect(() => {
     if (roundEnd) {
-      setHint1(true);
-      setHint2(true);
       play();
+      setUserAnswer(musics[nowPlayingIndex].title[0]);
+      setShowArtist(true);
     }
   }, [roundEnd]);
 
@@ -164,7 +196,7 @@ export default function MusicQuiz({}) {
   }, [chance]);
 
   useEffect(() => {
-    if (nowPlayingIndex === 5 - 1 && roundEnd) {
+    if (nowPlayingIndex === totalQuiz - 1 && roundEnd) {
       setTimeout(() => {
         setEndAlert(true);
       }, 3000);
@@ -198,102 +230,106 @@ export default function MusicQuiz({}) {
             playing={nowPlaying}
             controls
             url={`https://www.youtube.com/watch?v=${musics[nowPlayingIndex].id}`}
+            onProgress={setCurrentTime}
           />
 
-          {/* 남은 기회 */}
-          <Chance total="3" remaining={chance} />
+          <Header>
+            {/* 남은 기회 */}
+            <Chance total="3" remaining={chance} />
 
-          {/* 문제 진행도 */}
-          <Progress>
-            {nowPlayingIndex + 1}/{musics.length}
-          </Progress>
-          <QuizIndex>문제 {nowPlayingIndex + 1}</QuizIndex>
-          {roundEnd ? (
-            nowPlayingIndex !== 4 ? (
-              <NextBtn onClick={next}>
-                <PlayIcon />
+            {/* 문제 진행도 */}
+            <Center>
+              <Progress>
+                {nowPlayingIndex + 1}/{musics.length}
+              </Progress>
+              <QuizIndex>문제 {nowPlayingIndex + 1}</QuizIndex>
+            </Center>
+
+            {/* 패스 또는 다음 문제*/}
+            {showPass ? (
+              <NextBtn onClick={handlePass} show={showPass}>
+                <span>PASS</span>
+                <img src={playIcon} />
               </NextBtn>
-            ) : null
-          ) : null}
+            ) : null}
+            {showPass ? null : (
+              <NextBtn
+                onClick={next}
+                show={roundEnd && nowPlayingIndex !== totalQuiz - 1}
+              >
+                <span>다음 문제</span>
+                <img src={playIcon} />
+              </NextBtn>
+            )}
+          </Header>
+
           {/* 문제 상자 */}
-          <QuizDiv>
+          <Container>
             {counter ? (
               <GameStartCounter startCount={setCounter} />
-            ) : roundEnd ? (
-              <AlbumCover
-                src={`https://img.youtube.com/vi/${musics[nowPlayingIndex].id}/hqdefault.jpg`}
-              />
-            ) : nowPlaying ? (
-              <NowPlayingTrue src={NowplayingGif} />
             ) : (
-              <NowPlayingFalse>?</NowPlayingFalse>
-            )}
-            {correct != null ? (
-              <Correct
-                color={correct === "정답입니다!^ㅇ^" ? "#13BF33" : "#FF3E3E"}
-                bgcolor={correct === "정답입니다!^ㅇ^" ? "#F5FFF5" : "#FFF5F5"}
-                shadowcolor={
-                  correct === "정답입니다!^ㅇ^"
-                    ? "127, 191, 139, 0.25"
-                    : "255, 62, 62, 0.20"
-                }
-              >
-                {correct}
-              </Correct>
-            ) : roundEnd ? (
               <>
-                <AnswerInfo>
-                  {musics[nowPlayingIndex].title[0]}-
-                  {musics[nowPlayingIndex].artist}(
-                  {musics[nowPlayingIndex].year})
-                </AnswerInfo>
+                <Quiz>
+                  <PlayBox>
+                    {roundEnd ? (
+                      <AlbumCover
+                        src={`https://img.youtube.com/vi/${musics[nowPlayingIndex].id}/hqdefault.jpg`}
+                      />
+                    ) : nowPlaying ? (
+                      <NowPlayingTrue src={NowplayingGif} />
+                    ) : (
+                      <NowPlayingFalse>?</NowPlayingFalse>
+                    )}
+                  </PlayBox>
+                  <QuizRightDiv>
+                    <Artist show={showArtist}>
+                      가수: {musics[nowPlayingIndex].artist}
+                    </Artist>
+
+                    <InputDiv>
+                      <InputBox>
+                        <InputTagBox
+                          ref={inputRef}
+                          placeholder="정답을 입력하세요"
+                          onKeyPress={enterSubmit}
+                          value={userAnswer || ""}
+                          onChange={(e) => setUserAnswer(e.target.value)}
+                          disabled={counter || nowPlaying}
+                        ></InputTagBox>
+                        <img src={inputPath} width="552px" />
+                      </InputBox>
+
+                      <SubmitBtn
+                        onClick={clickSubmit}
+                        disabled={counter || nowPlaying}
+                      >
+                        제출
+                        <SubmitBtnHighlight />
+                      </SubmitBtn>
+                    </InputDiv>
+                  </QuizRightDiv>
+                </Quiz>
+                <HintDiv>
+                  <Hint onClick={useHint1} color={hint1Left > 0}>
+                    다시 듣기({hint1Left})
+                  </Hint>
+                  <Hint onClick={useHint2} color={hint2Left}>
+                    더 듣기
+                  </Hint>
+                  <Hint onClick={useHint3} color={hint3Left}>
+                    가수 공개
+                  </Hint>
+                </HintDiv>
               </>
+            )}
+            {correct === true ? (
+              <Correct src={correctImg} />
+            ) : correct === false ? (
+              <Correct src={wrongImg} />
             ) : null}
-          </QuizDiv>
-          <InputDiv>
-            <div>답</div>
-            <InputBox>
-              <InputTagBox
-                ref={inputRef}
-                placeholder="정답을 입력하세요"
-                onKeyPress={enterSubmit}
-                value={userAnswer || ""}
-                onChange={(e) => setUserAnswer(e.target.value)}
-                disabled={counter || nowPlaying}
-              ></InputTagBox>
-              <InputPath />
-            </InputBox>
-            <SubmitDiv>
-              <SubmitBtn onClick={clickSubmit} disabled={counter || nowPlaying}>
-                확인
-              </SubmitBtn>
-            </SubmitDiv>
-          </InputDiv>
+          </Container>
+
           <>
-            {hint === 2 || (hint === 1 && chance === 3) ? (
-              <>
-                <HintBtn
-                  onClick={replay}
-                  color={counter ? "#FF3E3E" : hint1 ? "#999999" : "#FF3E3E"}
-                  disabled={hint1}
-                >
-                  <ReplayIcon
-                    fill={counter ? "#FF3E3E" : hint1 ? "#999999" : "#FF3E3E"}
-                  />
-                  다시 듣기
-                </HintBtn>
-              </>
-            ) : (
-              <>
-                <HintBtn
-                  onClick={playMore}
-                  color={hint2 ? "#999999" : "#FF3E3E"}
-                  disabled={hint2}
-                >
-                  <PlayMoreIcon fill={hint2 ? "#999999" : "#FF3E3E"} />더 듣기
-                </HintBtn>
-              </>
-            )}
             {endAlert ? (
               <EndAlert onClick={handleEnd}>게임 종료!</EndAlert>
             ) : null}
@@ -319,168 +355,230 @@ export default function MusicQuiz({}) {
 // 스타일링
 const Game = styled.div`
   position: absolute;
-  top: 12vh;
+  top: 13.8vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
+
 const PlayerSt = styled(Player)`
   display: none;
 `;
 
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10.5vh;
+`;
+const Center = styled.div`
+  width: 16vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 13.3vw;
+  margin-right: ${({ showPass }) => (showPass ? "16.9vw" : "13.4vw")};
+`;
 const Progress = styled.div`
-  font-size: 36px;
-  font-family: UhbeeJung;
+  font-size: 2.5vw;
+  font-family: "UhbeeJung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
 const QuizIndex = styled.div`
-  font-size: 90px;
-  font-family: UhbeeJung;
+  font-size: 6.2vw;
+  font-family: "UhbeeJung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
-  margin-bottom: 5.4vh;
+  width: max-content;
 `;
-const NowPlayingTrue = styled.img`
-  height: 19vh;
-  margin: 0 auto;
-`;
-const AlbumCover = styled.div`
-  width: 19vh;
-  height: 19vh;
-  background-image: url(${(props) => props.src});
-  background-size: 150%;
-  background-position: center center;
-  /* 480 360 ->  */
-  background-repeat: no-repeat;
-  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
-  margin: 0 auto;
-`;
-const NowPlayingFalse = styled.div`
-  width: 19vh;
-  height: 19vh;
+
+const NextBtn = styled.button`
+  width: 16.4vw;
+  height: 7vh;
+  visibility: ${({ show }) => (show ? "visible" : "hidden")};
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  gap: 1vw;
+  /* margin-bottom: 1.1vh; */
   color: #151b26;
-  background-color: #ececec;
-  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
-  margin: 0 auto;
+  text-align: center;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-family: "UhBeejungBold";
+  font-size: 2.7vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  border: none;
+  background: transparent;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10.4vh;
+`;
+
+const Quiz = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+// 문제 재생 상태 및 앨범 커버 박스
+const PlayBox = styled.div`
+  height: 23.8vh;
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+const NowPlayingTrue = styled.img`
+  height: 17.7vh;
+  height: 19vh;
+`;
+const NowPlayingFalse = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 23.8vh;
+  height: 23.8vh;
+  background: #ececec;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
+  color: #151b26;
+  text-align: center;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "Gaegu";
-  font-size: 60px;
+  font-size: 6.2vw;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+`;
+const AlbumCover = styled.div`
+  width: 23.8vh;
+  height: 23.8vh;
+  background-image: url(${(props) => props.src});
+  background-size: 150%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
 `;
 
-const QuizDiv = styled.div`
-  height: 26vh;
+// 가수명, 답안 제출 상자
+const QuizRightDiv = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative;
+  gap: 2vh;
+  margin-top: 5vh;
 `;
+const Artist = styled.div`
+  color: #151b26;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  visibility: ${({ show }) => (show ? "visible" : "hidden")};
+  font-family: "Gaegu";
+  font-size: 2.5vw;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 3.6px;
+`;
+
 const InputDiv = styled.div`
+  width: 45.8vw;
   font-family: "UhbeeJung";
-  font-size: 60px;
+  font-size: 2.5vw;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   margin-bottom: 5.5vh;
 `;
 const InputBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 34px;
-  margin-right: 23px;
 `;
 const InputTagBox = styled.input`
   border: none;
   background-color: transparent;
-  font-family: "UhbeeJung";
+  font-family: "Gaegu";
   font-size: 44px;
   margin-bottom: 4px;
+  color: #151b26;
 `;
-const SubmitDiv = styled.div`
+
+const SubmitBtnHighlight = styled.div`
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 5.5vw;
+  height: 14px;
+  background-color: #fad51c;
+  filter: blur(15px);
+  opacity: 0; /* 변경 */
+  transition: opacity 0.3s ease;
+`;
+const SubmitBtn = styled.button`
   position: relative;
-`;
-const SubmitBtn = styled.div`
   border: none;
   background-color: transparent;
   font-family: "UhbeeJung";
-  font-size: 60px;
   color: #151b26;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    height: 60%;
-    background-color: rgba(248, 212, 24, 0.2);
-    filter: blur(15px);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  ${SubmitDiv}:hover &:before {
+  font-size: 3.2vw;
+  &:hover ${SubmitBtnHighlight} {
     opacity: 1;
   }
 `;
 
-const HintBtn = styled.button`
-  height: 11vh;
+// 힌트 버튼
+const HintDiv = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  border: none;
-  background-color: transparent;
-  font-family: Gaegu;
-  color: ${(props) => (props.color ? props.color : "#151B26")};
-  font-size: 30px;
+  flex-direction: row;
+  gap: 2.7vw;
 `;
-
-const Correct = styled.div`
-  width: 884px;
-  height: 8.3vh;
-  border-radius: 10px;
-  color: ${(props) => props.color};
-  background: ${(props) => props.bgcolor};
-  box-shadow: 0px 4px 10px 0px rgba(${(props) => props.shadowcolor});
-  margin-bottom: 1.5vh;
-  font-family: "Gaegu";
-  font-size: 50px;
-  text-align: center;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  margin-left: -442px;
-`;
-const NextBtn = styled.button`
-  border: none;
-  background: transparent;
-  position: absolute;
-  right: 9.5vw;
-  top: 2vh;
-`;
-const AnswerInfo = styled.div`
-  height: 8.3vh;
-  font-family: "Gaegu";
-  display: flex;
-  align-items: center;
-  font-size: 30px;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-`;
-const EndAlert = styled.div`
-  width: 85vw;
-  height: 78vh;
-  margin: 0 auto;
-  background-color: rgba(255, 255, 255, 0.8);
-  font-family: UhBeejungBold;
-  font-size: 120px;
-  font-weight: 700;
-  position: absolute;
-  top: 0;
+const Hint = styled.div`
+  width: 20.8vw;
+  height: 8.59vh;
+  border-radius: 80px;
+  background-color: ${(props) => (props.color ? "#FFE566" : "#C1C1C1")};
   display: flex;
   justify-content: center;
   align-items: center;
+  color: ${(props) => (props.color ? "#000" : "#656565")};
+  text-align: center;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-family: "Gaegu";
+  font-size: 3.19vw;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  &:hover {
+    background-color: ${(props) => (props.color ? "#ffc329" : "#C1C1C1")};
+  }
+`;
+
+const Correct = styled.img`
+  width: 65.2vh;
+  height: 65.2vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const EndAlert = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: -13.8vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: "UhBeejungBold";
+  font-size: 8.3vw;
+  font-weight: 700;
 `;
