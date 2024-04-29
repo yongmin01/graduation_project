@@ -1,6 +1,7 @@
 import GlobalStyle from "./styles/GlobalStyle";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import Intro from "./Pages/Intro";
 import Tutorial from "./Pages/Tutorial";
@@ -18,10 +19,10 @@ import Npc3 from "./Pages/Npc3";
 import Npc4 from "./Pages/Npc4";
 import Diary from "./Pages/Diary";
 
+import Test from "./Pages/Test";
+
 function App() {
   const handle = useFullScreenHandle();
-
-  const [character, setCharacter] = useState(null);
 
   return (
     <>
@@ -30,27 +31,26 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/intro" element={<Intro />} />
-            <Route
-              path="/tutorial"
-              element={<Tutorial chooseCharacter={setCharacter} />}
-            />
+            <Route path="/tutorial" element={<Tutorial />} />
 
-            <Route path="/map1" element={<Map1 sex={character} />} />
+            <Route path="/map1" element={<Map1 />} />
             <Route path="/music" element={<MusicQuiz />} />
             <Route path="/npc1" element={<Npc1 />} />
 
-            <Route path="/map2" element={<Map2 sex={character} />} />
+            <Route path="/map2" element={<Map2 />} />
             <Route path="/speech" element={<SpeechQuiz />} />
             <Route path="/npc2" element={<Npc2 />} />
 
-            <Route path="/map3" element={<Map3 sex={character} />} />
+            <Route path="/map3" element={<Map3 />} />
             <Route path="/puzzle" element={<PuzzleQuiz />} />
             <Route path="/npc3" element={<Npc3 />} />
 
-            <Route path="/map4" element={<Map4 sex={character} />} />
+            <Route path="/map4" element={<Map4 />} />
             <Route path="/npc4" element={<Npc4 />} />
 
             <Route path="/diary" element={<Diary />} />
+
+            <Route path="/test" element={<Test />} />
           </Routes>
         </BrowserRouter>
         <button onClick={handle.enter}>전체화면 전환</button>
