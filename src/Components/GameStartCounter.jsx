@@ -19,10 +19,12 @@ export default function GameStartCounter({ startCount }) {
   return <Count>{count}</Count>;
 }
 const Count = styled.div`
-  font-family: "Gaegu";
-  font-size: 150px;
   color: #151b26;
+  text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  -webkit-text-stroke-color: #ffe250;
-  -webkit-text-stroke-width: 4;
+  font-family: "Gaegu";
+  font-size: 10.4vw;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 `;
