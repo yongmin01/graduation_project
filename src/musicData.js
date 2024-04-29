@@ -6,36 +6,6 @@ function getRandomElements(array, numElements) {
 
 const totalMusics = [
   {
-    id: "5dHcVjj_Kq0",
-    title: ["그대에게"],
-    artist: "무한궤도",
-    year: "1988",
-  },
-  {
-    id: "mf1a6VfspKg",
-    title: ["깊은 밤을 날아서"],
-    artist: "이문세",
-    year: "1995",
-  },
-  {
-    id: "p2r64AL7knk",
-    title: ["풍선", "Balloons"],
-    artist: "동방신기(TVXQ!)",
-    year: "2006",
-  },
-  {
-    id: "Xw0CUGygsYw",
-    title: ["훗", "Hoot"],
-    artist: "소녀시대",
-    year: "2011",
-  },
-  {
-    id: "xFHAcsUXc-c",
-    title: ["루시퍼", "Lucifer"],
-    artist: "SHINee",
-    year: "2010",
-  },
-  {
     id: "NrmLcwGjovc",
     title: ["21세기의 어떤 날", "Some Day in the 21century"],
     artist: "LUCY",
@@ -46,6 +16,30 @@ const totalMusics = [
     title: ["때려쳐"],
     artist: "DAY6",
     year: "2020",
+  },
+  {
+    id: "Q_TzqcWKz00",
+    title: ["왜요 왜요 왜"],
+    artist: "플레이브",
+    year: "2023",
+  },
+  {
+    id: "hrXCP0xeoA8",
+    title: ["행운을 빌어줘"],
+    artist: "원필",
+    year: "2022",
+  },
+  {
+    id: "m6M6awqPPns",
+    title: ["Siren"],
+    artist: "RIIZE",
+    year: "2024",
+  },
+  {
+    id: "i4koWV1akZA",
+    title: ["Magnetic"],
+    artist: "ILLIT (아일릿)",
+    year: "2024",
   },
 ];
 
