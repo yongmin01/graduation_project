@@ -20,8 +20,9 @@ import Lottie from "react-lottie";
 import girlLottie from "../sources/lottie/girl.json";
 import boyLottie from "../sources/lottie/boy.json";
 
-import { CharacterMoveArrGirl } from "../utils/CharacterMoveArr";
-import { CharacterMoveArrBoy } from "../utils/CharacterMoveArr";
+// import { CharacterMoveArrGirl } from "../utils/CharacterMoveArr";
+// import { CharacterMoveArrBoy } from "../utils/CharacterMoveArr";
+
 const FRAMES_LENGTH = 40;
 const CW = 5000;
 const CH = 1024;
@@ -201,35 +202,35 @@ export default function Map1() {
   };
 
   // 캐릭터 그리기
-  const drawCharacter = () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+  // const drawCharacter = () => {
+  //   const canvas = canvasRef.current;
+  //   const context = canvas.getContext("2d");
 
-    const characterImg = new Image();
-    if (pressedKey !== null) {
-      if (characterSex === "girl") {
-        characterImg.src = CharacterMoveArrGirl[characterFrame];
-      } else {
-        characterImg.src = CharacterMoveArrBoy[characterFrame];
-      }
-    } else {
-      if (characterSex === "girl") {
-        characterImg.src = characterImage;
-      } else {
-        characterImg.src = characterImage2;
-      }
-    }
+  //   const characterImg = new Image();
+  //   if (pressedKey !== null) {
+  //     if (characterSex === "girl") {
+  //       characterImg.src = CharacterMoveArrGirl[characterFrame];
+  //     } else {
+  //       characterImg.src = CharacterMoveArrBoy[characterFrame];
+  //     }
+  //   } else {
+  //     if (characterSex === "girl") {
+  //       characterImg.src = characterImage;
+  //     } else {
+  //       characterImg.src = characterImage2;
+  //     }
+  //   }
 
-    characterImg.onload = () => {
-      context.drawImage(
-        characterImg,
-        character[0],
-        character[1],
-        character[2],
-        character[3]
-      );
-    };
-  };
+  //   characterImg.onload = () => {
+  //     context.drawImage(
+  //       characterImg,
+  //       character[0],
+  //       character[1],
+  //       character[2],
+  //       character[3]
+  //     );
+  //   };
+  // };
 
   const hornEffect = useEffectSound(hornSound, 1);
   useEffect(() => {
