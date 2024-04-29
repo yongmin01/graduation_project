@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import OptionsPath from "../sources/images/Game/optionsBg.svg";
-import { ReactComponent as RecordBtn } from "../sources/images/Game/recordBtn.svg";
+// import { ReactComponent as RecordBtn } from "../sources/images/Game/speechQuiz/recordBtn.svg";
 
 // 공통 에셋
-import shortOptionPath from "../sources/images/Game/shortOptionPath.svg";
-import longOptionPath1 from "../sources/images/Game/longOptionPath1.svg";
-import longOptionPath2 from "../sources/images/Game/longOptionPath2.svg";
-// import playIcon from "../sources/images/Game/playIcon.svg";
+import { ReactComponent as OptionPath1 } from "../sources/images/Game/optionPath1.svg";
+import { ReactComponent as OptionPath2 } from "../sources/images/Game/optionPath2.svg";
+import { ReactComponent as ShortOptionPath } from "../sources/images/Game/shortOptionPath.svg";
 import sprinkle from "../sources/images/Game/sprinkle.png";
 
 // 음악퀴즈 장식
@@ -21,8 +20,7 @@ import flower_pink from "../sources/images/Game/flower_pink.svg";
 import playIcon_yellow from "../sources/images/Game/playIcon_yellow.svg";
 
 // 방송퀴즈 장식
-import boy from "../sources/images/Game/speechQuiz/speech_boy.png";
-import girl from "../sources/images/Game/speechQuiz/speech_girl.png";
+import boyGirl from "../sources/images/Game/speechQuiz/boyGirl.svg";
 import cloud from "../sources/images/Game/speechQuiz/cloud.svg";
 import flower from "../sources/images/Game/speechQuiz/flower.svg";
 import left from "../sources/images/Game/speechQuiz/left.svg";
@@ -30,8 +28,11 @@ import right from "../sources/images/Game/speechQuiz/right.svg";
 import sprinkle2 from "../sources/images/Game/speechQuiz/sprinkle.svg";
 import flower_purple from "../sources/images/Game/flower_purple.svg";
 import playIcon_blue from "../sources/images/Game/playIcon_blue.svg";
+import recordBtn from "../sources/images/Game/speechQuiz/recordBtn.svg";
 
 // 퍼즐퀴즈 장식
+import cardGlass from "../sources/images/Game/puzzleQuiz/cardglass.svg";
+import pencilEraser from "../sources/images/Game/puzzleQuiz/pencileraser.svg";
 import flower_yellow from "../sources/images/Game/flower_yellow.svg";
 import playIcon_green from "../sources/images/Game/playIcon_green.svg";
 
@@ -45,33 +46,36 @@ export default function BeforeGame({ go, title, round }) {
           <Description>
             <DescTitle>
               <DescTitleText>게임 방법</DescTitleText>
-              <Elipse />
+              <Elipse color={round} />
             </DescTitle>
             <CommonLine color={round}>
-              게임을 성공해 아이템을 얻어 일기장과 교환하세요.
+              <span>게임을 성공해 아이템을 얻어 일기장과 교환하세요.</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="940"
+                height="6"
+                viewBox="0 0 940 6"
+                fill="none"
+              >
+                <path
+                  d="M1 1C57.6039 1 80.2658 4.25194 136.869 3.96784C160.743 3.84801 218.23 3.96784 242.042 3.96784C263.248 3.96784 319.97 1 341.176 1C417.511 1 456.925 3.96782 533.259 3.96782C603.366 3.96782 673.472 3.96782 743.578 3.96782C774.705 3.96782 810.176 6.29022 843.892 3.96784C863.517 1 878.83 5.33171 898.239 3.96782C908.533 3.2445 929.195 4.48811 939 1"
+                  stroke={
+                    round === 1
+                      ? "#FFBA68"
+                      : round === 2
+                      ? "#CDEACF"
+                      : "#CEEAFF"
+                  }
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
             </CommonLine>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="870px"
-              height="6"
-              viewBox="0 0 940 6"
-              fill="none"
-              style={{ marginBottom: "2.9vh" }}
-            >
-              <path
-                d="M1 1C57.6039 1 80.2658 4.25194 136.869 3.96784C160.743 3.84801 218.23 3.96784 242.042 3.96784C263.248 3.96784 319.97 1 341.176 1C417.511 1 456.925 3.96782 533.259 3.96782C603.366 3.96782 673.472 3.96782 743.578 3.96782C774.705 3.96782 810.176 6.29022 843.892 3.96784C863.517 1 878.83 5.33171 898.239 3.96782C908.533 3.2445 929.195 4.48811 939 1"
-                stroke={
-                  round === 1 ? "#FFBA68" : round === 2 ? "#CDEACF" : "#CEEAFF"
-                }
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-            {window.location.pathname === "/music" ? ( // 음악 퀴즈
-              <>
-                <Line>
+            {round === 1 ? ( // 음악 퀴즈
+              <Order style={{ gap: "3.5vh" }}>
+                <Line style={{ paddingTop: "3.7vh" }}>
                   노래는 3초 카운트다운 후 전주가{" "}
-                  <Word color="#0CA42D">1.5초</Word> 재생됩니다.{" "}
+                  <Word color="#0CA42D">2초</Word> 재생됩니다.{" "}
                 </Line>
                 <Line>
                   한 문제 당 정답 제출 기회는 딱{" "}
@@ -79,30 +83,61 @@ export default function BeforeGame({ go, title, round }) {
                 </Line>
                 <Line>
                   힌트는 <Word color="#9B3AE8">‘다시 듣기’</Word>,{" "}
-                  <Word color="#9B3AE8">‘3초 더 듣기’</Word>가 있어요.
+                  <Word color="#9B3AE8">‘더 듣기’</Word>,{" "}
+                  <Word color="#9B3AE8">‘가수공개’</Word> 가 있어요.
                 </Line>
-                <SmallLine>
-                  다시 듣기 : 정답 기회가 있을 때 언제든 딱 1번 사용할 수
-                  있습니다.
-                </SmallLine>
-                <SmallLine style={{ marginBottom: "2.5vh" }}>
-                  3초 더 듣기 : 한 번 틀렸을 때에만 주어지는 특별 힌트!{" "}
-                </SmallLine>
                 <Line>
                   총 <Word color="#FF4BCD">5라운드</Word>의 게임, 3라운드 이상
                   정답을 맞춰야 일기장을
                 </Line>
                 <Line>획득할 수 있습니다. 한 번 도전해보세요!</Line>
-              </>
-            ) : window.location.pathname === "/speech" ? ( // 방송 퀴즈
+              </Order>
+            ) : round === 2 ? ( // 퍼즐 퀴즈
               <>
-                <Line>제시되는 영상을 보고 다음에 올 대사를 맞춰보세요!</Line>
-                <Line>
+                <Order style={{ gap: "2.5vh" }}>
+                  <Line style={{ paddingTop: "2.9vh" }}>
+                    <Word color="#FFBB0D">12장의 카드</Word>를 뒤집어 맞는 짝을
+                    찾아보세요.
+                  </Line>
+                  <Line>
+                    한 문제 당 주어진 시간은 단{" "}
+                    <Word color="#FF3E3E">30초!</Word>
+                  </Line>
+                  <Line>
+                    1, 2라운드는 동일한 카드 6쌍을 찾아 짝을 맞춰야 하고,
+                  </Line>
+                  <Line>
+                    3라운드는 난이도가 높아진 문제가 기다려요.(뭔지는 비~밀)
+                  </Line>
+                  <Line>
+                    총 <Word color="#0CA42D">3라운드</Word>의 게임,{" "}
+                    <Word color="#0F98F4">2라운드 이상 정답</Word>을 맞춰야
+                    아이템을
+                  </Line>
+                  <Line>획득할 수 있습니다. 한 번 도전해보세요!</Line>
+                </Order>
+              </>
+            ) : round === 3 ? ( // 방송 퀴즈
+              <Order style={{ gap: "2.5vh" }}>
+                <Line
+                  style={{
+                    paddingTop: "3.7vh",
+                  }}
+                >
+                  제시되는 영상을 보고 다음에 올 대사를 맞춰보세요!
+                </Line>
+                <Line
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
                   다음에 올 대사를{" "}
-                  <Btn>
-                    <span>녹음하기</span>
-                    <RecordBtn fill="#E7F5FF" width="200px" height="90px" />
-                  </Btn>
+                  <img
+                    src={recordBtn}
+                    style={{ margin: "0 5px" }}
+                    alt="Record Button"
+                  />
                   버튼을 눌러 녹음하고,
                 </Line>
                 <Line>
@@ -118,48 +153,7 @@ export default function BeforeGame({ go, title, round }) {
                   아이템을
                 </Line>
                 <Line>획득할 수 있습니다. 한 번 도전해보세요!</Line>
-              </>
-            ) : window.location.pathname === "/guess" ? (
-              <Line>
-                AI와의 대화를 통해 추억의 간식을 맞춰보세요! <br />
-                AI는 <Word color="#FAD51C">"네"</Word>,{" "}
-                <Word color="#08C832">"아니요"</Word> 두 가지의 답변만 할 수
-                있어요. <br />
-                <SmallLine color="#F00E0E">
-                  네, 아니요로 답변할 수 없는 질문에는 AI가 대답하지 않습니다.
-                  <br />이 경우에도 도전 횟수가 차감되니 질문을 신중히
-                  정해주세요! <br />
-                </SmallLine>
-                질문, 답안 제출 기회는 <Word color="#2697FF">총 10번</Word>
-                입니다.
-                <br />
-                10번의 대화 안에 정답을 정확히 입력해주세요. <br />총{" "}
-                <Word color="#9736F7">3라운드</Word>의 게임, 2라운드 이상 정답을
-                맞춰야 일기장을
-                <br /> 획득할 수 있습니다. 한 번 도전해보세요!
-              </Line>
-            ) : window.location.pathname === "/puzzle" ? (
-              <>
-                <Line>
-                  <Word color="#FFBB0D">12장의 카드</Word>를 뒤집어 맞는 짝을
-                  찾아보세요.
-                </Line>
-                <Line>
-                  한 문제 당 주어진 시간은 단 <Word color="#FF3E3E">30초!</Word>
-                </Line>
-                <Line>
-                  1, 2라운드는 동일한 카드 6쌍을 찾아 짝을 맞춰야 하고,
-                </Line>
-                <Line>
-                  3라운드는 난이도가 높아진 문제가 기다려요.(뭔지는 비~밀)
-                </Line>
-                <Line>
-                  총 <Word color="#0CA42D">3라운드</Word>의 게임,{" "}
-                  <Word color="#0F98F4">2라운드 이상 정답</Word>을 맞춰야
-                  아이템을
-                </Line>
-                <Line>획득할 수 있습니다. 한 번 도전해보세요!</Line>
-              </>
+              </Order>
             ) : null}
           </Description>
           <Sprinkle src={sprinkle} />
@@ -172,7 +166,7 @@ export default function BeforeGame({ go, title, round }) {
                 : flower_purple
             }
           />
-          <GameStartDiv>
+          <GameStartDiv round={round}>
             <OptionBtn>
               <PlayIcon
                 src={
@@ -187,7 +181,7 @@ export default function BeforeGame({ go, title, round }) {
                 <OptionText onClick={() => go("start")} round={round}>
                   시작!
                 </OptionText>
-                <img src={shortOptionPath} />
+                <ShortOptionPath src={ShortOptionPath} />
               </Option>
             </OptionBtn>
           </GameStartDiv>
@@ -195,9 +189,9 @@ export default function BeforeGame({ go, title, round }) {
       ) : (
         // 게임 시작 or 게임 설명 선택
         <>
-          {window.location.pathname === "/music" ? (
+          {round === 1 ? (
             <>
-              <Decoration1>귀 기울여 집중!!</Decoration1>
+              <Decoration1 round={round}>귀 기울여 집중!!</Decoration1>
               <Radio src={radio} />
               <Speaker src={speaker} />
               <Note1 src={note1} />
@@ -205,7 +199,13 @@ export default function BeforeGame({ go, title, round }) {
               <Note3 src={note3} />
               <Note4 src={note4} />
             </>
-          ) : window.location.pathname === "/speech" ? (
+          ) : round === 2 ? (
+            <>
+              <Decoration1 round={round}>잘 찾을 수 있겠어?!</Decoration1>
+              <CardGlass src={cardGlass} />
+              <PencilEraser src={pencilEraser} />
+            </>
+          ) : round === 3 ? (
             <>
               <Cloud src={cloud} />
               <Flower2 src={flower} />
@@ -213,16 +213,7 @@ export default function BeforeGame({ go, title, round }) {
               <Right src={right} />
               <Sprinkle2 src={sprinkle2} />
               <Decoration>
-                <img src={boy} style={{ rotate: "-3.96deg" }} />
-                <img
-                  src={girl}
-                  style={{
-                    rotate: "1.74deg",
-                    position: "absolute",
-                    left: "347.12px",
-                    bottom: "32px",
-                  }}
-                />
+                <img src={boyGirl} alt="Boy and girl decoration" />
               </Decoration>
             </>
           ) : null}
@@ -240,7 +231,7 @@ export default function BeforeGame({ go, title, round }) {
               />
               <Option>
                 <OptionText round={round}>게임 시작</OptionText>
-                <img src={longOptionPath1} />
+                <OptionPath1 />
               </Option>
             </OptionBtn>
             <OptionBtn onClick={() => setDescription(true)}>
@@ -255,7 +246,7 @@ export default function BeforeGame({ go, title, round }) {
               />
               <Option>
                 <OptionText round={round}>게임 설명</OptionText>
-                <img src={longOptionPath2} />
+                <OptionPath2 />
               </Option>
             </OptionBtn>
           </Options>
@@ -293,7 +284,8 @@ const Elipse = styled.div`
   width: 54px;
   height: 52px;
   border-radius: 50px;
-  background-color: #ffd28f;
+  background-color: ${(props) =>
+    props.color === 1 ? "#D4F6E8" : props.color === 2 ? "#FEC8AA" : "#E8F4BB"};
   position: absolute;
   left: 19vw;
 `;
@@ -302,45 +294,35 @@ const CommonLine = styled.span`
   color: ${(props) =>
     props.color === 1 ? "#FF9B06" : props.color === 2 ? "#209228" : "#007FD5"};
   font-family: Gaegu;
-  font-size: 4.6vh;
+  font-size: 3.3vw;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin-bottom: 4px;
+  /* margin-bottom: 4px; */
   margin-left: 1.3vw;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+const Order = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 const Line = styled.div`
   color: #151b26;
   font-family: Gaegu;
-  font-size: 3.9vh;
+  font-size: 2.7vw;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
-  margin-bottom: 2.5vh;
+
   margin-left: 2vw;
 `;
-const SmallLine = styled.div`
-  color: ${(props) => (props.color ? props.color : "#151B26")};
-  font-family: Gaegu;
-  font-size: 3.1vh;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  margin-bottom: 10px;
-  white-space: nowrap;
-  margin-left: 3vw;
-`;
+
 const Word = styled.span`
   color: ${(props) => (props.color ? props.color : "#151B26")};
   white-space: nowrap;
-`;
-
-const Btn = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 // 게임 시작 or 게임 방법
 
@@ -356,7 +338,7 @@ const TitleStyled = styled.div`
 const GameStartDiv = styled.div`
   position: absolute;
   right: 12vw;
-  bottom: 12vh;
+  bottom: 12.6vh;
 `;
 
 const Options = styled.div`
@@ -426,9 +408,26 @@ const OptionText = styled.div`
     opacity: 1;
   }
 `;
-const LongOptionPath = styled.img`
-  width: 24vw;
-  height: 1.6vh;
+
+// 음악퀴즈 데코레이션
+const Decoration1 = styled.div`
+  position: absolute;
+  top: ${({ round }) => (round === 1 ? "20vh" : "19vh")};
+  right: ${({ round }) => (round === 1 ? "11vw" : "61vw")};
+  width: 23vw;
+  height: 9.5vh;
+  border-radius: 50%;
+  background: ${({ round }) => (round === 1 ? "#fad615" : "#9AF3A0")};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #151b26;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-family: "JGaegujaengyi";
+  font-size: 3.9vh;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 `;
 const Radio = styled.img`
   /* width: 43vw; */
@@ -444,25 +443,6 @@ const Speaker = styled.img`
   position: absolute;
   right: 5.9vw;
   top: 39vh; /* 비율 수정 */
-`;
-const Sprinkle = styled.img`
-  height: 11vh;
-  position: absolute;
-  right: 10vw;
-  top: 40vh;
-`;
-const Flower = styled.img`
-  height: 12vh;
-  position: absolute;
-  left: 6.1vw;
-  bottom: 5.8vh;
-`;
-const Decoration = styled.div`
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  bottom: 36.34px;
-  left: 60px;
 `;
 const Note1 = styled.img`
   position: absolute;
@@ -484,27 +464,32 @@ const Note4 = styled.img`
   top: 33vh;
   right: 13vw;
 `;
-const Decoration1 = styled.div`
+
+// 퍼즐 퀴즈 데코레이션
+const CardGlass = styled.img`
   position: absolute;
-  top: 20vh;
-  right: 11vw;
-  width: 23vw;
-  height: 9.5vh;
-  border-radius: 50%;
-  background: #fad615;
-  /* font-family: "SangSangShinb7"; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #151b26;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: JGaegujaengyi;
-  font-size: 3.9vh;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
+  top: 50vh;
+  left: 11.8vw;
+`;
+const PencilEraser = styled.img`
+  position: absolute;
+  top: 16.4vh;
+  right: 11.6vw;
+`;
+const Sprinkle = styled.img`
+  height: 11vh;
+  position: absolute;
+  right: 10vw;
+  top: 40vh;
+`;
+const Flower = styled.img`
+  height: 12vh;
+  position: absolute;
+  left: 6.1vw;
+  bottom: 5.8vh;
 `;
 
+// 방송퀴즈 데코
 const Cloud = styled.img`
   position: absolute;
   top: 12vh;
@@ -523,10 +508,17 @@ const Left = styled.img`
 const Right = styled.img`
   position: absolute;
   top: 29vh;
-  right: 17vw;
+  right: 20vw; // 원래는 17vw
 `;
 const Sprinkle2 = styled.img`
   position: absolute;
   top: 46vh;
   right: 7.6vw;
+`;
+const Decoration = styled.div`
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  left: 4.16vw;
+  bottom: 4vh; // 원래는 3.vh
 `;
