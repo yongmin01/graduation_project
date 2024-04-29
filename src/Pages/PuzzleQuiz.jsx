@@ -1,10 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { Howl } from "howler";
+import useEffectSound from "../utils/EffectSound";
+import countDownSound from "../sources/sound/Game/countDown.mp3";
+import endSound from "../sources/sound/Game/end.mp3";
+import flipSound from "../sources/sound/Game/flip.mp3";
 import GameStartCounter from "../Components/GameStartCounter.jsx";
 import BeforeGame from "../Components/BeforeGame.jsx";
 import GameResult from "../Components/GameResult.jsx";
 import GameCommonStyle from "../utils/GameCommonStyle.jsx";
-import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
+import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon_green.svg";
+import star from "../sources/images/Game/puzzleQuiz/puzzleQuizR3Star.svg";
+import highlight from "../sources/images/Game/puzzleQuiz/puzzleQuizR3HL.svg";
 
 import backImg from "../sources/images/Game/puzzleQuiz/back.webp";
 import bookA from "../sources/images/Game/puzzleQuiz/book1.webp";
@@ -106,7 +113,6 @@ export default function PuzzleQuiz() {
   const score = useRef(0);
   const pass = useRef();
   const [roundEndAlert, setRoundEndAlert] = useState(false);
-  const [endAlert, setEndAlert] = useState(false);
   const [levelupAlert, setLevelupAlert] = useState(false);
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
@@ -126,7 +132,9 @@ export default function PuzzleQuiz() {
     "F2",
   ];
   const symbols2 = ["A1", "B1", "C1", "D1", "E1", "F1"];
-  // const symbols = ["A", "B", "C"];
+
+  const countDownEffect = useEffectSound(countDownSound, 2);
+  const endEffect = useEffectSound(endSound, 2);
 
   // 매치된 카드가 12장이 되는지 -> 라운드 종료
   useEffect(() => {
@@ -143,6 +151,14 @@ export default function PuzzleQuiz() {
   }, [matchedCards]);
 
   useEffect(() => {
+    if (game === "start") {
+      countDownEffect.play();
+    }
+  }, [game]);
+  useEffect(() => {
+    if (quizIndex === 1) {
+      countDownEffect.play();
+    }
     setMatchedCards([]);
     setFlippedCards([]);
     const initialCards = symbols;
@@ -152,18 +168,14 @@ export default function PuzzleQuiz() {
     setTime(timeLimit);
     setUrgent(false);
   }, [quizIndex]);
-
-  // 게임 종료 화면 전환 (카드 보여주는 화면 있어서 필요없음)
-  // useEffect(() => {
-  //   if (quizIndex === totalQuiz - 1 && roundEnd !== "yet") {
-  //     setTimeout(() => {
-  //       setEndAlert(true);
-  //     }, 3000);
-  //   }
-  // }, [quizIndex, roundEnd]);
+  useEffect(() => {
+    if (!levelupAlert && game === "start") countDownEffect.play();
+  }, [levelupAlert]);
 
   // 뒤집힌 두 카드가 일치하는지
+  const flipEffect = useEffectSound(flipSound, 1);
   useEffect(() => {
+    if (flippedCards.length !== 0) flipEffect.play();
     if (flippedCards.length === 2) {
       const [firstCard, secondCard] = flippedCards;
       if (cards[firstCard][0] === cards[secondCard][0]) {
@@ -207,6 +219,7 @@ export default function PuzzleQuiz() {
   useEffect(() => {
     if (roundEnd === "fail") {
       setRoundEndAlert("now");
+      endEffect.play();
       setTimeout(() => {
         setRoundEndAlert("after");
       }, 2000);
@@ -229,27 +242,10 @@ export default function PuzzleQuiz() {
     }
     setRoundEnd("yet");
     setQuizIndex(quizIndex + 1);
-    setCounter(true);
+    // setCounter(true);
     setMatchedCards([]);
     setTime(timeLimit);
   };
-  // const handleEnd = () => {
-  //   if (score.current >= 2) {
-  //     pass.current = true;
-  //   } else {
-  //     pass.current = false;
-  //   }
-  //   setGame("end");
-  // };
-
-  // const getSeconds = (time) => {
-  //   const seconds = Number(time % 60);
-  //   if (seconds < 10) {
-  //     return "0" + String(seconds);
-  //   } else {
-  //     return String(seconds);
-  //   }
-  // };
 
   return (
     <>
@@ -264,16 +260,19 @@ export default function PuzzleQuiz() {
             <Progress>{quizIndex + 1}/3</Progress>
             <QuizIndex>문제 {quizIndex + 1}</QuizIndex>
           </Index>
-
           {levelupAlert ? (
             <Levelup>
               <LevelupTitle>LEVEL UP!!!</LevelupTitle>
               <Description>
-                서로 관련 있는 캐릭터를 찾아 짝을 맞춰보세요.
+                <Star src={star} />
+                <span>서로 관련 있는 캐릭터를 찾아 짝을 맞춰보세요.</span>
+                <Highlight src={highlight} />
               </Description>
             </Levelup>
           ) : counter ? (
-            <GameStartCounter startCount={setCounter} />
+            <div style={{ marginTop: "14.2vh" }}>
+              <GameStartCounter startCount={setCounter} />
+            </div>
           ) : (
             <>
               {roundEnd === "yet" ? null : roundEnd === "pass" ? (
@@ -392,13 +391,10 @@ export default function PuzzleQuiz() {
               </GameBoard>
             </>
           )}
-          {/* {endAlert ? (
-            <EndAlert onClick={handleEnd}>게임 종료!</EndAlert>
-          ) : null} */}
         </Game>
       ) : game === "before" ? (
         <>
-          <BeforeGame go={setGame} title="추억의 물건 짝 맞추기" round={3} />
+          <BeforeGame go={setGame} title="추억의 물건 짝 맞추기" round={2} />
         </>
       ) : game === "end" ? (
         <GameResult
@@ -415,7 +411,6 @@ export default function PuzzleQuiz() {
 
 const Game = styled.div`
   position: absolute;
-
   top: 12vh;
   width: 100vw;
   display: flex;
@@ -565,6 +560,8 @@ const LevelupTitle = styled.div`
   line-height: normal;
 `;
 const Description = styled.div`
+  display: flex;
+  flex-direction: column;
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -573,6 +570,13 @@ const Description = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+`;
+const Star = styled.img`
+  width: 2.5vw;
+  margin-left: -10px;
+`;
+const Highlight = styled.img`
+  width: 15vw;
 `;
 const CardContainer = styled.div`
   width: 10vw;
@@ -617,18 +621,4 @@ const GameBoard = styled.div`
   justify-content: center;
   align-items: center;
   gap: 2.9vh;
-`;
-const EndAlert = styled.div`
-  width: 85vw;
-  height: 78vh;
-  margin: 0 auto;
-  background-color: rgba(255, 255, 255, 0.8);
-  font-family: UhBeejungBold;
-  font-size: 120px;
-  font-weight: 700;
-  position: absolute;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
