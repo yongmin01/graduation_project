@@ -6,6 +6,7 @@ export default function GameCommonStyle({ color }) {
   return <GameBgStyle color={color} />;
 }
 const GameBgStyle = styled.div`
+  display: relative;
   background-color: ${(props) => props.color};
   background-image: url(${Bg});
   background-size: 94vw 91vh;
