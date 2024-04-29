@@ -9,7 +9,7 @@ import bgImage2 from "../sources/images/Map/map1/greenBg.webp";
 import bgImage3 from "../sources/images/Map/map1/redBg.webp";
 import characterImage from "../sources/images/Map/girl/girl.png";
 import characterImage2 from "../sources/images/Map/boy/boy.png";
-import dateFormatImg from "../sources/images/Map/dateFormat.png";
+import dateFormatImg from "../sources/images/Map/dateFormat.svg";
 import smog1Img from "../sources/images/Map/map1/smog1.png";
 import smog2Img from "../sources/images/Map/map1/smog2.png";
 import carImg from "../sources/images/Map/map1/car.png";
@@ -27,6 +27,10 @@ const CW = 5000;
 const CH = 1024;
 
 export default function Map1() {
+  // 일기장 개수 세팅
+  useEffect(() => {
+    localStorage.setItem("totalDiary", JSON.stringify(0));
+  }, []);
   // 캔버스 크기 관련
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -385,7 +389,7 @@ const Date = styled.img`
   position: absolute;
   top: 0;
   left: 0;
-  /* z-index: 100; */
+  z-index: 100;
 `;
 const translate = keyframes`
   0%{

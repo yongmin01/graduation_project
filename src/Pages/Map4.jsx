@@ -7,8 +7,14 @@ import bgm from "../sources/sound/Map4/map4_bgm.mp3";
 
 import frameBgImage from "../sources/images/Map/map4/frameBg.webp";
 import panelBgImage from "../sources/images/Map/map4/panelBg.webp";
+
+import get0Diary from "../sources/images/Map/dateFormat.svg";
+import get1Diary from "../sources/images/Map/get1Diary.svg";
+import get2Diary from "../sources/images/Map/get2Diary.svg";
+import get3Diary from "../sources/images/Map/get3Diary.svg";
+
 import clickImage from "../sources/images/Map/click.png";
-import dateFormatImg from "../sources/images/Map/dateFormat.png";
+import dateFormatImg from "../sources/images/Map/dateFormat.svg";
 import characterImage from "../sources/images/Map/girl/girl.png";
 import characterImage2 from "../sources/images/Map/boy/boy.png";
 import frameBorderImage from "../sources/images/Map/map4/frameBorder.png";
@@ -29,6 +35,19 @@ const CW = 5000;
 const CH = 1024;
 
 export default function Map4() {
+  const [getTotalDiary, setGetTotalDiary] = useState(get0Diary);
+  const totalDiary = JSON.parse(localStorage.getItem("totalDiary"));
+
+  useEffect(() => {
+    if (totalDiary === 0) {
+      setGetTotalDiary(get0Diary);
+    } else if (totalDiary === 1) {
+      setGetTotalDiary(get1Diary);
+    } else if (totalDiary === 2) {
+      setGetTotalDiary(get2Diary);
+    } else setGetTotalDiary(get3Diary);
+  }, []);
+
   // 캔버스 크기 관련
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -460,7 +479,7 @@ export default function Map4() {
         //   </Loading>
         // ) :
         <MapContainer>
-          {pressedKey ? null : <Date src={dateFormatImg} />}
+          {pressedKey ? null : <Date src={getTotalDiary} />}
           {characterMove === 1 ? (
             <CharacterAtEnd
               src={characterinMap}
