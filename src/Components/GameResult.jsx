@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Bg from "../sources/images/Game/gameResultBg.svg";
-import { ReactComponent as PlayIcon } from "../sources/images/Game/playIcon.svg";
-import { ReactComponent as BackToMapPath } from "../sources/images/Game/backtomapPath.svg";
-import { ReactComponent as NextPath } from "../sources/images/Game/nextOptionPath.svg";
+import bg from "../sources/images/Game/gameEndingBg.svg";
+import { ReactComponent as BackToMapPath } from "../sources/images/Game/optionPath1.svg";
+import { ReactComponent as NextPath } from "../sources/images/Game/shortOptionPath.svg";
 import itemArrow from "../sources/images/Game/resultPageArrow.svg";
 import item1 from "../sources/images/Game/CD.svg";
 import item2 from "../sources/images/Game/jetty.svg";
 import item3 from "../sources/images/Game/seal.svg";
 import deadDiary from "../sources/images/Game/deadDiary.svg";
+import playIcon_yellow from "../sources/images/Game/playIcon_yellow.svg";
+import playIcon_blue from "../sources/images/Game/playIcon_blue.svg";
+import playIcon_green from "../sources/images/Game/playIcon_green.svg";
 
 export default function GameResult({ pass, score, total, round, end }) {
   const itemName = ["실패", "CD", "제티", "띠부띠부씰"];
@@ -24,54 +26,75 @@ export default function GameResult({ pass, score, total, round, end }) {
     }
   };
 
+  const totalDiary = JSON.parse(localStorage.getItem("totalDiary"));
+  useEffect(() => {
+    if (pass) {
+      localStorage.setItem("totalDiary", JSON.stringify(totalDiary + 1));
+      console.log("얻은 일기장 개수 : ", totalDiary);
+    }
+  }, [pass]);
   return (
-    <Result>
-      <Tittle>결과</Tittle>
-      <Score>
-        맞힌 문제 :{score}개 / {total}개
-      </Score>
-      <Comments>
-        {pass ? (
-          <>
-            <Comment>축하합니다!</Comment>
-            <Comment>‘{itemName[round]}’아이템을 획득하셨습니다.</Comment>
-          </>
-        ) : (
-          <>
-            <Comment>괜찮아요!</Comment>
-            <Comment>아직 남은 게임이 있으니까요.</Comment>
-            <Comment>이제 또 다른 추억을 만나러 가볼까요?</Comment>
-          </>
-        )}
-      </Comments>
-      <Item src={pass ? itemImg[round] : deadDiary} round={round} />
-      <Decoration src={itemArrow} />
+    <>
+      <BgDiv src={bg} />
+
+      <Result isPass={pass}>
+        <Tittle isPass={pass}>결과</Tittle>
+        <Score isPass={pass}>
+          맞힌 문제 :{score}개 / {total}개
+        </Score>
+        <Comments>
+          {pass ? (
+            <>
+              <Comment>축하합니다!</Comment>
+              <Comment>
+                <span style={{ fontWeight: "700" }}>‘{itemName[round]}’</span>
+                아이템을 획득하셨습니다.
+              </Comment>
+            </>
+          ) : (
+            <>
+              <Comment>괜찮아요!</Comment>
+              <Comment>아직 남은 게임이 있으니까요.</Comment>
+              <Comment>이제 또 다른 추억을 만나러 가볼까요?</Comment>
+            </>
+          )}
+        </Comments>
+      </Result>
+      <Item src={pass ? itemImg[round] : deadDiary} round={round} pass={pass} />
+      {pass ? <Arrow src={itemArrow} round={round} /> : null}
       <OptionBtn>
-        <PlayIcon width="4.1vw" />
+        {round === 1 ? (
+          <img src={playIcon_yellow} />
+        ) : round === 2 ? (
+          <img src={playIcon_green} />
+        ) : (
+          <img src={playIcon_blue} />
+        )}
         <Option>
-          <OptionText onClick={route}>
+          <OptionText onClick={route} round={round}>
             {pass ? "다음" : "맵으로 돌아가기"}
           </OptionText>
           {pass ? <NextPath /> : <BackToMapPath />}
         </Option>
       </OptionBtn>
-    </Result>
+    </>
   );
 }
+
+const BgDiv = styled.img`
+  width: 75.3vw;
+  height: 54.7vh;
+  position: absolute;
+  top: 11.3vh;
+  left: 10.5vw;
+`;
 const Result = styled.div`
   width: 100%;
   position: absolute;
-  top: 12vh;
+  top: ${({ isPass }) => (isPass ? "16.6vh" : "12.2vh")};
   text-align: center;
   display: flex;
   flex-direction: column;
-  background-image: url(${Bg});
-  background-size: 77vw 54vh;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed;
-  width: 100vw;
-  height: 100vh;
 `;
 const Tittle = styled.span`
   color: #151b26;
@@ -82,7 +105,7 @@ const Tittle = styled.span`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-bottom: 7.8vh;
+  margin-bottom: ${({ isPass }) => (isPass ? "7.8vh" : "6.9vh")};
 `;
 const Score = styled.div`
   color: #151b26;
@@ -92,7 +115,20 @@ const Score = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-bottom: 6.8vh;
+  margin-bottom: ${({ isPass }) => (isPass ? "6.8vh" : "4.4vh")};
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 38.4vw;
+    height: 1.9vh;
+    background: rgba(255, 216, 216, 0.8);
+    filter: blur(15px);
+    border-radius: 10px;
+  }
 `;
 const Comments = styled.div`
   display: flex;
@@ -111,16 +147,31 @@ const Comment = styled.span`
 
 const Item = styled.img`
   position: absolute;
-  /* left: ${(props) =>
-    props.round === 0
-      ? "7.7vw"
-      : props.round === 1
-      ? "10.5vw"
-      : props.round === 2
-      ? "7.9vw"
-      : "7.9vw"}; */
-  left: 9vw;
-  top: 50vh;
+  left: ${({ round, pass }) =>
+    pass
+      ? round === 1
+        ? "7.7vw"
+        : round === 2
+        ? "10.5vw"
+        : "7.9vw"
+      : "5.8vw"};
+  top: ${({ round, pass }) =>
+    pass
+      ? round === 1
+        ? "62.5vh"
+        : round === 2
+        ? "58.6vh"
+        : "66.2vh"
+      : "59.9vh"};
+  height: 28.5vh;
+`;
+const Arrow = styled.img`
+  position: absolute;
+  left: ${({ round }) =>
+    round === 1 ? "26.4vw" : round === 2 ? "25vw" : "22.9vw"};
+  top: ${({ round }) =>
+    round === 1 ? "68.9vh" : round === 2 ? "71.6vh" : "73.6vh"};
+  width: 4.4vw;
 `;
 const OptionBtn = styled.div`
   display: flex;
@@ -129,7 +180,7 @@ const OptionBtn = styled.div`
   gap: 2px;
   position: absolute;
   right: 12.5vw;
-  top: 68vh;
+  bottom: 13.8vh;
 `;
 const Option = styled.div`
   display: flex;
@@ -140,14 +191,31 @@ const OptionText = styled.span`
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "UhBee jung";
-  font-size: 60px;
+  font-size: 4.16vw;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-`;
-const Decoration = styled.img`
-  position: absolute;
-  top: 52vh;
-  left: 23vw;
-  width: 4.4vw;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, -50%);
+    width: 80%;
+    height: 60%;
+    background-color: ${({ round }) =>
+      round === 1
+        ? "rgba(248, 212, 24, 0.2)"
+        : round === 2
+        ? "rgba(27, 199, 70, 0.371)"
+        : "rgba(27, 127, 199, 0.371)"};
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  ${Option}:hover &:before {
+    opacity: 1;
+  }
 `;
