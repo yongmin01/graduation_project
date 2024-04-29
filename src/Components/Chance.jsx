@@ -18,14 +18,33 @@ export default function Chance({ remaining, total }) {
     return icons;
   };
 
-  return <ChanceDiv>{renderIcons(total, remaining)}</ChanceDiv>;
+  return (
+    <ChanceDiv>
+      <span>도전기회</span>
+      <Hearts>{renderIcons(total, remaining)}</Hearts>
+    </ChanceDiv>
+  );
 }
 const ChanceDiv = styled.div`
-  width: 202px;
-  position: absolute;
-  left: 125px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.97vh;
+  color: #151b26;
+  text-align: center;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-family: "UhBee jung";
+  font-size: 1.9vw;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  /* margin-bottom: 1.1vh; */
+`;
+const Hearts = styled.div`
+  width: max-content;
+  gap: 1.38vw;
 `;
 const HeartSt = styled(Heart)`
-  width: 54px;
+  height: 5.6vh;
   fill: ${(props) => props.color};
 `;
