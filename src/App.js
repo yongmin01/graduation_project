@@ -28,7 +28,7 @@ function App() {
     <>
       <GlobalStyle />
       <FullScreen className="full-screen" handle={handle}>
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
           <Routes>
             <Route path="/intro" element={<Intro />} />
             <Route path="/tutorial" element={<Tutorial />} />
