@@ -198,7 +198,7 @@ export default function SpeechQuiz({}) {
               <Quiz>
                 <Player>
                   <Video
-                    src={`/videos/speechQuiz${quizIndex}.mp4#t,${speech[quizIndex].end}`}
+                    src={`./videos/speechQuiz${quizIndex}.mp4#t,${speech[quizIndex].end}`}
                     ref={playerRef}
                     onTimeUpdate={pauseVideo}
                     onClick={replay}
