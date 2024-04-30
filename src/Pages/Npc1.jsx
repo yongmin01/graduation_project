@@ -37,15 +37,6 @@ export default function Npc1() {
     }
   }, [videoEnd]);
 
-  const playVideo = () => {
-    if (videoRef.current) {
-      setTimeout(() => {
-        videoRef.current.play();
-      }, 300);
-      setVideoStart(true);
-    }
-  };
-
   return (
     <>
       <Npc>
@@ -54,7 +45,7 @@ export default function Npc1() {
             ref={videoRef}
             style={{ display: buttonClicked ? "block" : "none" }}
           >
-            <source src="/videos/npc_cd.mov" />
+            <source src="./videos/npc_cd.mov" />
           </Video>
 
           <ItemUseBtn

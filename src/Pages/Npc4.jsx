@@ -36,7 +36,7 @@ export default function Npc4() {
             ref={videoRef}
             // style={{ display: buttonClicked ? "block" : "none" }}
           >
-            <source src="/videos/npc_tv.mov" />
+            <source src="./videos/npc_tv.mov" />
           </Video>
 
           <ItemUseBtn

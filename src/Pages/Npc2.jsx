@@ -45,7 +45,7 @@ export default function Npc2() {
             ref={videoRef}
             style={{ display: buttonClicked ? "block" : "none" }}
           >
-            <source src="/videos/npc_jetty.mov" />
+            <source src="./videos/npc_jetty.mov" />
           </Video>
 
           <ItemUseBtn
