@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSpeechRecognition } from "react-speech-kit";
+// import { useSpeechRecognition } from "react-speech-kit";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import styled from "styled-components";
 import GameCommonStyle from "../utils/GameCommonStyle";
 import BeforeGame from "../Components/BeforeGame";
@@ -31,12 +34,19 @@ export default function SpeechQuiz({}) {
   const score = useRef(0);
   const pass = useRef();
 
-  // 음성 전환 로직
-  const { listen, listening, stop } = useSpeechRecognition({
-    onResult: (result) => {
-      setUserAnswer(result);
-    },
-  });
+  // 음성 전환 로직 - react-speech-kit 사용
+  // const { listen, listening, stop } = useSpeechRecognition({
+  //   onResult: (result) => {
+  //     setUserAnswer(result);
+  //   },
+  // });
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
 
   useEffect(() => {
     setTimeout(() => {
@@ -44,6 +54,11 @@ export default function SpeechQuiz({}) {
     }, 5000);
   }, [quizIndex]);
 
+  useEffect(() => {
+    if (transcript !== null) {
+      setUserAnswer(transcript);
+    }
+  }, [transcript]);
   // 문제 관련 로직
   const play = () => {
     playerRef.current.currentTime = 0;
@@ -59,7 +74,7 @@ export default function SpeechQuiz({}) {
     }
   };
   const handleFirstTry = () => {
-    listen();
+    SpeechRecognition.startListening();
     setIsFirstTry(false);
   };
   const next = () => {
@@ -95,7 +110,7 @@ export default function SpeechQuiz({}) {
   }, [quizIndex, roundEnd]);
 
   const handlePass = () => {
-    if (listening) stop();
+    if (listening) SpeechRecognition.stopListening();
     if (nowPlaying) setNowPlaying(false);
     setCorrect(false);
     setShowPass(false);
@@ -123,7 +138,7 @@ export default function SpeechQuiz({}) {
   };
   const clickSubmit = () => {
     if (userAnswer === null) return;
-    stop();
+    SpeechRecognition.stopListening();
     if (!playerRef.current.paused) {
       playerRef.current.pause();
     }
@@ -240,7 +255,7 @@ export default function SpeechQuiz({}) {
                     <InputBox>
                       <InputTagBox
                         ref={inputRef}
-                        value={userAnswer || ""}
+                        value={transcript || ""}
                         onChange={(e) => setUserAnswer(e.target.value)}
                         disabled
                       ></InputTagBox>
@@ -263,7 +278,7 @@ export default function SpeechQuiz({}) {
                     <BtnDiv>
                       {listening ? (
                         <Btn
-                          onClick={stop}
+                          onClick={SpeechRecognition.stopListening}
                           isFirstTry={isFirstTry}
                           disabled={roundEnd}
                         >
@@ -272,7 +287,7 @@ export default function SpeechQuiz({}) {
                         </Btn>
                       ) : (
                         <Btn
-                          onClick={listen}
+                          onClick={SpeechRecognition.startListening}
                           isFirstTry={isFirstTry}
                           disabled={roundEnd}
                         >
