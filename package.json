@@ -2,7 +2,7 @@
   "name": "heavy-rain-advisory",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://yongmin01.github.io/heavy-rain-advisory",
+  "homepage": "https://my-ordinary-diary.netlify.app",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
