@@ -20,7 +20,7 @@ export default function Intro() {
     <Wrapper>
       <IntroVideo>
         <Video ref={intro} onClick={playIntro} onEnded={goToTutorial}>
-          <source src="/videos/introWtitle.mp4" type="video/mp4" />
+          <source src="./videos/intro.mp4" />
         </Video>
       </IntroVideo>
     </Wrapper>
