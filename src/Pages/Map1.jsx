@@ -15,7 +15,12 @@ import greenBg from "../sources/images/Map/map1/greenBg.webp";
 import redBg from "../sources/images/Map/map1/redBg.webp";
 
 import dateFormatImg from "../sources/images/Map/dateFormat.svg";
+
+import clickImage from "../sources/images/Map/click.png";
 import carImg from "../sources/images/Map/map1/car.png";
+
+import shopKidsImg from "../sources/images/Map/map1/shopKids.webp";
+import telephoneImg from "../sources/images/Map/map1/1541.webp";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
@@ -86,6 +91,36 @@ export default function Map1() {
     (392 / CH) * canvasHeight,
   ];
 
+  const [shopKidsStatus, setShopKidsStatus] = useState(false);
+  const shopKidsSize = {
+    w: (372 / CW) * val,
+    h: (386 / CH) * canvasHeight,
+  };
+  const shopKidsCoor = {
+    x: (1352 / CW) * val,
+    y: (226 / CH) * canvasHeight,
+  };
+
+  const [telephoneStatus, setTelephoneStatus] = useState(false);
+  const telephoneBorderSize = {
+    w: (284 / CW) * val,
+    h: (375 / CH) * canvasHeight,
+  };
+  const telephoneBorderCoor = {
+    x: (3558 / CW) * val,
+    y: (340 / CH) * canvasHeight,
+  };
+  const telephoneBubbleSize = {
+    w: (336 / CW) * val,
+    h: (188 / CH) * canvasHeight,
+  };
+  const telephoneBubbleCoor = {
+    x: (3506 / CW) * val,
+    y: (147 / CH) * canvasHeight,
+  };
+  const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
+  const clickCoor1 = { x: (3649 / CW) * val, y: (282 / CH) * canvasHeight };
+
   const canvasRef = useRef(null);
 
   const [background, setBackground] = useState(0);
@@ -104,6 +139,52 @@ export default function Map1() {
 
     bg.onload = () => {
       context.drawImage(bg, background, 0, val, canvasHeight);
+    };
+
+    // 문구점 아이들 그리기
+    const shopKids = new Image();
+    shopKids.src = shopKidsImg;
+
+    shopKids.onload = () => {
+      if (shopKidsStatus) {
+        context.drawImage(
+          shopKids,
+          background + shopKidsCoor.x,
+          shopKidsCoor.y,
+          shopKidsSize.w,
+          shopKidsSize.h
+        );
+      }
+    };
+    // 공중전화 말풍선 그리기
+    const telephoneBubble = new Image();
+    telephoneBubble.src = telephoneImg;
+
+    telephoneBubble.onload = () => {
+      if (telephoneStatus) {
+        context.drawImage(
+          telephoneBubble,
+          background + telephoneBubbleCoor.x,
+          telephoneBubbleCoor.y,
+          telephoneBubbleSize.w,
+          telephoneBubbleSize.h
+        );
+      }
+    };
+
+    const click = new Image();
+    click.src = clickImage;
+
+    click.onload = () => {
+      if (!telephoneStatus) {
+        context.drawImage(
+          click,
+          background + clickCoor1.x,
+          clickCoor1.y,
+          clickSize.w,
+          clickSize.h
+        );
+      }
     };
   };
 
@@ -144,6 +225,30 @@ export default function Map1() {
         return;
     }
   };
+
+  const handleCanvasClick = (e) => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    let x = e.clientX - context.canvas.offsetLeft;
+    let y = e.clientY - context.canvas.offsetTop;
+
+    // 공중전화 클릭 확인
+    if (
+      x >= background + telephoneBorderCoor.x &&
+      y >= telephoneBorderCoor.y &&
+      x <= background + (telephoneBorderCoor.x + telephoneBorderSize.w) &&
+      y <= telephoneBorderCoor.y + telephoneBorderSize.h
+    ) {
+      setTelephoneStatus(true);
+    }
+  };
+
+  // 문구점 아이들 보이기
+  useEffect(() => {
+    if (background < (-600 / 5000) * val) {
+      setShopKidsStatus(true);
+    }
+  }, [background]);
 
   // 차 그리기
   const car = new Image();
@@ -239,14 +344,6 @@ export default function Map1() {
   }, [characterMove]);
 
   const [loading, setLoading] = useState(false);
-
-  const handleCanvasClick = (e) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-
-    let x = e.clientX - context.canvas.offsetLeft;
-    let y = e.clientY - context.canvas.offsetTop;
-  };
 
   // 사운드
   const sound = new Howl({
