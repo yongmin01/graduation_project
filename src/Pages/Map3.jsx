@@ -29,6 +29,7 @@ import shopBorderImage from "../sources/images/Map/map3/shopBorder.png";
 import snack1Image from "../sources/images/Map/map3/snack1.png";
 import snack2Image from "../sources/images/Map/map3/snack2.png";
 import sugarSnackImage from "../sources/images/Map/map3/sugarSnack.png";
+import leafImage from "../sources/images/Map/map3/leaf.png";
 import busImage from "../sources/images/Map/map3/bus.png";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
@@ -175,6 +176,16 @@ export default function Map3() {
   const busSize = {
     w: (450 / CW) * val,
     h: (352 / CH) * canvasHeight,
+  };
+
+  const [leafAnimation, setLeafAnimation] = useState(false);
+  const [leafCoor, setLeafCoor] = useState({
+    x: (3800 / CW) * val,
+    y: (430 / CH) * canvasHeight,
+  });
+  const leafSize = {
+    w: (176 / CW) * val,
+    h: (178 / CH) * canvasHeight,
   };
 
   const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
@@ -331,6 +342,22 @@ export default function Map3() {
         );
       }
     };
+
+    // 나뭇잎 그리기
+    const leafImg = new Image();
+    leafImg.src = leafImage;
+
+    leafImg.onload = () => {
+      if (!leafAnimation) {
+        context.drawImage(
+          leafImg,
+          background + leafCoor.x,
+          leafCoor.y,
+          leafSize.w,
+          leafSize.h
+        );
+      }
+    };
   };
 
   // 캐릭터 이동
@@ -422,6 +449,36 @@ export default function Map3() {
       }, 500);
     }
   }, [showBorder]);
+
+  const drawLeaf = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    const leafImg = new Image();
+    leafImg.src = leafImage;
+    leafImg.onload = () => {
+      if (leafCoor.x >= (3372 / CW) * val) {
+        context.drawImage(
+          leafImg,
+          background + leafCoor.x,
+          leafCoor.y,
+          leafSize.w,
+          leafSize.h
+        );
+      } else {
+        context.drawImage(
+          leafImg,
+          background + leafCoor.x,
+          leafCoor.y,
+          leafSize.w,
+          leafSize.h
+        );
+        setStop(false);
+        setLeafAnimation(false);
+      }
+      setLeafCoor({ x: leafCoor.x - 7, y: leafCoor.y + 1 });
+    };
+  };
   const drawBus = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -442,7 +499,7 @@ export default function Map3() {
 
         if (background + busCoorX > canvasWidth) {
           setBusAnimation(false);
-          setStop(false);
+          setLeafAnimation(true);
         }
         setBusCoorX(busCoorX + 5);
       } else {
@@ -470,6 +527,9 @@ export default function Map3() {
     drawBg();
     if (busAnimation) {
       drawBus();
+    }
+    if (leafAnimation) {
+      drawLeaf();
     }
     if (characterMove !== 1) {
       handleMove();
