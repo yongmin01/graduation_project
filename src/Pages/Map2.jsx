@@ -18,6 +18,7 @@ import get2Diary from "../sources/images/Map/get2Diary.svg";
 import get3Diary from "../sources/images/Map/get3Diary.svg";
 
 import clickImage from "../sources/images/Map/click.png";
+import letterImage from "../sources/images/Map/map2/letter.png";
 import boy1Image from "../sources/images/Map/map2/boy1.png";
 import boy2Image from "../sources/images/Map/map2/boy2.png";
 import milkBoxBorderImage from "../sources/images/Map/map2/milkBoxBorder.png";
@@ -103,6 +104,16 @@ export default function Map2() {
     (392 / CH) * canvasHeight,
   ];
 
+  const [letterStatus, setLetterStatus] = useState(false);
+  const letterSize = {
+    w: (403 / CW) * val,
+    h: (366 / CH) * canvasHeight,
+  };
+  const letterCoor = {
+    x: (1731 / CW) * val,
+    y: (318 / CH) * canvasHeight,
+  };
+
   const [milkStatus, setmilkStatus] = useState(false);
   const milkBoxBorderSize = {
     w: (416 / CW) * val,
@@ -145,6 +156,20 @@ export default function Map2() {
       context.drawImage(bg, background, 0, val, canvasHeight);
     };
 
+    // 편지 말풍선 그리기
+    const letter = new Image();
+    letter.src = letterImage;
+    if (letterStatus) {
+      letter.onload = () => {
+        context.drawImage(
+          letter,
+          background + letterCoor.x,
+          letterCoor.y,
+          letterSize.w,
+          letterSize.h
+        );
+      };
+    }
     // 우유 말풍선 그리기
     const milk = new Image();
     milk.src = milkImage;
@@ -344,6 +369,14 @@ export default function Map2() {
       setPlateStatus(true);
     }
   };
+
+  // 편지 말풍선 보이기
+  useEffect(() => {
+    if (background < (-1000 / 5000) * val) {
+      setLetterStatus(true);
+    }
+  }, [background]);
+
   useEffect(() => {
     if (showBorder) {
       setInterval(() => {
