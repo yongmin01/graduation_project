@@ -1,38 +1,31 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
+
+// 사운드
 import { Howl } from "howler";
 import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map1/map1_bgm.mp3";
 import hornSound from "../sources/sound/Map1/hornSound.mp3";
-import bgImage2 from "../sources/images/Map/map1/greenBg.webp";
-import bgImage3 from "../sources/images/Map/map1/redBg.webp";
-import characterImage from "../sources/images/Map/girl/girl.png";
-import characterImage2 from "../sources/images/Map/boy/boy.png";
-import dateFormatImg from "../sources/images/Map/dateFormat.svg";
-import smog1Img from "../sources/images/Map/map1/smog1.png";
-import smog2Img from "../sources/images/Map/map1/smog2.png";
-import carImg from "../sources/images/Map/map1/car.png";
-import notesImg from "../sources/images/Map/map1/notes.png";
+
+// 이미지
 import loading1 from "../sources/images/MP3.gif";
 
+import greenBg from "../sources/images/Map/map1/greenBg.webp";
+import redBg from "../sources/images/Map/map1/redBg.webp";
+
+import dateFormatImg from "../sources/images/Map/dateFormat.svg";
+import carImg from "../sources/images/Map/map1/car.png";
+
+import girlImg from "../sources/images/Map/girl/girl.png";
+import boyImg from "../sources/images/Map/boy/boy.png";
+// 로티
 import Lottie from "react-lottie";
 import girlLottie from "../sources/lottie/girl.json";
 import boyLottie from "../sources/lottie/boy.json";
 
-// import { CharacterMoveArrGirl } from "../utils/CharacterMoveArr";
-// import { CharacterMoveArrBoy } from "../utils/CharacterMoveArr";
-
-const FRAMES_LENGTH = 40;
-const CW = 5000;
-const CH = 1024;
-
 export default function Map1() {
-  // 일기장 개수 세팅
-  useEffect(() => {
-    localStorage.setItem("totalDiary", JSON.stringify(0));
-  }, []);
-  // 캔버스 크기 관련
+  // 캔버스 크기 세팅
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -52,43 +45,24 @@ export default function Map1() {
     };
   }, []);
 
-  const canvasRef = useRef(null);
-  const requestAnimationRef = useRef(null);
+  // 일기장 개수 세팅
+  useEffect(() => {
+    localStorage.setItem("totalDiary", JSON.stringify(0));
+  }, []);
 
-  const navigator = useNavigate();
-
-  const [background, setBackground] = useState({ x: 0, y: 0 });
-  const bg = new Image();
-  bg.src = bgImage2;
-
-  // 계산 줄이기용 변수
-  const bgWidth = bg.width;
-  const bgHeight = bg.height;
-  const canvasWidth = windowSize.width;
-  const canvasHeight = windowSize.height;
-  const ratio = canvasHeight / bgHeight;
-  const val = bgWidth * ratio;
-
-  const [characterFrame, setCharacterFrame] = useState(0);
+  // 캐릭터 성별 세팅
   const characterSex = JSON.parse(localStorage.getItem("character"));
 
   let characterLottie = null;
   if (characterSex === "girl") characterLottie = girlLottie;
   else characterLottie = boyLottie;
 
-  let characterinMap = null;
+  let characterImg = null;
   if (characterSex === "girl") {
-    characterinMap = characterImage;
+    characterImg = girlImg;
   } else if (characterSex === "boy") {
-    characterinMap = characterImage2;
+    characterImg = boyImg;
   }
-  const character = [
-    (188 / CW) * val,
-    (498 / CH) * canvasHeight,
-    (330 / CW) * val,
-    (392 / CH) * canvasHeight,
-  ];
-
   const lottieOptions = {
     loop: true, // 반복재생
     autoplay: false, // 자동재생
@@ -97,36 +71,45 @@ export default function Map1() {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const [characterMoveX, setCharacterMoveX] = useState();
-  const characterEndX = 188 / CW;
-  const [characterMove, setCharacterMove] = useState(0);
 
+  // 계산 줄이기용 변수
+  const CW = 5000;
+  const CH = 1024;
+  const canvasHeight = windowSize.height;
+  const ratio = canvasHeight / 1024;
+  const val = 5000 * ratio;
+
+  const character = [
+    (188 / CW) * val,
+    (498 / CH) * canvasHeight,
+    (330 / CW) * val,
+    (392 / CH) * canvasHeight,
+  ];
+
+  const canvasRef = useRef(null);
+
+  const [background, setBackground] = useState(0);
   const [trafficLightStatus, setTrafficLightStatus] = useState("red");
+  // 배경 그리기
+  const drawBg = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
 
-  const [carCoor, setCarCoor] = useState({ x: 1600, y: 468 });
-  const carCoorX = 2602 / CW;
-  const car = new Image();
-  car.src = carImg;
-  const carSize = { w: car.width / CW, h: car.height / CH };
+    const bg = new Image();
+    if (trafficLightStatus === "green") {
+      bg.src = greenBg;
+    } else {
+      bg.src = redBg;
+    }
 
-  const [loading, setLoading] = useState(false);
-  // 캐릭터 이동 관련 state
+    bg.onload = () => {
+      context.drawImage(bg, background, 0, val, canvasHeight);
+    };
+  };
+
+  // 캐릭터 이동
   const [pressedKey, setPressedKey] = useState(null);
   const [stop, setStop] = useState(false);
-  const [smogPos, setSmogPos] = useState(0);
-
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    canvasRef.current.focus();
-  }, []);
-
-  useEffect(() => {
-    requestAnimationRef.current = requestAnimationFrame(render);
-
-    return () => {
-      cancelAnimationFrame(requestAnimationRef.current);
-    };
-  }, [requestAnimationRef.current]);
 
   const keyDown = (e) => {
     e.preventDefault();
@@ -135,17 +118,110 @@ export default function Map1() {
   const keyUp = () => {
     setPressedKey(null);
   };
-  const handleCanvasClick = (e) => {
+
+  const v = 5;
+  const handleMove = () => {
+    switch (pressedKey) {
+      case "ArrowLeft":
+        if (background < 0) {
+          if (stop) {
+            setBackground(background);
+          } else {
+            setBackground(background + v);
+          }
+        }
+        return;
+      case "ArrowRight":
+        if (background + val > canvasRef.current.width) {
+          if (stop) {
+            setBackground(background);
+          } else {
+            setBackground(background - v);
+          }
+        } else {
+          setStop(true);
+        }
+        return;
+    }
+  };
+
+  // 차 그리기
+  const car = new Image();
+  car.src = carImg;
+  const carSize = { w: car.width / CW, h: car.height / CH };
+  const [carCoor, setCarCoor] = useState({ x: 1600, y: 468 });
+  const carCoorX = 2602 / CW;
+
+  const drawCar = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    let x = e.clientX - context.canvas.offsetLeft;
-    let y = e.clientY - context.canvas.offsetTop;
+    const carImage = new Image();
+    carImage.src = carImg;
+
+    carImage.onload = () => {
+      if (background < (-1500 / CW) * val) {
+        setStop(true);
+        context.drawImage(
+          carImage,
+          background + carCoorX * val,
+          carCoor.y,
+          carSize.w * val,
+          carSize.h * canvasHeight
+        );
+        if (carCoor.y > canvas.height) {
+          setTrafficLightStatus("green");
+          // hornEffect.stop();
+          setStop(false);
+        }
+        setCarCoor({ ...carCoor, y: carCoor.y + 2 });
+      } else {
+        context.drawImage(
+          carImage,
+          background + carCoorX * val,
+          (carCoor.y / CH) * canvasHeight,
+          carSize.w * val,
+          carSize.h * canvasHeight
+        );
+      }
+    };
+  };
+  // canvas가 정의되었다면 애니메이션 그리기
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    canvasRef.current.focus();
+  }, []);
+
+  const requestAnimationRef = useRef(null);
+  // 렌더링 함수
+  const render = () => {
+    // navigator 실행되면 canvasRef.current가 null이 되므로 이때는 함수 종료
+    if (!canvasRef.current) return;
+    drawBg();
+    drawCar();
+    if (characterMove !== 1) {
+      handleMove();
+    }
+    requestAnimationRef.current = requestAnimationFrame(render);
   };
 
-  // 게임 화면 라우팅
+  // 애니메이션 실행
   useEffect(() => {
-    if (background.x <= -(val - windowSize.width)) {
+    requestAnimationRef.current = requestAnimationFrame(render);
+
+    return () => {
+      cancelAnimationFrame(requestAnimationRef.current);
+    };
+  }, [render]);
+
+  // 게임 화면 라우팅
+  const [characterMove, setCharacterMove] = useState(0);
+  const handleAnimation = () => {
+    setCharacterMove(2);
+  };
+  const navigator = useNavigate();
+  useEffect(() => {
+    if (background <= -(val - windowSize.width)) {
       setStop(true);
       setCharacterMove(1);
     }
@@ -162,146 +238,14 @@ export default function Map1() {
     }
   }, [characterMove]);
 
-  // 렌더링 함수
-  const render = () => {
-    // navigator 실행되면 canvasRef.current가 null이 되므로 이때는 함수 종료
-    if (!canvasRef.current) return;
-    // setCharacterFrame((prev) => (prev < FRAMES_LENGTH ? prev + 1 : 0));
-    drawBg();
+  const [loading, setLoading] = useState(false);
 
-    // if (!characterMove) {
-    //   drawCharacter();
-    // }
-    drawCar();
-    setSmogPos(background.x);
-    if (characterMove !== 1) {
-      handleMove();
-    }
-    requestAnimationRef.current = requestAnimationFrame(render);
-  };
-
-  // 배경 그리기
-  const drawBg = () => {
+  const handleCanvasClick = (e) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    const bg = new Image();
-    if (trafficLightStatus === "green") {
-      bg.src = bgImage2;
-    } else {
-      bg.src = bgImage3;
-    }
-
-    bg.onload = () => {
-      context.drawImage(bg, background.x, background.y, val, canvasHeight);
-    };
-
-    // 스피커 음표 애니메이션
-    const notesImage = new Image();
-    notesImage.src = notesImg;
-  };
-
-  // 캐릭터 그리기
-  // const drawCharacter = () => {
-  //   const canvas = canvasRef.current;
-  //   const context = canvas.getContext("2d");
-
-  //   const characterImg = new Image();
-  //   if (pressedKey !== null) {
-  //     if (characterSex === "girl") {
-  //       characterImg.src = CharacterMoveArrGirl[characterFrame];
-  //     } else {
-  //       characterImg.src = CharacterMoveArrBoy[characterFrame];
-  //     }
-  //   } else {
-  //     if (characterSex === "girl") {
-  //       characterImg.src = characterImage;
-  //     } else {
-  //       characterImg.src = characterImage2;
-  //     }
-  //   }
-
-  //   characterImg.onload = () => {
-  //     context.drawImage(
-  //       characterImg,
-  //       character[0],
-  //       character[1],
-  //       character[2],
-  //       character[3]
-  //     );
-  //   };
-  // };
-
-  const hornEffect = useEffectSound(hornSound, 1);
-  useEffect(() => {
-    if (stop) {
-      hornEffect.play();
-    }
-  }, [stop]);
-  // 차 그리기
-  const drawCar = () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-
-    const carImage = new Image();
-    carImage.src = carImg;
-
-    carImage.onload = () => {
-      if (background.x < (-1500 / CW) * val) {
-        setStop(true);
-        context.drawImage(
-          carImage,
-          background.x + carCoorX * val,
-          carCoor.y,
-          carSize.w * val,
-          carSize.h * canvasHeight
-        );
-        if (carCoor.y > canvas.height) {
-          setTrafficLightStatus("green");
-          hornEffect.stop();
-          setStop(false);
-        }
-        setCarCoor({ ...carCoor, y: carCoor.y + 2 });
-      } else {
-        context.drawImage(
-          carImage,
-          background.x + carCoorX * val,
-          (carCoor.y / CH) * canvasHeight,
-          carSize.w * val,
-          carSize.h * canvasHeight
-        );
-      }
-    };
-  };
-
-  // 캐릭터 이동
-  const v = 5;
-  const handleMove = () => {
-    switch (pressedKey) {
-      case "ArrowLeft":
-        if (background.x < 0) {
-          if (stop) {
-            setBackground({ ...background });
-          } else {
-            setBackground({ ...background, x: background.x + v });
-          }
-        }
-        return;
-      case "ArrowRight":
-        if (background.x + val > canvasRef.current.width) {
-          if (stop) {
-            setBackground({ ...background });
-          } else {
-            setBackground({ ...background, x: background.x - v });
-          }
-        } else {
-          setStop(true);
-        }
-        return;
-    }
-  };
-  const handleAnimation = () => {
-    setCharacterMove(2);
+    let x = e.clientX - context.canvas.offsetLeft;
+    let y = e.clientY - context.canvas.offsetTop;
   };
 
   // 사운드
@@ -325,6 +269,14 @@ export default function Map1() {
     // 4-5. sound.on() 두번째 매개변수인 익명 함수의 리턴값은 soundStop으로 설정한다.
     // 4-6. loop을 true로 설정했기 때문에 soundStop이 실행될 일은 없을 듯.
   }, []);
+
+  const hornEffect = useEffectSound(hornSound, 1);
+  useEffect(() => {
+    if (stop && characterMove !== 1) {
+      hornEffect.play();
+    }
+  }, [stop]);
+
   return (
     <>
       {loading ? (
@@ -336,7 +288,7 @@ export default function Map1() {
           {pressedKey ? null : <Date src={dateFormatImg} />}
           {characterMove === 1 ? (
             <CharacterAtEnd
-              src={characterinMap}
+              src={characterImg}
               width={character[2]}
               onAnimationEnd={handleAnimation}
             />
@@ -358,7 +310,7 @@ export default function Map1() {
             />
           ) : characterMove !== 1 ? (
             <Character
-              src={characterinMap}
+              src={characterImg}
               width={character[2]}
               onAnimationEnd={handleAnimation}
             />
