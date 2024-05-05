@@ -156,7 +156,7 @@ const Item = styled.img`
         ? "7.7vw"
         : round === 2
         ? "10.5vw"
-        : "7.9vw"
+        : "7.3vw"
       : "5.8vw"};
   top: ${({ round, pass }) =>
     pass
@@ -164,7 +164,7 @@ const Item = styled.img`
         ? "62.5vh"
         : round === 2
         ? "58.6vh"
-        : "66.2vh"
+        : "60.6vh"
       : "59.9vh"};
   height: 28.5vh;
 `;
