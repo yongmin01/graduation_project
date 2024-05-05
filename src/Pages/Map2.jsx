@@ -231,16 +231,18 @@ export default function Map2() {
 
   const keyDown = (e) => {
     e.preventDefault();
-    setPressedKey(e.key);
+    if (e.key === "a" || e.key === "d") {
+      setPressedKey(e.key);
+    }
   };
   const keyUp = () => {
     setPressedKey(null);
   };
 
-  const v = 5;
+  const v = 3;
   const handleMove = () => {
     switch (pressedKey) {
-      case "ArrowLeft":
+      case "a":
         if (background < 0) {
           if (stop) {
             setBackground(background);
@@ -249,7 +251,7 @@ export default function Map2() {
           }
         }
         return;
-      case "ArrowRight":
+      case "d":
         if (background + val > canvasRef.current.width) {
           if (stop) {
             setBackground(background);
