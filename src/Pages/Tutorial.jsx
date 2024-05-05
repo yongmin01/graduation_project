@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
-import bgImg from "../sources/images/Map/map1/map2.png";
+import bgImg from "../sources/images/Map/map1/redBg.webp";
 import girlImg from "../sources/images/Intro/girl.svg";
 import boyImg from "../sources/images/Intro/boy.svg";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
