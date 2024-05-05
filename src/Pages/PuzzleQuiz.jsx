@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Howl } from "howler";
+import bgm1 from "../sources/sound/Game/puzzleQuizBgm1.mp3";
+import bgm2 from "../sources/sound/Game/puzzleQuizBgm2.mp3";
 import useEffectSound from "../utils/EffectSound";
 import countDownSound from "../sources/sound/Game/countDown.mp3";
 import endSound from "../sources/sound/Game/end.mp3";
@@ -202,6 +204,7 @@ export default function PuzzleQuiz() {
       const timer = setInterval(() => {
         setTime((prev) => prev - 1);
       }, 1000);
+
       if (time === 5) {
         setUrgent(true);
       }
@@ -212,9 +215,27 @@ export default function PuzzleQuiz() {
       if (roundEnd === "pass") {
         clearInterval(timer);
       }
-      return () => clearInterval(timer);
+      return () => {
+        clearInterval(timer);
+      };
     }
   }, [counter, time, roundEnd]);
+
+  useEffect(() => {
+    if (!counter) {
+      if (quizIndex === 0 || quizIndex === 1) {
+        sound1.play();
+      } else if (quizIndex === 2) {
+        sound2.play();
+      }
+    }
+
+    if (quizIndex === 0 || quizIndex === 1) {
+      return sound1Stop;
+    } else if (quizIndex === 2) {
+      return sound2Stop;
+    }
+  }, [counter]);
 
   useEffect(() => {
     if (roundEnd === "fail") {
@@ -240,13 +261,26 @@ export default function PuzzleQuiz() {
         setLevelupAlert(false);
       }, 2500);
     }
-    setRoundEnd("yet");
     setQuizIndex(quizIndex + 1);
-    // setCounter(true);
+    setRoundEnd("yet");
+    setCounter(true);
     setMatchedCards([]);
     setTime(timeLimit);
   };
 
+  // 사운드
+  const sound1 = new Howl({
+    src: [bgm1],
+    // loop: true,
+    volume: 0.5,
+  });
+  const sound2 = new Howl({
+    src: [bgm2],
+    // loop: true,
+    volume: 0.5,
+  });
+  const sound1Stop = () => sound1.stop();
+  const sound2Stop = () => sound2.stop();
   return (
     <>
       <GameCommonStyle color={"#CDEACF"} />
