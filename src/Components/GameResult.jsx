@@ -29,7 +29,10 @@ export default function GameResult({ pass, score, total, round, end }) {
   const totalDiary = JSON.parse(localStorage.getItem("totalDiary"));
   useEffect(() => {
     if (pass) {
-      localStorage.setItem("totalDiary", JSON.stringify(totalDiary + 1));
+      localStorage.setItem(
+        "totalDiary",
+        JSON.stringify([...totalDiary, round])
+      );
       console.log("얻은 일기장 개수 : ", totalDiary);
     }
   }, [pass]);

@@ -11,6 +11,7 @@ import hornSound from "../sources/sound/Map1/hornSound.mp3";
 // 이미지
 import loading1 from "../sources/images/MP3.gif";
 
+import noSmogBg from "../sources/images/Map/map1/map.webp";
 import greenBg from "../sources/images/Map/map1/greenBg.webp";
 import redBg from "../sources/images/Map/map1/redBg.webp";
 
@@ -28,6 +29,7 @@ import boyImg from "../sources/images/Map/boy/boy.png";
 import Lottie from "react-lottie";
 import girlLottie from "../sources/lottie/girl.json";
 import boyLottie from "../sources/lottie/boy.json";
+import smogLottie from "../sources/lottie/smog.json";
 
 export default function Map1() {
   // 캔버스 크기 세팅
@@ -52,7 +54,7 @@ export default function Map1() {
 
   // 일기장 개수 세팅
   useEffect(() => {
-    localStorage.setItem("totalDiary", JSON.stringify(0));
+    localStorage.setItem("totalDiary", JSON.stringify([0]));
   }, []);
 
   // 캐릭터 성별 세팅
@@ -76,6 +78,14 @@ export default function Map1() {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  const smogImg = {
+    loop: true, // 반복재생
+    autoplay: true, // 자동재생
+    animationData: smogLottie, // 로띠 파일
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   // 계산 줄이기용 변수
   const CW = 5000;
@@ -89,6 +99,14 @@ export default function Map1() {
     (498 / CH) * canvasHeight,
     (330 / CW) * val,
     (392 / CH) * canvasHeight,
+  ];
+
+  const [smogStatus, setSmogStatus] = useState(true);
+  const smog = [
+    (238 / CW) * val,
+    (282 / CH) * canvasHeight,
+    (800 / CW) * val,
+    (200 / CH) * canvasHeight,
   ];
 
   const [shopKidsStatus, setShopKidsStatus] = useState(false);
@@ -131,7 +149,9 @@ export default function Map1() {
     const context = canvas.getContext("2d");
 
     const bg = new Image();
-    if (trafficLightStatus === "green") {
+    if (smogStatus) {
+      bg.src = noSmogBg;
+    } else if (trafficLightStatus === "green") {
       bg.src = greenBg;
     } else {
       bg.src = redBg;
@@ -326,6 +346,7 @@ export default function Map1() {
   };
   const navigator = useNavigate();
   useEffect(() => {
+    if (background < 0) setSmogStatus(false);
     if (background <= -(val - windowSize.width)) {
       setStop(true);
       setCharacterMove(1);
@@ -383,6 +404,22 @@ export default function Map1() {
       ) : (
         <MapContainer>
           {pressedKey ? null : <Date src={dateFormatImg} />}
+          {smogStatus ? (
+            <Smog
+              options={smogImg}
+              width={smog[2]}
+              height={smog[3]}
+              isStopped={false}
+              ariaLabel={""}
+              ariaRole={"img"}
+              style={{
+                position: "absolute",
+                top: "27.5vh",
+                left: "0vw",
+                zIndex: "200",
+              }}
+            />
+          ) : null}
           {characterMove === 1 ? (
             <CharacterAtEnd
               src={characterImg}
@@ -440,6 +477,11 @@ const Date = styled.img`
   top: 0;
   left: 0;
   z-index: 100;
+`;
+const Smog = styled(Lottie)`
+  position: absolute;
+  /* top: 27.5vh;
+  left: 4.7vw; */
 `;
 const translate = keyframes`
   0%{

@@ -59,11 +59,11 @@ export default function Map2() {
   const totalDiary = JSON.parse(localStorage.getItem("totalDiary"));
 
   useEffect(() => {
-    if (totalDiary === 0) {
+    if (totalDiary.length === 1) {
       setGetTotalDiary(get0Diary);
-    } else if (totalDiary === 1) {
+    } else if (totalDiary.length === 2) {
       setGetTotalDiary(get1Diary);
-    } else if (totalDiary === 2) {
+    } else if (totalDiary.length === 3) {
       setGetTotalDiary(get2Diary);
     } else setGetTotalDiary(get3Diary);
   }, []);

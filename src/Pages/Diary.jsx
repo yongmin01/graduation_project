@@ -8,12 +8,19 @@ import gPage3 from "../sources/images/Outro/gPage3.png";
 import bPage1 from "../sources/images/Outro/bPage1.png";
 import bPage2 from "../sources/images/Outro/bPage2.png";
 import bPage3 from "../sources/images/Outro/bPage3.png";
+import gPage1_dirt from "../sources/images/Outro/gPage1_dirt.png";
+import gPage2_dirt from "../sources/images/Outro/gPage2_dirt.png";
+import gPage3_dirt from "../sources/images/Outro/gPage3_dirt.png";
+import bPage1_dirt from "../sources/images/Outro/bPage1_dirt.png";
+import bPage2_dirt from "../sources/images/Outro/bPage2_dirt.png";
+import bPage3_dirt from "../sources/images/Outro/bPage3_dirt.png";
 import emptyPage from "../sources/images/Outro/emptyPage.png";
 import coverBack from "../sources/images/Outro/coverBack.svg";
 import pageBack from "../sources/images/Outro/pageBack.svg";
 
 export default function Diary() {
   const characterSex = JSON.parse(localStorage.getItem("character"));
+  const result = JSON.parse(localStorage.getItem("totalDiary"));
 
   const [page, setPage] = useState(0);
   const [isMoved, setIsMoved] = useState(false);
@@ -76,7 +83,15 @@ export default function Diary() {
         onClick={handleCoverClick}
       />
       <Page1
-        src={characterSex === "girl" ? gPage1 : bPage1}
+        src={
+          characterSex === "girl"
+            ? result.includes(1)
+              ? gPage1
+              : gPage1_dirt
+            : result.includes(1)
+            ? bPage1
+            : bPage1_dirt
+        }
         beforePage={coverFlipped}
         isFlipped={page1Flipped}
         afterPage={page2Flipped}
@@ -84,7 +99,15 @@ export default function Diary() {
       />
 
       <Page
-        src={characterSex === "girl" ? gPage2 : bPage2}
+        src={
+          characterSex === "girl"
+            ? result.includes(2)
+              ? gPage2
+              : gPage2_dirt
+            : result.includes(2)
+            ? bPage2
+            : bPage2_dirt
+        }
         beforePage={page1Flipped}
         isFlipped={page2Flipped}
         afterPage={page3Flipped}
@@ -92,7 +115,15 @@ export default function Diary() {
       />
 
       <Page
-        src={characterSex === "girl" ? gPage3 : bPage3}
+        src={
+          characterSex === "girl"
+            ? result.includes(3)
+              ? gPage3
+              : gPage3_dirt
+            : result.includes(3)
+            ? bPage3
+            : bPage3_dirt
+        }
         beforePage={page2Flipped}
         isFlipped={page3Flipped}
         afterPage={page4Flipped}
