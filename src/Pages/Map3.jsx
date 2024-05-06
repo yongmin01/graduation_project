@@ -579,7 +579,7 @@ export default function Map3() {
     // 2-1. 사용할 배경음 src에 추가
     loop: true,
     // 2-2. 반복재생값 true로 설정 (반복재생 on)
-    volume: 0.1,
+    volume: 0.2,
     // 2-3. 기본 볼륨은 0.1로 설정 (최소 0, 최대 1의 값을 가질 수 있다)
   });
   const soundStop = () => sound.stop();
