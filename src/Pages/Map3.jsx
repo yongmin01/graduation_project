@@ -366,7 +366,12 @@ export default function Map3() {
 
   const keyDown = (e) => {
     e.preventDefault();
-    if (e.key === "a" || e.key === "d") {
+    if (
+      e.key === "a" ||
+      e.key === "d" ||
+      e.key === "ArrowLeft" ||
+      e.key === "ArrowRight"
+    ) {
       setPressedKey(e.key);
     }
   };
@@ -386,7 +391,27 @@ export default function Map3() {
           }
         }
         return;
+      case "ArrowLeft":
+        if (background < 0) {
+          if (stop) {
+            setBackground(background);
+          } else {
+            setBackground(background + v);
+          }
+        }
+        return;
       case "d":
+        if (background + val > canvasRef.current.width) {
+          if (stop) {
+            setBackground(background);
+          } else {
+            setBackground(background - v);
+          }
+        } else {
+          setStop(true);
+        }
+        return;
+      case "ArrowRight":
         if (background + val > canvasRef.current.width) {
           if (stop) {
             setBackground(background);
