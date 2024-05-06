@@ -189,13 +189,14 @@ export default function PuzzleQuiz() {
     }
   }, [flippedCards]);
 
-  useEffect(() => {
-    if (flippedCards.length === 2) {
-    }
-  });
   // 카드 뒤집기 (뒤집힌 카드가 이미 두장이거나 선택된 카드가 매치된 카드에 포함되어 있으면 return)
   const handleCardClick = (index) => {
-    if (flippedCards.length === 2 || matchedCards.includes(index)) return;
+    if (
+      flippedCards.length === 2 ||
+      flippedCards.includes(index) ||
+      matchedCards.includes(index)
+    )
+      return;
     setFlippedCards([...flippedCards, index]);
   };
 
