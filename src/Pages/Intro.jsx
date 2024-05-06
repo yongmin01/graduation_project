@@ -1,48 +1,86 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { keyframes, css } from "styled-components";
+import styled from "styled-components";
+
+import bg from "../sources/images/Outro/outroBg.png";
+import cover from "../sources/images/Outro/diaryCover.webp";
 
 export default function Intro() {
-  const intro = useRef();
+  const introRef = useRef(null);
+  const [videoPlayed, setVideoPlayed] = useState(false);
+  const navigate = useNavigate();
 
-  const playIntro = () => {
-    if (intro.current) {
-      intro.current.play();
+  const handleStart = () => {
+    if (!videoPlayed) {
+      setVideoPlayed(true);
+      if (introRef.current) {
+        introRef.current.play();
+      }
+      introRef.current.addEventListener("ended", () => {
+        navigate("/tutorial");
+      });
     }
   };
-  const navigator = useNavigate();
-  const goToTutorial = () => {
-    setTimeout(() => {
-      navigator("/tutorial");
-    }, 1000);
-  };
+
   return (
-    <Wrapper>
-      <IntroVideo>
-        <Video ref={intro} onClick={playIntro} onEnded={goToTutorial}>
-          <source src="./videos/intro.mp4" />
-        </Video>
-      </IntroVideo>
-    </Wrapper>
+    <Container videoPlayed={videoPlayed}>
+      <DiaryDiv>
+        <Diary src={cover} />
+        <Btn onClick={handleStart}>시작하기</Btn>
+      </DiaryDiv>
+
+      <Video ref={introRef} videoPlayed={videoPlayed}>
+        <source src="./videos/intro.mp4" type="video/mp4" />
+        비디오 태그를 지원하지 않는 브라우저입니다.
+      </Video>
+    </Container>
   );
 }
 
-const Wrapper = styled.div`
-  width: 100%;
+const Container = styled.div`
+  width: 100vw;
   height: 100vh;
+  background-image: ${({ videoPlayed }) =>
+    videoPlayed ? "none" : `url(${bg})`};
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: ${({ videoPlayed }) => (videoPlayed ? "black" : "#89502d")};
 `;
 
-const IntroVideo = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+const DiaryDiv = styled.div`
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4.5vh;
+  margin: 0 auto;
+  padding-top: 17vh;
+`;
+const Diary = styled.img`
+  width: 382px;
+  margin-left: 3.5vw;
+`;
+const Btn = styled.button`
+  width: 36.6vw;
+  height: 9.5vh;
+  border-radius: 30px;
+  border: 3px solid #ffe250;
+  background: #fff7cd;
+  color: #7c4622;
+  text-align: center;
+  font-family: "UhBee jung BOLD";
+  font-size: 4.1vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  cursor: pointer;
 `;
 
 const Video = styled.video`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100vw;
+  display: ${({ videoPlayed }) => (videoPlayed ? "flex" : "none")};
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
 `;
