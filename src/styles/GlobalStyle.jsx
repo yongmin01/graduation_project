@@ -5,6 +5,10 @@ const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-use-select: none;
+    user-select: none;
 }
 
 canvas {
@@ -17,10 +21,7 @@ html, body {
     font-size: 60px;
     line-height: 1.5;
     margin: 0;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-use-select: none;
-    user-select: none;
+    
 }
 
 button {
