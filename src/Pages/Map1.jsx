@@ -24,7 +24,10 @@ import shopKidsImg from "../sources/images/Map/map1/shopKids.webp";
 import telephoneImg from "../sources/images/Map/map1/1541.webp";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
+import girlGif from "../sources/images/Map/girl/girl.gif";
 import boyImg from "../sources/images/Map/boy/boy.png";
+import boyGif from "../sources/images/Map/boy/boy.gif";
+
 // 로티
 import Lottie from "react-lottie";
 import girlLottie from "../sources/lottie/girl.json";
@@ -444,7 +447,8 @@ export default function Map1() {
                 zIndex: "200",
               }}
             />
-          ) : characterMove !== 1 ? (
+          ) : // <Gif src={characterLottie} width={character[2]} />
+          characterMove !== 1 ? (
             <Character
               src={characterImg}
               width={character[2]}
@@ -541,4 +545,11 @@ const Loading = styled.div`
 
 const LoadingImg = styled.img`
   width: 100%;
+`;
+
+const Gif = styled.img`
+  position: absolute;
+  top: 48.6vh;
+  left: 13vw;
+  z-index: 1;
 `;
