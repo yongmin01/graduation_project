@@ -520,11 +520,11 @@ const translate = keyframes`
     opacity: 100%;
   }
   50%{
-    transform:  translateX(250px);
+    transform:  translateX(450px);
     opacity: 100%;
   }
   100% {
-    transform:  translateX(300px);
+    transform:  translateX(500px);
     opacity: 0;
   }
 `;
