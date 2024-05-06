@@ -22,6 +22,7 @@ import carImg from "../sources/images/Map/map1/car.png";
 
 import shopKidsImg from "../sources/images/Map/map1/shopKids.webp";
 import telephoneImg from "../sources/images/Map/map1/1541.webp";
+import telephoneBorderImg from "../sources/images/Map/map1/telephoneBorder.png";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
 import girlGif from "../sources/images/Map/girl/girl.gif";
@@ -124,12 +125,12 @@ export default function Map1() {
 
   const [telephoneStatus, setTelephoneStatus] = useState(false);
   const telephoneBorderSize = {
-    w: (284 / CW) * val,
-    h: (375 / CH) * canvasHeight,
+    w: (448 / CW) * val,
+    h: (470 / CH) * canvasHeight,
   };
   const telephoneBorderCoor = {
-    x: (3558 / CW) * val,
-    y: (340 / CH) * canvasHeight,
+    x: (3489 / CW) * val,
+    y: (287 / CH) * canvasHeight,
   };
   const telephoneBubbleSize = {
     w: (336 / CW) * val,
@@ -146,6 +147,7 @@ export default function Map1() {
 
   const [background, setBackground] = useState(0);
   const [trafficLightStatus, setTrafficLightStatus] = useState("red");
+  const [showBorder, setShowBorder] = useState(true);
   // 배경 그리기
   const drawBg = () => {
     const canvas = canvasRef.current;
@@ -316,6 +318,35 @@ export default function Map1() {
       }
     };
   };
+
+  // 테두리 그리기
+  const drawBorder = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    // 액자 테두리 그리기
+    const telephoneBorder = new Image();
+    telephoneBorder.src = telephoneBorderImg;
+    telephoneBorder.onload = () => {
+      if (!telephoneStatus && showBorder) {
+        context.drawImage(
+          telephoneBorder,
+          background + telephoneBorderCoor.x,
+          telephoneBorderCoor.y,
+          telephoneBorderSize.w,
+          telephoneBorderSize.h
+        );
+      }
+    };
+  };
+  useEffect(() => {
+    if (showBorder) {
+      setInterval(() => {
+        setShowBorder((prev) => !prev);
+      }, 500);
+    }
+  }, [showBorder]);
+
   // canvas가 정의되었다면 애니메이션 그리기
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -329,6 +360,7 @@ export default function Map1() {
     if (!canvasRef.current) return;
     drawBg();
     drawCar();
+    drawBorder();
     if (characterMove !== 1) {
       handleMove();
     }
