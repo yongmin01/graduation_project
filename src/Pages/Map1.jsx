@@ -31,7 +31,7 @@ import boyGif from "../sources/images/Map/boy/boy.gif";
 
 // 로티
 import Lottie from "react-lottie";
-import girlLottie from "../sources/lottie/girl.json";
+import girlLottie from "../sources/lottie/girlThin.json";
 import boyLottie from "../sources/lottie/boy.json";
 import smogLottie from "../sources/lottie/smog.json";
 
@@ -101,8 +101,8 @@ export default function Map1() {
   const character = [
     (188 / CW) * val,
     (498 / CH) * canvasHeight,
-    (330 / CW) * val,
-    (392 / CH) * canvasHeight,
+    (368 / CW) * val,
+    (442 / CH) * canvasHeight,
   ];
 
   const [smogStatus, setSmogStatus] = useState(true);
@@ -490,20 +490,15 @@ export default function Map1() {
             />
           ) : null}
           {pressedKey && characterMove !== 1 ? (
-            <LottieAnimation
-              options={lottieOptions}
-              width={character[2]}
-              height={character[3]}
-              isStopped={false}
-              ariaLabel={""}
-              ariaRole={"img"}
-              style={{
-                position: "absolute",
-                bottom: "13vh",
-                left: "13vw",
-                zIndex: "200",
-              }}
-            />
+            <LottieWrapper width={character[2]} height={character[3]}>
+              <LottieAnimation
+                options={lottieOptions}
+                // height={character[3]}
+                isStopped={false}
+                ariaLabel={""}
+                ariaRole={"img"}
+              />
+            </LottieWrapper>
           ) : // <Gif src={characterLottie} width={character[2]} />
           characterMove !== 1 ? (
             <Character
@@ -576,10 +571,18 @@ const Character = styled.img`
   z-index: 150;
 `;
 const LottieAnimation = styled(Lottie)`
-  position: absolute;
-  bottom: 13vh;
+  /* position: absolute; */
+  /* bottom: 13vh;
   left: 13vw;
-  z-index: 150;
+  z-index: 150; */
+`;
+const LottieWrapper = styled.div`
+  width: ${({ width }) => width};
+  /* height: ${({ height }) => height}; */
+  position: absolute;
+  z-index: 200;
+  top: 46.2vh;
+  left: 11.2vw;
 `;
 
 const Canvas = styled.canvas`
