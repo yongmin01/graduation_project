@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
 import bgImg from "../sources/images/Map/map1/redBg.webp";
-import girlImg from "../sources/images/Intro/girl.svg";
-import boyImg from "../sources/images/Intro/boy.svg";
+// import girlImg from "../sources/images/Intro/girl.svg";
+// import boyImg from "../sources/images/Intro/boy.svg";
+import girlImg from "../sources/images/Map/girl/girl.png";
+import boyImg from "../sources/images/Map/boy/boy.png";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
 import keyboardImg from "../sources/images/Intro/keyboard.svg";
+import keyboardImg2 from "../sources/images/Intro/keyboardWASD.svg";
 import mouseImg from "../sources/images/Intro/mouse.svg";
 import diaryImg from "../sources/images/diary.svg";
 
@@ -87,8 +90,10 @@ export default function Tutorial() {
           ) : step === 3 ? (
             <>
               <Order>
-                <IMG src={keyboardImg} height="22vh" />
-                이동은 좌, 우 방향키로 조작할 수 있습니다.
+                <IMG src={keyboardImg2} height="18.5vh" />
+                캐릭터의 이동은 좌, 우 방향키 또는
+                <br /> A, D 키로 조작할 수 있습니다.
+                <IMG src={keyboardImg} height="17.1vh" />
               </Order>
               <Order>
                 맵에서 궁금한 부분은 꼭 마우스로 클릭해보세요.
