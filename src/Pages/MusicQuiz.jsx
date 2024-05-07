@@ -3,6 +3,8 @@ import styled from "styled-components";
 import musics from "../musicData";
 import Player from "react-player";
 import GameStartCounter from "../Components/GameStartCounter";
+import useEffectSound from "../utils/EffectSound";
+import countDownSound from "../sources/sound/Game/countDown.mp3";
 import BeforeGame from "../Components/BeforeGame";
 import GameResult from "../Components/GameResult";
 import Chance from "../Components/Chance";
@@ -38,6 +40,12 @@ export default function MusicQuiz({}) {
   const score = useRef(0);
   const pass = useRef();
 
+  const countDownEffect = useEffectSound(countDownSound, 2);
+  useEffect(() => {
+    if (game === "start") {
+      countDownEffect.play();
+    }
+  }, [game]);
   useEffect(() => {
     if (counter === false) {
       playerRef.current.seekTo(0);
