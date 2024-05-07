@@ -23,6 +23,9 @@ import Test from "./Pages/Test";
 
 function App() {
   const handle = useFullScreenHandle();
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "\\") handle.enter();
+  });
 
   return (
     <>
