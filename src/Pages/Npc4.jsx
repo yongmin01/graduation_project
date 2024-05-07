@@ -1,15 +1,18 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
-import afterGameMap from "../sources/images/Map/map4/afterGame.png";
+// import afterGameMap from "../sources/images/Map/map4/afterGame.png";
+import afterGameMap from "../sources/images/Map/map4/afterGame.webp";
 import nextBtnImage from "../sources/images/nextBtn.svg";
 import ItemImage from "../sources/images/Game/npc4_play.png";
 
 export default function Npc4() {
   const videoRef = useRef();
-  const [videoEnd, setVideoEnd] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [showNext, setShowNext] = useState(false);
+
+  const characterSex = JSON.parse(localStorage.getItem("character"));
 
   const navigator = useNavigate();
   const routeing = () => {
@@ -22,11 +25,20 @@ export default function Npc4() {
     setButtonClicked(true);
     if (videoRef.current) {
       videoRef.current.play();
-      videoRef.current.addEventListener("ended", () => {
-        setVideoEnd(true);
-      });
     }
   };
+
+  useEffect(() => {
+    const checkTimeAndSetShowNext = () => {
+      if (videoRef.current && videoRef.current.currentTime >= 23) {
+        setShowNext(true);
+      }
+    };
+
+    const intervalId = setInterval(checkTimeAndSetShowNext, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>
@@ -36,7 +48,10 @@ export default function Npc4() {
             ref={videoRef}
             // style={{ display: buttonClicked ? "block" : "none" }}
           >
-            <source src="./videos/npc_tv.mov" />
+            <source
+              src="./videos/npc_tv_g
+.mov"
+            />
           </Video>
 
           <ItemUseBtn
@@ -46,7 +61,7 @@ export default function Npc4() {
             <span>Play</span>
             <img src={ItemImage} width="40%" style={{ zIndex: "100" }} />
           </ItemUseBtn>
-          {videoEnd && (
+          {showNext && (
             <Button onClick={routeing}>
               <Text>이동</Text>
               <NextBtnImg width="2.6vw" fill={"#151B26"} />
@@ -63,7 +78,7 @@ const Npc = styled.div`
   height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
     url(${afterGameMap});
-  background-size: 100% 100%;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,8 +88,8 @@ const Npc = styled.div`
 `;
 const Modal = styled.div`
   position: relative;
-  width: 68vw;
-  height: 66vh;
+  width: 63.1vw;
+  height: 66.4vh;
   border-radius: 41px;
   background-color: #fff;
   display: flex;
@@ -106,8 +121,8 @@ const ItemUseBtn = styled.div`
   line-height: normal;
 `;
 const Video = styled.video`
-  width: 54vw;
-  height: 57vh;
+  width: 54.3vw;
+  height: 57.2vh;
 `;
 const Button = styled.div`
   display: flex;

@@ -2,15 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
-import afterGameMap from "../sources/images/Map/map1/afterGame.png";
+// import afterGameMap from "../sources/images/Map/map1/afterGame.png";
+import afterGameMap from "../sources/images/Map/map1/afterGame.webp";
 import ItemImage from "../sources/images/Game/CD.svg";
 import getDiaryImg from "../sources/images/getDiary.svg";
 
 export default function Npc1() {
   const videoRef = useRef();
-  const [videoEnd, setVideoEnd] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [showNext, setShowNext] = useState(false);
+
+  const characterSex = JSON.parse(localStorage.getItem("character"));
 
   const navigator = useNavigate();
   const routeing = () => {
@@ -23,19 +25,20 @@ export default function Npc1() {
     setButtonClicked(true);
     if (videoRef.current) {
       videoRef.current.play();
-      videoRef.current.addEventListener("ended", () => {
-        setVideoEnd(true);
-      });
     }
   };
 
   useEffect(() => {
-    if (videoEnd) {
-      setTimeout(() => {
+    const checkTimeAndSetShowNext = () => {
+      if (videoRef.current && videoRef.current.currentTime >= 17) {
         setShowNext(true);
-      }, 2000);
-    }
-  }, [videoEnd]);
+      }
+    };
+
+    const intervalId = setInterval(checkTimeAndSetShowNext, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>
@@ -45,7 +48,13 @@ export default function Npc1() {
             ref={videoRef}
             style={{ display: buttonClicked ? "block" : "none" }}
           >
-            <source src="./videos/npc_cd.mov" />
+            <source
+              src={
+                characterSex === "girl"
+                  ? "./videos/npc_cd_g.mov"
+                  : "./videos/npc_cd_b.mov"
+              }
+            />
           </Video>
 
           <ItemUseBtn
@@ -58,13 +67,12 @@ export default function Npc1() {
             </Item>
             <UseText>사용하기</UseText>
           </ItemUseBtn>
-          {videoEnd && (
+          {showNext && (
             <GetDiary>
               <GetDiaryAlert src={getDiaryImg} />
               <Button
                 onClick={routeing}
                 style={{ display: "flex", marginLeft: "auto" }}
-                show={showNext}
               >
                 <Text>다음 맵으로 이동</Text>
                 <NextBtnImg width="2.6vw" fill={"#151B26"} />
@@ -82,7 +90,7 @@ const Npc = styled.div`
   height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
     url(${afterGameMap});
-  background-size: 100% 100%;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,8 +100,8 @@ const Npc = styled.div`
 `;
 const Modal = styled.div`
   position: relative;
-  width: 68vw;
-  height: 66vh;
+  width: 63.1vw;
+  height: 66.4vh;
   border-radius: 41px;
   background-color: #fff;
   display: flex;
@@ -167,12 +175,11 @@ const GetDiaryAlert = styled.img`
   height: 54.2vh;
 `;
 const Video = styled.video`
-  width: 54vw;
-  height: 57vh;
+  width: 54.3vw;
+  height: 57.2vh;
 `;
 
 const Button = styled.div`
-  visibility: ${({ show }) => (show ? "visible" : "hidden")};
   display: flex;
   flex-direction: row;
   align-items: center;
