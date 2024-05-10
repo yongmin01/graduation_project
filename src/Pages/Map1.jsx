@@ -93,8 +93,8 @@ export default function Map1() {
   const CW = 5000;
   const CH = 1024;
   const canvasHeight = windowSize.height;
-  const ratio = canvasHeight / 1024;
-  const val = 5000 * ratio;
+  const [ratio, setRatio] = useState(canvasHeight / 1024);
+  const [val, setVal] = useState(5000 * ratio);
 
   const character = [
     (162 / CW) * val,
@@ -145,7 +145,7 @@ export default function Map1() {
 
   const [background, setBackground] = useState(0);
   const [trafficLightStatus, setTrafficLightStatus] = useState("red");
-  const [showBorder, setShowBorder] = useState(true);
+
   // 배경 그리기
   const drawBg = () => {
     const canvas = canvasRef.current;
@@ -206,6 +206,21 @@ export default function Map1() {
           clickCoor1.y,
           clickSize.w,
           clickSize.h
+        );
+      }
+    };
+
+    // 액자 테두리 그리기
+    const telephoneBorder = new Image();
+    telephoneBorder.src = telephoneBorderImg;
+    telephoneBorder.onload = () => {
+      if (!telephoneStatus) {
+        context.drawImage(
+          telephoneBorder,
+          background + telephoneBorderCoor.x,
+          telephoneBorderCoor.y,
+          telephoneBorderSize.w,
+          telephoneBorderSize.h
         );
       }
     };
@@ -342,34 +357,6 @@ export default function Map1() {
     };
   };
 
-  // 테두리 그리기
-  const drawBorder = () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-
-    // 액자 테두리 그리기
-    const telephoneBorder = new Image();
-    telephoneBorder.src = telephoneBorderImg;
-    telephoneBorder.onload = () => {
-      if (!telephoneStatus && showBorder) {
-        context.drawImage(
-          telephoneBorder,
-          background + telephoneBorderCoor.x,
-          telephoneBorderCoor.y,
-          telephoneBorderSize.w,
-          telephoneBorderSize.h
-        );
-      }
-    };
-  };
-  useEffect(() => {
-    if (showBorder) {
-      setInterval(() => {
-        setShowBorder((prev) => !prev);
-      }, 500);
-    }
-  }, [showBorder]);
-
   // canvas가 정의되었다면 애니메이션 그리기
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -383,7 +370,6 @@ export default function Map1() {
     if (!canvasRef.current) return;
     drawBg();
     drawCar();
-    drawBorder();
     if (characterMove !== 1) {
       handleMove();
     }
@@ -492,7 +478,6 @@ export default function Map1() {
               <Lottie
                 options={lottieOptions}
                 width={character[2]}
-                // height={character[3]}
                 isStopped={false}
                 ariaLabel={""}
                 ariaRole={"img"}

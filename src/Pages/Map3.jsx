@@ -103,8 +103,6 @@ export default function Map3() {
   const canvasHeight = windowSize.height;
   const [ratio, setRatio] = useState(canvasHeight / 1024);
   const [val, setVal] = useState(5000 * ratio);
-  // const ratio = canvasHeight / 1024;
-  // const val = 5000 * ratio;
 
   const character = [
     (162 / CW) * val,
@@ -198,7 +196,6 @@ export default function Map3() {
   const canvasRef = useRef(null);
 
   const [background, setBackground] = useState(0);
-  const [showBorder, setShowBorder] = useState(true);
   const [streetLightStatus, setStreetLightStatus] = useState(0);
   const [busAnimation, setBusAnimation] = useState(true);
   // 배경 그리기
@@ -246,7 +243,7 @@ export default function Map3() {
     // 병아리 아저씨 테두리 그리기
     const chickManBorder = new Image();
     chickManBorder.src = chickManBorderImage;
-    if (!chickStatus && showBorder) {
+    if (!chickStatus) {
       chickManBorder.onload = () => {
         context.drawImage(
           chickManBorder,
@@ -292,7 +289,7 @@ export default function Map3() {
     // 포장마차 테두리 그리기
     const shopBorder = new Image();
     shopBorder.src = shopBorderImage;
-    if (!snackStatus && showBorder) {
+    if (!snackStatus) {
       shopBorder.onload = () => {
         context.drawImage(
           shopBorder,
@@ -471,14 +468,6 @@ export default function Map3() {
       setSugarSnackStatus(true);
     }
   }, [background]);
-
-  useEffect(() => {
-    if (showBorder) {
-      setInterval(() => {
-        setShowBorder((prev) => !prev);
-      }, 500);
-    }
-  }, [showBorder]);
 
   const drawLeaf = () => {
     const canvas = canvasRef.current;

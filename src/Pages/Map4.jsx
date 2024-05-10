@@ -92,8 +92,8 @@ export default function Map4() {
   const CW = 5000;
   const CH = 1024;
   const canvasHeight = windowSize.height;
-  const ratio = canvasHeight / 1024;
-  const val = 5000 * ratio;
+  const [ratio, setRatio] = useState(canvasHeight / 1024);
+  const [val, setVal] = useState(5000 * ratio);
 
   const character = [
     (162 / CW) * val,
@@ -158,7 +158,7 @@ export default function Map4() {
   const canvasRef = useRef(null);
 
   const [background, setBackground] = useState(0);
-  const [showBorder, setShowBorder] = useState(true);
+
   // 배경 그리기
   const drawBg = () => {
     const canvas = canvasRef.current;
@@ -237,6 +237,50 @@ export default function Map4() {
         );
       };
     }
+    // 액자 테두리 그리기
+    const frameBorder = new Image();
+    frameBorder.src = frameBorderImage;
+    frameBorder.onload = () => {
+      if (frameStatus) {
+        context.drawImage(
+          frameBorder,
+          background + frameBorderCoor.x,
+          frameBorderCoor.y,
+          frameBorderSize.w,
+          frameBorderSize.h
+        );
+      }
+    };
+
+    // 닌텐도 테두리 그리기
+    const nintendoBorder = new Image();
+    nintendoBorder.src = nintendoBorderImage;
+    nintendoBorder.onload = () => {
+      if (!nintendoStatus) {
+        context.drawImage(
+          nintendoBorder,
+          background + nintendoBorderCoor.x,
+          nintendoBorderCoor.y,
+          nintendoBorderSize.w,
+          nintendoBorderSize.h
+        );
+      }
+    };
+
+    // 악보 테두리 그리기
+    const noteBorder = new Image();
+    noteBorder.src = noteBorderImage;
+    noteBorder.onload = () => {
+      if (!noteStatus) {
+        context.drawImage(
+          noteBorder,
+          background + noteBorderCoor.x,
+          noteBorderCoor.y,
+          noteBorderSize.w,
+          noteBorderSize.h
+        );
+      }
+    };
   };
 
   // 캐릭터 이동
@@ -339,64 +383,6 @@ export default function Map4() {
     }
   };
 
-  // 테두리 그리기
-  const drawBorder = () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-
-    // 액자 테두리 그리기
-    const frameBorder = new Image();
-    frameBorder.src = frameBorderImage;
-    frameBorder.onload = () => {
-      if (frameStatus && showBorder) {
-        context.drawImage(
-          frameBorder,
-          background + frameBorderCoor.x,
-          frameBorderCoor.y,
-          frameBorderSize.w,
-          frameBorderSize.h
-        );
-      }
-    };
-
-    // 닌텐도 테두리 그리기
-    const nintendoBorder = new Image();
-    nintendoBorder.src = nintendoBorderImage;
-    nintendoBorder.onload = () => {
-      if (!nintendoStatus && showBorder) {
-        context.drawImage(
-          nintendoBorder,
-          background + nintendoBorderCoor.x,
-          nintendoBorderCoor.y,
-          nintendoBorderSize.w,
-          nintendoBorderSize.h
-        );
-      }
-    };
-
-    // 악보 테두리 그리기
-    const noteBorder = new Image();
-    noteBorder.src = noteBorderImage;
-    noteBorder.onload = () => {
-      if (!noteStatus && showBorder) {
-        context.drawImage(
-          noteBorder,
-          background + noteBorderCoor.x,
-          noteBorderCoor.y,
-          noteBorderSize.w,
-          noteBorderSize.h
-        );
-      }
-    };
-  };
-  useEffect(() => {
-    if (showBorder) {
-      setInterval(() => {
-        setShowBorder((prev) => !prev);
-      }, 500);
-    }
-  }, [showBorder]);
-
   // canvas가 정의되었다면 애니메이션 그리기
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -408,7 +394,6 @@ export default function Map4() {
   const render = () => {
     if (!canvasRef.current) return;
     drawBg();
-    drawBorder();
     if (characterMove !== 1) {
       handleMove();
     }

@@ -95,8 +95,8 @@ export default function Map2() {
   const CW = 5000;
   const CH = 1024;
   const canvasHeight = windowSize.height;
-  const ratio = canvasHeight / 1024;
-  const val = 5000 * ratio;
+  const [ratio, setRatio] = useState(canvasHeight / 1024);
+  const [val, setVal] = useState(5000 * ratio);
 
   const character = [
     (162 / CW) * val,
@@ -144,7 +144,7 @@ export default function Map2() {
   const canvasRef = useRef(null);
 
   const [background, setBackground] = useState(0);
-  const [showBorder, setShowBorder] = useState(true);
+
   // 배경 그리기
   const drawBg = () => {
     const canvas = canvasRef.current;
@@ -224,6 +224,35 @@ export default function Map2() {
         );
       }
     };
+    // 우유 박스 테두리 그리기
+    const milkBoxBorder = new Image();
+    milkBoxBorder.src = milkBoxBorderImage;
+    if (!milkStatus) {
+      milkBoxBorder.onload = () => {
+        context.drawImage(
+          milkBoxBorder,
+          background + milkBoxBorderCoor.x,
+          milkBoxBorderCoor.y,
+          milkBoxBorderSize.w,
+          milkBoxBorderSize.h
+        );
+      };
+    }
+
+    // 급식차 테두리 그리기
+    const cartBorder = new Image();
+    cartBorder.src = cartBorderImage;
+    cartBorder.onload = () => {
+      if (!plateStatus) {
+        context.drawImage(
+          cartBorder,
+          background + cartBorderCoor.x,
+          cartBorderCoor.y,
+          cartBorderSize.w,
+          cartBorderSize.h
+        );
+      }
+    };
   };
 
   // 캐릭터 이동
@@ -289,42 +318,6 @@ export default function Map2() {
         }
         return;
     }
-  };
-
-  // 테두리 그리기
-  const drawBorder = () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-
-    // 우유 박스 테두리 그리기
-    const milkBoxBorder = new Image();
-    milkBoxBorder.src = milkBoxBorderImage;
-    if (!milkStatus && showBorder) {
-      milkBoxBorder.onload = () => {
-        context.drawImage(
-          milkBoxBorder,
-          background + milkBoxBorderCoor.x,
-          milkBoxBorderCoor.y,
-          milkBoxBorderSize.w,
-          milkBoxBorderSize.h
-        );
-      };
-    }
-
-    // 급식차 테두리 그리기
-    const cartBorder = new Image();
-    cartBorder.src = cartBorderImage;
-    cartBorder.onload = () => {
-      if (!plateStatus && showBorder) {
-        context.drawImage(
-          cartBorder,
-          background + cartBorderCoor.x,
-          cartBorderCoor.y,
-          cartBorderSize.w,
-          cartBorderSize.h
-        );
-      }
-    };
   };
 
   const [boysAnimation, setBoysAnimation] = useState(true);
@@ -405,14 +398,6 @@ export default function Map2() {
     }
   }, [background]);
 
-  useEffect(() => {
-    if (showBorder) {
-      setInterval(() => {
-        setShowBorder((prev) => !prev);
-      }, 500);
-    }
-  }, [showBorder]);
-
   // canvas가 정의되었다면 애니메이션 그리기
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -424,7 +409,6 @@ export default function Map2() {
   const render = () => {
     if (!canvasRef.current) return;
     drawBg();
-    drawBorder();
     if (boysAnimation) {
       drawBoys();
     }
