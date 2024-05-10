@@ -344,7 +344,7 @@ export default function Map1() {
           // hornEffect.stop();
           setStop(false);
         }
-        setCarCoor({ ...carCoor, y: carCoor.y + 2 });
+        setCarCoor({ ...carCoor, y: carCoor.y + 3 });
       } else {
         context.drawImage(
           carImage,

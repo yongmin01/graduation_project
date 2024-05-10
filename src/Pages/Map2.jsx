@@ -336,7 +336,7 @@ export default function Map2() {
     boy2Img.src = boy2Image;
 
     boy1mg.onload = () => {
-      if (background < (-1595 / 5000) * val) {
+      if (background < (-1900 / 5000) * val) {
         setStop(true);
         context.drawImage(
           boy1mg,
@@ -357,8 +357,8 @@ export default function Map2() {
           setStop(false);
           setBoysAnimation(false);
         }
-        setBoy1Coor({ ...boy1Coor, x: boy1Coor.x - 8 });
-        setBoy2Coor({ ...boy2Coor, x: boy2Coor.x - 9 });
+        setBoy1Coor({ ...boy1Coor, x: boy1Coor.x - 9 });
+        setBoy2Coor({ ...boy2Coor, x: boy2Coor.x - 10 });
       }
     };
   };

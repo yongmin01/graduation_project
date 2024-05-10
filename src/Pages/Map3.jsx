@@ -495,7 +495,7 @@ export default function Map3() {
         setStop(false);
         setLeafAnimation("end");
       }
-      setLeafCoor({ x: leafCoor.x - 7, y: leafCoor.y + 1 });
+      setLeafCoor({ x: leafCoor.x - 9, y: leafCoor.y + 3 });
     };
   };
   const drawBus = () => {
@@ -520,7 +520,7 @@ export default function Map3() {
           setBusAnimation(false);
           setLeafAnimation("now");
         }
-        setBusCoorX(busCoorX + 5);
+        setBusCoorX(busCoorX + 7);
       } else {
         context.drawImage(
           busImg,
