@@ -101,8 +101,10 @@ export default function Map3() {
   const CH = 1024;
   const canvasWidth = windowSize.width;
   const canvasHeight = windowSize.height;
-  const ratio = canvasHeight / 1024;
-  const val = 5000 * ratio;
+  const [ratio, setRatio] = useState(canvasHeight / 1024);
+  const [val, setVal] = useState(5000 * ratio);
+  // const ratio = canvasHeight / 1024;
+  // const val = 5000 * ratio;
 
   const character = [
     (162 / CW) * val,
@@ -179,7 +181,7 @@ export default function Map3() {
     h: (352 / CH) * canvasHeight,
   };
 
-  const [leafAnimation, setLeafAnimation] = useState(false);
+  const [leafAnimation, setLeafAnimation] = useState("before");
   const [leafCoor, setLeafCoor] = useState({
     x: (3800 / CW) * val,
     y: (430 / CH) * canvasHeight,
@@ -349,7 +351,7 @@ export default function Map3() {
     leafImg.src = leafImage;
 
     leafImg.onload = () => {
-      if (!leafAnimation) {
+      if (leafAnimation === "end") {
         context.drawImage(
           leafImg,
           background + leafCoor.x,
@@ -502,7 +504,7 @@ export default function Map3() {
           leafSize.h
         );
         setStop(false);
-        setLeafAnimation(false);
+        setLeafAnimation("end");
       }
       setLeafCoor({ x: leafCoor.x - 7, y: leafCoor.y + 1 });
     };
@@ -527,7 +529,7 @@ export default function Map3() {
 
         if (background + busCoorX > canvasWidth) {
           setBusAnimation(false);
-          setLeafAnimation(true);
+          setLeafAnimation("now");
         }
         setBusCoorX(busCoorX + 5);
       } else {
@@ -556,7 +558,7 @@ export default function Map3() {
     if (busAnimation) {
       drawBus();
     }
-    if (leafAnimation) {
+    if (leafAnimation === "now") {
       drawLeaf();
     }
     if (characterMove !== 1) {
