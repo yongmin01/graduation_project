@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
 import bgImg from "../sources/images/Map/map1/redBg.webp";
-// import girlImg from "../sources/images/Intro/girl.svg";
-// import boyImg from "../sources/images/Intro/boy.svg";
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
@@ -22,7 +20,11 @@ export default function Tutorial() {
 
   useEffect(() => {
     if (step === 2) {
-      localStorage.setItem("character", JSON.stringify(character));
+      if (character !== null) {
+        localStorage.setItem("character", JSON.stringify(character));
+      } else {
+        localStorage.setItem("character", JSON.stringify("girl"));
+      }
     }
   }, [step]);
 
@@ -44,7 +46,7 @@ export default function Tutorial() {
   }, [step]);
 
   return (
-    <Wrapper>
+    <>
       {step === 0 ? (
         <Cover />
       ) : (
@@ -110,15 +112,10 @@ export default function Tutorial() {
           ) : null}
         </Content>
       )}
-    </Wrapper>
+    </>
   );
 }
 
-const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-`;
-// 페이드인 애니메이션 정의
 const fadeIn = keyframes`
   from {
         opacity: 1;
@@ -127,16 +124,7 @@ const fadeIn = keyframes`
     opacity: 0;
   }
 `;
-const fadeOut = keyframes`
-  from {
-        opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
 
-// 애니메이션을 적용할 스타일 컴포넌트
 const Cover = styled.div`
   position: absolute;
   top: 0;
@@ -151,13 +139,13 @@ const Cover = styled.div`
   z-index: 100;
 `;
 const Content = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   text-align: center;
   background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
     url(${bgImg});
   background-repeat: no-repeat;
-  /* padding-top: 19vh; */
+  background-size: cover;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -165,6 +153,7 @@ const Content = styled.div`
   font-family: Uhbee Jung;
   font-weight: 700;
   color: #fff;
+  background-color: pink;
 `;
 
 const CharacterContainer = styled.div`
@@ -174,8 +163,8 @@ const CharacterContainer = styled.div`
 `;
 
 const Character = styled.img`
-  height: 44vh;
-  transition: box-shadow 0.3s ease-in-out; /* 그림자 효과에 애니메이션을 적용합니다 */
+  height: 51.3vh;
+  transition: box-shadow 0.3s ease-in-out;
   &:hover {
     filter: drop-shadow(0px 4px 20px white);
   }
