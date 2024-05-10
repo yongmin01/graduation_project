@@ -25,13 +25,11 @@ import telephoneImg from "../sources/images/Map/map1/1541.webp";
 import telephoneBorderImg from "../sources/images/Map/map1/telephoneBorder.png";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
-import girlGif from "../sources/images/Map/girl/girl.gif";
 import boyImg from "../sources/images/Map/boy/boy.png";
-import boyGif from "../sources/images/Map/boy/boy.gif";
 
 // 로티
 import Lottie from "react-lottie";
-import girlLottie from "../sources/lottie/girlThin.json";
+import girlLottie from "../sources/lottie/girl.json";
 import boyLottie from "../sources/lottie/boy.json";
 import smogLottie from "../sources/lottie/smog.json";
 
@@ -99,8 +97,8 @@ export default function Map1() {
   const val = 5000 * ratio;
 
   const character = [
-    (188 / CW) * val,
-    (498 / CH) * canvasHeight,
+    (162 / CW) * val,
+    (474 / CH) * canvasHeight,
     (368 / CW) * val,
     (442 / CH) * canvasHeight,
   ];
@@ -232,7 +230,7 @@ export default function Map1() {
     setPressedKey(null);
   };
 
-  const v = 3;
+  const v = 5;
   const handleMove = () => {
     switch (pressedKey) {
       case "a":
@@ -490,17 +488,17 @@ export default function Map1() {
             />
           ) : null}
           {pressedKey && characterMove !== 1 ? (
-            <LottieWrapper width={character[2]} height={character[3]}>
-              <LottieAnimation
+            <LottieWrapper>
+              <Lottie
                 options={lottieOptions}
+                width={character[2]}
                 // height={character[3]}
                 isStopped={false}
                 ariaLabel={""}
                 ariaRole={"img"}
               />
             </LottieWrapper>
-          ) : // <Gif src={characterLottie} width={character[2]} />
-          characterMove !== 1 ? (
+          ) : characterMove !== 1 ? (
             <Character
               src={characterImg}
               width={character[2]}
@@ -556,33 +554,25 @@ const translate = keyframes`
   }
   
 `;
+const LottieWrapper = styled.div`
+  position: absolute;
+  z-index: 200;
+  top: 46.2vh;
+  left: 11.2vw;
+`;
 const CharacterAtEnd = styled.img`
   position: absolute;
-  bottom: 13vh;
-  left: 13vw;
+  top: 46.2vh;
+  left: 11.2vw;
   z-index: 150;
   animation: ${translate} 2.5s linear forwards;
   animation-delay: 2s;
 `;
 const Character = styled.img`
   position: absolute;
-  bottom: 13vh;
-  left: 13vw;
-  z-index: 150;
-`;
-const LottieAnimation = styled(Lottie)`
-  /* position: absolute; */
-  /* bottom: 13vh;
-  left: 13vw;
-  z-index: 150; */
-`;
-const LottieWrapper = styled.div`
-  width: ${({ width }) => width};
-  /* height: ${({ height }) => height}; */
-  position: absolute;
-  z-index: 200;
   top: 46.2vh;
   left: 11.2vw;
+  z-index: 150;
 `;
 
 const Canvas = styled.canvas`
@@ -605,11 +595,4 @@ const Loading = styled.div`
 
 const LoadingImg = styled.img`
   width: 100%;
-`;
-
-const Gif = styled.img`
-  position: absolute;
-  top: 48.6vh;
-  left: 13vw;
-  z-index: 1;
 `;

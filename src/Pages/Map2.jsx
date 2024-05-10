@@ -29,6 +29,7 @@ import speakerSoundImage from "../sources/images/Map/map2/speakerSound.png";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
+
 // 로티
 import Lottie from "react-lottie";
 import girlLottie from "../sources/lottie/girl.json";
@@ -98,10 +99,10 @@ export default function Map2() {
   const val = 5000 * ratio;
 
   const character = [
-    (188 / CW) * val,
-    (498 / CH) * canvasHeight,
-    (330 / CW) * val,
-    (392 / CH) * canvasHeight,
+    (162 / CW) * val,
+    (474 / CH) * canvasHeight,
+    (368 / CW) * val,
+    (442 / CH) * canvasHeight,
   ];
 
   const [letterStatus, setLetterStatus] = useState(false);
@@ -244,7 +245,7 @@ export default function Map2() {
     setPressedKey(null);
   };
 
-  const v = 3;
+  const v = 5;
   const handleMove = () => {
     switch (pressedKey) {
       case "a":
@@ -363,8 +364,8 @@ export default function Map2() {
           setStop(false);
           setBoysAnimation(false);
         }
-        setBoy1Coor({ ...boy1Coor, x: boy1Coor.x - 6 });
-        setBoy2Coor({ ...boy2Coor, x: boy2Coor.x - 7 });
+        setBoy1Coor({ ...boy1Coor, x: boy1Coor.x - 8 });
+        setBoy2Coor({ ...boy2Coor, x: boy2Coor.x - 9 });
       }
     };
   };
@@ -506,20 +507,15 @@ export default function Map2() {
             />
           ) : null}
           {pressedKey && characterMove !== 1 ? (
-            <LottieAnimation
-              options={lottieOptions}
-              width={character[2]}
-              height={character[3]}
-              isStopped={false}
-              ariaLabel={""}
-              ariaRole={"img"}
-              style={{
-                position: "absolute",
-                bottom: "13vh",
-                left: "13vw",
-                zIndex: "200",
-              }}
-            />
+            <LottieWrapper>
+              <Lottie
+                options={lottieOptions}
+                width={character[2]}
+                isStopped={false}
+                ariaLabel={""}
+                ariaRole={"img"}
+              />
+            </LottieWrapper>
           ) : characterMove !== 1 ? (
             <Character
               src={characterImg}
@@ -568,6 +564,26 @@ const translate = keyframes`
   }
   
 `;
+const LottieWrapper = styled.div`
+  position: absolute;
+  top: 46.2vh;
+  left: 11.2vw;
+  z-index: 200;
+`;
+const Character = styled.img`
+  position: absolute;
+  top: 46.2vh;
+  left: 11.2vw;
+  z-index: 150;
+`;
+const CharacterAtEnd = styled.img`
+  position: absolute;
+  top: 46.2vh;
+  left: 11.2vw;
+  z-index: 150;
+  animation: ${translate} 2.5s linear forwards;
+  animation-delay: 2s;
+`;
 
 const Canvas = styled.canvas`
   position: absolute;
@@ -589,24 +605,4 @@ const Loading = styled.div`
 
 const LoadingImg = styled.img`
   width: 100%;
-`;
-const CharacterAtEnd = styled.img`
-  position: absolute;
-  bottom: 13vh;
-  left: 13vw;
-  z-index: 150;
-  animation: ${translate} 2.5s linear forwards;
-  animation-delay: 2s;
-`;
-const Character = styled.img`
-  position: absolute;
-  bottom: 13vh;
-  left: 13vw;
-  z-index: 150;
-`;
-const LottieAnimation = styled(Lottie)`
-  position: absolute;
-  bottom: 13vh;
-  left: 13vw;
-  z-index: 150;
 `;

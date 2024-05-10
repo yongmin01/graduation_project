@@ -34,6 +34,7 @@ import busImage from "../sources/images/Map/map3/bus.png";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
+
 // 로티
 import Lottie from "react-lottie";
 import girlLottie from "../sources/lottie/girl.json";
@@ -104,10 +105,10 @@ export default function Map3() {
   const val = 5000 * ratio;
 
   const character = [
-    (188 / CW) * val,
-    (498 / CH) * canvasHeight,
-    (330 / CW) * val,
-    (392 / CH) * canvasHeight,
+    (162 / CW) * val,
+    (474 / CH) * canvasHeight,
+    (368 / CW) * val,
+    (442 / CH) * canvasHeight,
   ];
 
   const [chickStatus, setChickStatus] = useState(false);
@@ -379,7 +380,7 @@ export default function Map3() {
     setPressedKey(null);
   };
 
-  const v = 3;
+  const v = 5;
   const handleMove = () => {
     switch (pressedKey) {
       case "a":
@@ -646,20 +647,15 @@ export default function Map3() {
             />
           ) : null}
           {pressedKey && characterMove !== 1 ? (
-            <LottieAnimation
-              options={lottieOptions}
-              width={character[2]}
-              height={character[3]}
-              isStopped={false}
-              ariaLabel={""}
-              ariaRole={"img"}
-              style={{
-                position: "absolute",
-                bottom: "13vh",
-                left: "13vw",
-                zIndex: "200",
-              }}
-            />
+            <LottieWrapper>
+              <Lottie
+                options={lottieOptions}
+                width={character[2]}
+                isStopped={false}
+                ariaLabel={""}
+                ariaRole={"img"}
+              />
+            </LottieWrapper>
           ) : characterMove !== 1 ? (
             <Character
               src={characterImg}
@@ -667,7 +663,6 @@ export default function Map3() {
               onAnimationEnd={handleAnimation}
             />
           ) : null}
-
           <Canvas
             ref={canvasRef}
             width={windowSize.width}
@@ -694,13 +689,6 @@ const Date = styled.img`
   left: 0;
   z-index: 100;
 `;
-const Canvas = styled.canvas`
-  width: 100%;
-  height: 100%;
-  background-color: brown;
-  overflow-y: hidden;
-`;
-
 const translate = keyframes`
   0%{
     transform:  translateX(0px);
@@ -715,27 +703,32 @@ const translate = keyframes`
     opacity: 0;
   }
 `;
+const LottieWrapper = styled.div`
+  position: absolute;
+  top: 46.2vh;
+  left: 11.2vw;
+  z-index: 200;
+`;
+const Character = styled.img`
+  position: absolute;
+  top: 46.2vh;
+  left: 11.2vw;
+  z-index: 150;
+`;
 const CharacterAtEnd = styled.img`
   position: absolute;
-  bottom: 13vh;
-  left: 13vw;
+  top: 46.2vh;
+  left: 11.2vw;
   z-index: 150;
   animation: ${translate} 2.5s linear forwards;
   animation-delay: 2s;
 `;
-const Character = styled.img`
-  position: absolute;
-  bottom: 13vh;
-  left: 13vw;
-  z-index: 150;
+const Canvas = styled.canvas`
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  overflow-y: hidden;
 `;
-const LottieAnimation = styled(Lottie)`
-  position: absolute;
-  bottom: 13vh;
-  left: 13vw;
-  z-index: 150;
-`;
-
 const Loading = styled.div`
   width: 100vw;
   height: 100vh;
