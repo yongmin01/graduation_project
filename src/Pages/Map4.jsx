@@ -423,14 +423,12 @@ export default function Map4() {
   useEffect(() => {
     if (characterMove === 2) {
       cancelAnimationFrame(requestAnimationRef.current);
-      setLoading(true);
       setTimeout(() => {
         navigator("/npc4");
       }, 1000);
     }
   }, [characterMove]);
 
-  const [loading, setLoading] = useState(false);
   // 사운드
   const sound = new Howl({
     // 2. sound라는 상수에 new Howl 생성자 생성하고 원하는 옵션을 추가한다.
@@ -454,50 +452,42 @@ export default function Map4() {
   }, []);
 
   return (
-    <>
-      {loading ? (
-        <Loading>
-          <LoadingImg src={loading1} />
-        </Loading>
-      ) : (
-        <MapContainer>
-          {pressedKey ? null : <Date src={getTotalDiary} />}
-          {characterMove === 1 ? (
-            <CharacterAtEnd
-              src={characterImg}
-              width={character[2]}
-              onAnimationEnd={handleAnimation}
-            />
-          ) : null}
-          {pressedKey && characterMove !== 1 ? (
-            <LottieWrapper>
-              <Lottie
-                options={lottieOptions}
-                width={character[2]}
-                isStopped={false}
-                ariaLabel={""}
-                ariaRole={"img"}
-              />
-            </LottieWrapper>
-          ) : characterMove !== 1 ? (
-            <Character
-              src={characterImg}
-              width={character[2]}
-              onAnimationEnd={handleAnimation}
-            />
-          ) : null}
-          <Canvas
-            ref={canvasRef}
-            width={windowSize.width}
-            height={windowSize.height}
-            tabIndex={0}
-            onKeyDown={keyDown}
-            onKeyUp={keyUp}
-            onClick={handleCanvasClick}
+    <MapContainer>
+      {pressedKey ? null : <Date src={getTotalDiary} />}
+      {characterMove === 1 ? (
+        <CharacterAtEnd
+          src={characterImg}
+          width={character[2]}
+          onAnimationEnd={handleAnimation}
+        />
+      ) : null}
+      {pressedKey && characterMove === 0 ? (
+        <LottieWrapper>
+          <Lottie
+            options={lottieOptions}
+            width={character[2]}
+            isStopped={false}
+            ariaLabel={""}
+            ariaRole={"img"}
           />
-        </MapContainer>
-      )}
-    </>
+        </LottieWrapper>
+      ) : characterMove === 0 ? (
+        <Character
+          src={characterImg}
+          width={character[2]}
+          onAnimationEnd={handleAnimation}
+        />
+      ) : null}
+      <Canvas
+        ref={canvasRef}
+        width={windowSize.width}
+        height={windowSize.height}
+        tabIndex={0}
+        onKeyDown={keyDown}
+        onKeyUp={keyUp}
+        onClick={handleCanvasClick}
+      />
+    </MapContainer>
   );
 }
 
