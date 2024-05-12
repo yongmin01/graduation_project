@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import React, { useEffect, useState, useRef } from "react";
+import styled, { css, keyframes } from "styled-components";
 import bg from "../sources/images/Outro/outroBg.png";
 
-import cover from "../sources/images/Outro/diaryCover.webp";
-import emptyPage from "../sources/images/Outro/emptyPage.png";
+import cover from "../sources/images/Outro/diaryCover.png";
 import pageBack from "../sources/images/Outro/pageBack.png";
 
 import gPage1 from "../sources/images/Outro/gPage1.png";
@@ -20,15 +19,19 @@ import bPage1_dirt from "../sources/images/Outro/bPage1_dirt.png";
 import bPage2_dirt from "../sources/images/Outro/bPage2_dirt.png";
 import bPage3_dirt from "../sources/images/Outro/bPage3_dirt.png";
 
-import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
+// 사운드
+import { Howl } from "howler";
+import bgm from "../sources/sound/endingBgm.mp3";
 
 export default function Diary() {
   const characterSex = JSON.parse(localStorage.getItem("character"));
   const result = JSON.parse(localStorage.getItem("totalDiary"));
+  const videoRef = useRef();
 
   const [isMoved, setIsMoved] = useState(false);
   const [showCover, setShowCover] = useState(true);
   const [coverFlipped, setCoverFlipped] = useState(false);
+  const [coverFlippedEnd, setCoverFlippedEnd] = useState(false);
   const [page0Back, setPage0Back] = useState(false);
   const [page1Back, setPage1Back] = useState(false);
   const [page2Back, setPage2Back] = useState(false);
@@ -39,24 +42,41 @@ export default function Diary() {
   const [page2Flipped, setPage2Flipped] = useState(false);
   const [page3Flipped, setPage3Flipped] = useState(false);
   const [page4Flipped, setPage4Flipped] = useState(false);
+  const [removeCover, setRemoveCover] = useState(false);
 
+  // 페이지 넘기기 함수
   const handleCoverClick = () => {
-    if (page2Flipped) {
+    if (page3Flipped) {
+      setPage4Flipped(true);
+      setTimeout(() => {
+        setRemoveCover(true);
+      }, 2100);
+    } else if (page2Flipped) {
       setPage3Flipped(true);
     } else if (page1Flipped) {
       setPage2Flipped(true);
     } else if (coverFlipped) {
       setPage1Flipped(true);
+      console.log(videoRef.current.width);
     } else if (isMoved) {
       setCoverFlipped(true);
+      setTimeout(() => {
+        setCoverFlippedEnd(true);
+      }, 500);
     } else {
       setIsMoved(true);
       setTimeout(() => {
         setShowCover(false);
-      }, 1000);
+      }, 500);
     }
   };
 
+  // 마지막 페이지 이동 및 확대 애니메이션 끝나면 영상 재생
+  const startVideo = () => {
+    if (videoRef.current) videoRef.current.play();
+  };
+
+  // 넘기는 애니메이션 뒷장 보여주기
   useEffect(() => {
     if (coverFlipped) {
       setTimeout(() => {
@@ -74,158 +94,193 @@ export default function Diary() {
       setTimeout(() => {
         setPage3Back(true);
       }, 500);
+    } else if (page4Flipped) {
+      setTimeout(() => {
+        setPage4Back(true);
+      }, 500);
     }
-  }, [coverFlipped, page1Flipped, page2Flipped, page3Flipped]);
+  }, [coverFlipped, page1Flipped, page2Flipped, page3Flipped, page4Flipped]);
+
+  // 사운드
+  const sound = new Howl({
+    src: [bgm],
+    loop: true,
+    volume: 0.4,
+  });
+  const soundStop = () => sound.stop();
+
+  useEffect(() => {
+    sound.play();
+    sound.on("play", () => {});
+    return soundStop;
+  }, []);
 
   return (
     <>
-      <BG src={bg} />
+      <Container removecover={removeCover}>
+        <Cover
+          src={cover}
+          onClick={handleCoverClick}
+          ismoved={isMoved}
+          showcover={showCover}
+        />
+        <DiaryDiv>
+          <LastPage
+            coverflipped={coverFlippedEnd}
+            beforepage={page3Flipped}
+            isflipped={page4Flipped}
+            afterpage={page4Flipped}
+            pageslide={page4Flipped}
+            removecover={removeCover}
+            onClick={handleCoverClick}
+            onAnimationEnd={startVideo}
+          >
+            <video ref={videoRef}>
+              <source src="./videos/ending1.mp4" type="video/mp4" />
+            </video>
+          </LastPage>
+          <Page
+            coverflipped={coverFlippedEnd}
+            beforepage={page2Flipped}
+            isflipped={page3Flipped}
+            afterpage={page4Flipped}
+            onClick={handleCoverClick}
+          >
+            <Front
+              src={
+                characterSex === "girl"
+                  ? result.includes(1)
+                    ? gPage3
+                    : gPage3_dirt
+                  : result.includes(1)
+                  ? bPage3
+                  : bPage3_dirt
+              }
+            />
+            <Back
+              src={pageBack}
+              isflipped={page3Back}
+              afterpage={page4Flipped}
+            />
+          </Page>
+          <Page
+            coverflipped={coverFlippedEnd}
+            beforepage={page1Flipped}
+            isflipped={page2Flipped}
+            afterpage={page3Flipped}
+            onClick={handleCoverClick}
+          >
+            <Front
+              src={
+                characterSex === "girl"
+                  ? result.includes(1)
+                    ? gPage2
+                    : gPage2_dirt
+                  : result.includes(1)
+                  ? bPage2
+                  : bPage2_dirt
+              }
+            />
+            <Back
+              src={pageBack}
+              isflipped={page2Back}
+              afterpage={page3Flipped}
+            />
+          </Page>
+          <Page
+            coverflipped={coverFlippedEnd}
+            beforepage={coverFlippedEnd}
+            isflipped={page1Flipped}
+            afterpage={page2Flipped}
+            onClick={handleCoverClick}
+          >
+            <Front
+              src={
+                characterSex === "girl"
+                  ? result.includes(1)
+                    ? gPage1
+                    : gPage1_dirt
+                  : result.includes(1)
+                  ? bPage1
+                  : bPage1_dirt
+              }
+            />
+            <Back
+              src={pageBack}
+              isflipped={page1Back}
+              afterpage={page2Flipped}
+            />
+          </Page>
+          <CoverPage
+            beforepage={isMoved}
+            showcover={showCover}
+            isflipped={coverFlipped}
+            afterpage={page1Flipped}
+            pageslide={page4Flipped}
+            onClick={handleCoverClick}
+          >
+            <Front src={cover} isflipped={coverFlipped} />
 
-      <Cover
-        src={cover}
-        onClick={handleCoverClick}
-        isMoved={isMoved}
-        showCover={showCover}
-      />
-      <DiaryDiv>
-        <CoverPage
-          beforePage={isMoved}
-          showCover={showCover}
-          isFlipped={coverFlipped}
-          afterPage={page1Flipped}
-          onClick={handleCoverClick}
-        >
-          <Front src={cover} isFlipped={coverFlipped} />
-
-          <Back src={pageBack} isFlipped={page0Back} afterPage={page1Flipped} />
-        </CoverPage>
-        <Page
-          beforePage={coverFlipped}
-          isFlipped={page1Flipped}
-          afterPage={page2Flipped}
-          onClick={handleCoverClick}
-        >
-          <Front
-            src={
-              characterSex === "girl"
-                ? result.includes(1)
-                  ? gPage1
-                  : gPage1_dirt
-                : result.includes(1)
-                ? bPage1
-                : bPage1_dirt
-            }
-          />
-          <Back src={pageBack} isFlipped={page1Back} afterPage={page2Flipped} />
-        </Page>
-        <Page
-          beforePage={page1Flipped}
-          isFlipped={page2Flipped}
-          afterPage={page3Flipped}
-          onClick={handleCoverClick}
-        >
-          <Front
-            src={
-              characterSex === "girl"
-                ? result.includes(1)
-                  ? gPage2
-                  : gPage2_dirt
-                : result.includes(1)
-                ? bPage2
-                : bPage2_dirt
-            }
-          />
-          <Back src={pageBack} isFlipped={page2Back} afterPage={page3Flipped} />
-        </Page>
-        <Page
-          beforePage={page2Flipped}
-          isFlipped={page3Flipped}
-          afterPage={page4Flipped}
-          onClick={handleCoverClick}
-        >
-          <Front
-            src={
-              characterSex === "girl"
-                ? result.includes(1)
-                  ? gPage3
-                  : gPage3_dirt
-                : result.includes(1)
-                ? bPage3
-                : bPage3_dirt
-            }
-          />
-          <Back src={pageBack} isFlipped={page3Back} afterPage={page4Flipped} />
-        </Page>
-        <Page
-          beforePage={page3Flipped}
-          isFlipped={page4Flipped}
-          afterPage={page4Flipped}
-          onClick={handleCoverClick}
-        >
-          <Front src={emptyPage} />
-          <Back src={pageBack} isFlipped={page4Back} afterPage={page4Flipped} />
-        </Page>
-      </DiaryDiv>
+            <Back
+              src={pageBack}
+              isflipped={page0Back}
+              afterpage={page1Flipped}
+            />
+          </CoverPage>
+        </DiaryDiv>
+      </Container>
     </>
   );
 }
 
-const BG = styled.img`
+const Container = styled.div`
+  position: relative;
   width: 100vw;
-  /* height: 100vh; */
-  /* object-fit: fill; */
+  height: 100vh;
+  background-image: ${({ removecover }) =>
+    removecover ? "none" : `url(${bg})`};
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: ${({ removecover }) => (removecover ? "black" : "#89502d")};
 `;
+
 const DiaryDiv = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+  perspective: 1000px;
 `;
 
-const Next = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 11px;
-  position: absolute;
-  /* top: 85.8vh; */
-  top: 84vh;
-  /* left: 78.5vw; */
-  left: 72vw;
-  font-size: 1.6vw;
-  font-family: "UhBeeJung";
-  z-index: 100;
-`;
 const Cover = styled.img`
   position: absolute;
   top: 9.2vh;
   left: 33.2vw;
   height: 81vh;
-  display: ${({ showCover }) => (showCover ? "flex" : "none")};
-  transition: transform 1s ease-in-out;
+  display: ${({ showcover }) => (showcover ? "flex" : "none")};
+  transition: transform 0.5s ease-in-out;
 
-  ${({ isMoved }) =>
-    isMoved &&
+  ${({ ismoved }) =>
+    ismoved &&
     css`
       transform: translateX(14.58vw);
     `}
 `;
 const CoverPage = styled.div`
   position: absolute;
-  top: ${({ isFlipped }) => (isFlipped ? "9.2vh" : "7.4vh")};
+  top: ${({ isflipped }) => (isflipped ? "9.2vh" : "7.4vh")};
   left: 47.8vw;
   width: 38vw;
-  perspective: 1000px;
-  transition: all 1s;
+  transition: all 1s ease-in-out;
   backface-visibility: hidden;
-  z-index: 2;
-  display: ${({ showCover }) => (showCover ? "none" : "flex")};
+  display: ${({ showcover, pageslide }) =>
+    pageslide ? "none" : showcover ? "none" : "flex"};
   transform-origin: left center;
-  ${({ isFlipped }) =>
-    isFlipped &&
+  ${({ isflipped }) =>
+    isflipped &&
     css`
-      z-index: 1;
       transform: rotateY(-180deg);
     `}
 `;
@@ -234,16 +289,13 @@ const Page = styled.div`
   top: 9.2vh;
   left: 47.8vw;
   width: 38vw;
-  perspective: 1000px;
-  transition: all 2s;
+  transition: all 1s ease-in-out;
   backface-visibility: hidden;
-  z-index: 2;
-  opacity: ${({ beforePage }) => (beforePage ? "1" : "0")};
+  opacity: ${({ beforepage }) => (beforepage ? "1" : "0")};
   transform-origin: left center;
-  ${({ isFlipped }) =>
-    isFlipped &&
+  ${({ isflipped }) =>
+    isflipped &&
     css`
-      z-index: 1;
       transform: rotateY(-180deg);
     `}
 `;
@@ -259,6 +311,46 @@ const Back = styled.img`
   left: 0;
   height: 83vh;
   transform: rotateY(180deg);
-  visibility: ${({ isFlipped, afterPage }) =>
-    isFlipped ? "visible" : afterPage ? "visible" : "hidden"};
+  visibility: ${({ isflipped, afterpage }) =>
+    isflipped ? "visible" : afterpage ? "hidden" : "hidden"};
+`;
+
+const lastPageTransition = keyframes`
+  0%{
+    transform: translateX(0);
+  }
+  30% {
+    transform: translateX(-14.58vw) scale(1);
+  }
+  70% {
+    transform: translateX(-14.58vw) scale(1);
+    
+  }
+  100%{
+    transform: translateX(-14.58vw)
+    scale(1.1);
+    
+  }
+`;
+
+const LastPage = styled.div`
+  position: absolute;
+  top: 11vh;
+  left: 47.8vw;
+  /* width: 38vw; */
+  backface-visibility: hidden;
+  opacity: ${({ coverflipped }) => (coverflipped ? "1" : "0")};
+  transform-origin: left center;
+  ${({ pageslide }) =>
+    pageslide &&
+    css`
+      animation: ${lastPageTransition} 3s linear forwards;
+    `}
+
+  & > video {
+    width: 100%; /* 동영상 너비 100%로 설정 */
+    /* height: auto; */
+    max-height: 81vh;
+    object-fit: contain; /* 동영상 비율 유지하며 채우기 */
+  }
 `;
