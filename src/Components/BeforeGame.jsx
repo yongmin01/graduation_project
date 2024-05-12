@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import OptionsPath from "../sources/images/Game/optionsBg.svg";
-// import { ReactComponent as RecordBtn } from "../sources/images/Game/speechQuiz/recordBtn.svg";
 
 // 공통 에셋
 import { ReactComponent as OptionPath1 } from "../sources/images/Game/optionPath1.svg";
@@ -18,6 +17,7 @@ import note3 from "../sources/images/Game/musicQuiz/note3.svg";
 import note4 from "../sources/images/Game/musicQuiz/note4.svg";
 import flower_pink from "../sources/images/Game/flower_pink.svg";
 import playIcon_yellow from "../sources/images/Game/playIcon_yellow.svg";
+import communlineUnder_music from "../sources/images/Game/musicQuiz/commonlineUnder_music.png";
 
 // 방송퀴즈 장식
 import boyGirl from "../sources/images/Game/speechQuiz/boyGirl.svg";
@@ -29,12 +29,14 @@ import sprinkle2 from "../sources/images/Game/speechQuiz/sprinkle.svg";
 import flower_purple from "../sources/images/Game/flower_purple.svg";
 import playIcon_blue from "../sources/images/Game/playIcon_blue.svg";
 import recordBtn from "../sources/images/Game/speechQuiz/recordBtn.svg";
+import communlineUnder_speech from "../sources/images/Game/speechQuiz/commonlineUnder_speech.png";
 
 // 퍼즐퀴즈 장식
 import cardGlass from "../sources/images/Game/puzzleQuiz/cardglass.svg";
 import pencilEraser from "../sources/images/Game/puzzleQuiz/pencileraser.svg";
 import flower_yellow from "../sources/images/Game/flower_yellow.svg";
 import playIcon_green from "../sources/images/Game/playIcon_green.svg";
+import communlineUnder_puzzle from "../sources/images/Game/puzzleQuiz/commonlineUnder_puzzle.png";
 
 export default function BeforeGame({ go, title, round }) {
   const [description, setDescription] = useState(false);
@@ -50,26 +52,15 @@ export default function BeforeGame({ go, title, round }) {
             </DescTitle>
             <CommonLine color={round}>
               <span>게임을 성공해 아이템을 얻어 일기장과 교환하세요.</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="940"
-                height="6"
-                viewBox="0 0 940 6"
-                fill="none"
-              >
-                <path
-                  d="M1 1C57.6039 1 80.2658 4.25194 136.869 3.96784C160.743 3.84801 218.23 3.96784 242.042 3.96784C263.248 3.96784 319.97 1 341.176 1C417.511 1 456.925 3.96782 533.259 3.96782C603.366 3.96782 673.472 3.96782 743.578 3.96782C774.705 3.96782 810.176 6.29022 843.892 3.96784C863.517 1 878.83 5.33171 898.239 3.96782C908.533 3.2445 929.195 4.48811 939 1"
-                  stroke={
-                    round === 1
-                      ? "#FFBA68"
-                      : round === 2
-                      ? "#CDEACF"
-                      : "#CEEAFF"
-                  }
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
+              <CommonlineUnder
+                src={
+                  round === 1
+                    ? communlineUnder_music
+                    : round === 2
+                    ? communlineUnder_puzzle
+                    : communlineUnder_speech
+                }
+              />
             </CommonLine>
             {round === 1 ? ( // 음악 퀴즈
               <Order style={{ gap: "3.5vh" }}>
@@ -304,6 +295,9 @@ const CommonLine = styled.span`
   flex-direction: column;
   gap: 4px;
 `;
+const CommonlineUnder = styled.img`
+  width: 65.1vw;
+`;
 const Order = styled.div`
   display: flex;
   flex-direction: column;
@@ -345,12 +339,10 @@ const Options = styled.div`
   display: flex;
   flex-direction: column;
   background-image: url(${OptionsPath});
-  /* width: min-content; */
   height: 39vh;
   padding: 88px 119px 89px 110px;
   background-repeat: no-repeat;
   background-position: center;
-  /* background-size: contain; */
   position: absolute;
   right: 6vw;
   bottom: 10vh;
@@ -501,13 +493,14 @@ const Flower2 = styled.img`
   left: 9vw;
 `;
 const Left = styled.img`
+  width: 2.2vw;
   position: absolute;
-  top: 28vh;
-  left: 39vw;
+  top: 28.5vh;
+  left: 39.2vw;
 `;
 const Right = styled.img`
   position: absolute;
-  top: 29vh;
+  top: 29.1vh;
   right: 20vw; // 원래는 17vw
 `;
 const Sprinkle2 = styled.img`
