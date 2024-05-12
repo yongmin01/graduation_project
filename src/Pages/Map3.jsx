@@ -15,10 +15,10 @@ import bgImage from "../sources/images/Map/map3/map3.webp";
 import leftLightOnBg from "../sources/images/Map/map3/leftLightOnBg.webp";
 import rightLightOnBg from "../sources/images/Map/map3/rightLightOnBg.webp";
 
-import get0Diary from "../sources/images/Map/dateFormat.svg";
-import get1Diary from "../sources/images/Map/get1Diary.svg";
-import get2Diary from "../sources/images/Map/get2Diary.svg";
-import get3Diary from "../sources/images/Map/get3Diary.svg";
+import dateFormatImg from "../sources/images/Map/dateFormat3.svg";
+import diaryImg from "../sources/images/diary.svg";
+import diaryXImg from "../sources/images/diaryX.svg";
+import diaryYetImg from "../sources/images/diaryYet.svg";
 
 import clickImage from "../sources/images/Map/click.png";
 import chickManBorderImage from "../sources/images/Map/map3/chickManBorder.png";
@@ -61,17 +61,21 @@ export default function Map3() {
   }, []);
 
   // 일기장 개수 세팅
-  const [getTotalDiary, setGetTotalDiary] = useState(get0Diary);
+  const [diaries, setDiaries] = useState([]);
   const totalDiary = JSON.parse(localStorage.getItem("totalDiary"));
-
   useEffect(() => {
-    if (totalDiary.length === 1) {
-      setGetTotalDiary(get0Diary);
-    } else if (totalDiary.length === 2) {
-      setGetTotalDiary(get1Diary);
-    } else if (totalDiary.length === 3) {
-      setGetTotalDiary(get2Diary);
-    } else setGetTotalDiary(get3Diary);
+    const temp = [];
+    if (totalDiary) {
+      for (let i = 1; i < totalDiary.length; i++) {
+        if (totalDiary[i]) {
+          temp.push(diaryImg);
+        } else {
+          temp.push(diaryXImg);
+        }
+      }
+      temp.push(diaryYetImg);
+      setDiaries(temp);
+    }
   }, []);
 
   // 캐릭터 성별 세팅
@@ -495,7 +499,7 @@ export default function Map3() {
         setStop(false);
         setLeafAnimation("end");
       }
-      setLeafCoor({ x: leafCoor.x - 9, y: leafCoor.y + 3 });
+      setLeafCoor({ x: leafCoor.x - 9, y: leafCoor.y + 2 });
     };
   };
   const drawBus = () => {
@@ -629,7 +633,16 @@ export default function Map3() {
         </Loading>
       ) : (
         <MapContainer>
-          {pressedKey ? null : <Date src={getTotalDiary} />}
+          {pressedKey ? null : (
+            <Date>
+              <img src={dateFormatImg} />
+              <Diaries>
+                {diaries.map((diary, index) => (
+                  <Diary key={index} src={diary} />
+                ))}
+              </Diaries>
+            </Date>
+          )}
           {characterMove === 1 ? (
             <CharacterAtEnd
               src={characterImg}
@@ -673,12 +686,22 @@ const MapContainer = styled.div`
   width: 100vw;
   height: 100vh;
 `;
-const Date = styled.img`
-  width: 50vw;
+const Date = styled.div`
+  width: min-content;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+`;
+const Diaries = styled.div`
+  position: absolute;
+  left: 57%;
+`;
+const Diary = styled.img`
+  width: 6.5vw;
+  z-index: 20;
 `;
 const translate = keyframes`
   0%{

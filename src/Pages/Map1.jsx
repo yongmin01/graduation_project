@@ -15,7 +15,7 @@ import noSmogBg from "../sources/images/Map/map1/map.webp";
 import greenBg from "../sources/images/Map/map1/greenBg.webp";
 import redBg from "../sources/images/Map/map1/redBg.webp";
 
-import dateFormatImg from "../sources/images/Map/dateFormat.svg";
+import dateFormatImg from "../sources/images/Map/dateFormat1.svg";
 
 import clickImage from "../sources/images/Map/click.png";
 import carImg from "../sources/images/Map/map1/car.png";
@@ -52,11 +52,6 @@ export default function Map1() {
       // 중복 이벤트 방지용 클린업
       window.removeEventListener("resize", resizeHandler);
     };
-  }, []);
-
-  // 일기장 개수 세팅
-  useEffect(() => {
-    localStorage.setItem("totalDiary", JSON.stringify([0]));
   }, []);
 
   // 캐릭터 성별 세팅

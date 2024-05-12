@@ -13,10 +13,9 @@ import loading1 from "../sources/images/icettaeng.gif";
 import frameBgImage from "../sources/images/Map/map4/frameBg.webp";
 import panelBgImage from "../sources/images/Map/map4/panelBg.webp";
 
-import get0Diary from "../sources/images/Map/dateFormat.svg";
-import get1Diary from "../sources/images/Map/get1Diary.svg";
-import get2Diary from "../sources/images/Map/get2Diary.svg";
-import get3Diary from "../sources/images/Map/get3Diary.svg";
+import dateFormatImg from "../sources/images/Map/dateFormat4.svg";
+import diaryImg from "../sources/images/diary.svg";
+import diaryXImg from "../sources/images/diaryX.svg";
 
 import clickImage from "../sources/images/Map/click.png";
 import frameBorderImage from "../sources/images/Map/map4/frameBorder.png";
@@ -53,17 +52,22 @@ export default function Map4() {
   }, []);
 
   // 일기장 개수 세팅
-  const [getTotalDiary, setGetTotalDiary] = useState(get0Diary);
+  const [diaries, setDiaries] = useState([]);
   const totalDiary = JSON.parse(localStorage.getItem("totalDiary"));
-
   useEffect(() => {
-    if (totalDiary.length === 1) {
-      setGetTotalDiary(get0Diary);
-    } else if (totalDiary.length === 2) {
-      setGetTotalDiary(get1Diary);
-    } else if (totalDiary.length === 3) {
-      setGetTotalDiary(get2Diary);
-    } else setGetTotalDiary(get3Diary);
+    const temp = [];
+    if (totalDiary) {
+      for (let i = 1; i < totalDiary.length; i++) {
+        if (totalDiary[i]) {
+          console.log("pushed O");
+          temp.push(diaryImg);
+        } else {
+          console.log("pushsedX");
+          temp.push(diaryXImg);
+        }
+      }
+      setDiaries(temp);
+    }
   }, []);
 
   // 캐릭터 성별 세팅
@@ -453,7 +457,16 @@ export default function Map4() {
 
   return (
     <MapContainer>
-      {pressedKey ? null : <Date src={getTotalDiary} />}
+      {pressedKey ? null : (
+        <Date>
+          <img src={dateFormatImg} />
+          <Diaries>
+            {diaries.map((diary, index) => (
+              <Diary key={index} src={diary} />
+            ))}
+          </Diaries>
+        </Date>
+      )}
       {characterMove === 1 ? (
         <CharacterAtEnd
           src={characterImg}
@@ -495,12 +508,22 @@ const MapContainer = styled.div`
   width: 100vw;
   height: 100vh;
 `;
-const Date = styled.img`
-  width: 50vw;
+const Date = styled.div`
+  width: min-content;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+`;
+const Diaries = styled.div`
+  position: absolute;
+  left: 57%;
+`;
+const Diary = styled.img`
+  width: 6.5vw;
+  z-index: 20;
 `;
 const translate = keyframes`
   0%{
