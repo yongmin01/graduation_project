@@ -26,17 +26,6 @@ export default function Tutorial() {
         localStorage.setItem("character", JSON.stringify("girl"));
       }
     }
-  }, [step]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setStep((prev) => prev + 1);
-    }, 1000);
-  }, []);
-
-  const navigator = useNavigate();
-
-  useEffect(() => {
     if (step === 4) {
       setTimeout(() => {
         setStep(5);
@@ -44,6 +33,15 @@ export default function Tutorial() {
       }, 3000);
     }
   }, [step]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setStep((prev) => prev + 1);
+    }, 1000);
+    localStorage.setItem("totalDiary", JSON.stringify([0]));
+  }, []);
+
+  const navigator = useNavigate();
 
   return (
     <>
