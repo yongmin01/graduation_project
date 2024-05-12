@@ -52,7 +52,7 @@ export default function MusicQuiz({}) {
       setNowPlaying(true);
       setTimeout(() => {
         setShowPass(true);
-      }, 5000);
+      }, 3000);
     }
   }, [counter]);
 
@@ -73,7 +73,7 @@ export default function MusicQuiz({}) {
         setNowPlaying(false);
       }
     }
-  }, [currentTime]);
+  }, [currentTime, roundEnd]);
 
   const next = () => {
     setRoundEnd(false);
@@ -121,8 +121,8 @@ export default function MusicQuiz({}) {
       setHint3Left(false);
     }
   };
-  // 답안 제출 관련 함수
 
+  // 답안 제출 관련 함수
   const clickSubmit = () => {
     if (nowPlaying) {
       setNowPlaying(false);
@@ -148,8 +148,8 @@ export default function MusicQuiz({}) {
     }
     return answer;
   };
+
   const checkAnswer = (value) => {
-    // setNowPlaying(false);
     const answer1 = normalization(musics[nowPlayingIndex].title[0]);
     const answer2 = normalization(musics[nowPlayingIndex].title[1]);
     if (value === answer1 || value === answer2) {
@@ -182,15 +182,19 @@ export default function MusicQuiz({}) {
       setHint2Left(true);
       setHint3Left(true);
       setShowPass(false);
+
       setTimeout(() => {
         setShowPass(true);
-      }, 5000);
+      }, 3000);
       setNowPlaying(true);
     }
   }, [nowPlayingIndex]);
 
   useEffect(() => {
     if (roundEnd) {
+      if (nowPlaying) {
+        setNowPlaying(false);
+      }
       play();
       setUserAnswer(musics[nowPlayingIndex].title[0]);
       setShowArtist(true);
@@ -211,14 +215,18 @@ export default function MusicQuiz({}) {
     }
   }, [nowPlayingIndex, roundEnd]);
 
-  const handleEnd = () => {
-    if (score.current >= 3) {
-      pass.current = true;
-    } else {
-      pass.current = false;
+  useEffect(() => {
+    if (endAlert) {
+      setTimeout(() => {
+        if (score.current >= 3) {
+          pass.current = true;
+        } else {
+          pass.current = false;
+        }
+        setGame("end");
+      }, 1000); // 게임종료에서 넘어가는 시점 조절
     }
-    setGame("end");
-  };
+  }, [endAlert]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -259,8 +267,7 @@ export default function MusicQuiz({}) {
                 <span>PASS</span>
                 <img src={playIcon} />
               </NextBtn>
-            ) : null}
-            {showPass ? null : (
+            ) : (
               <NextBtn
                 onClick={next}
                 show={roundEnd && nowPlayingIndex !== totalQuiz - 1}
@@ -337,11 +344,7 @@ export default function MusicQuiz({}) {
             ) : null}
           </Container>
 
-          <>
-            {endAlert ? (
-              <EndAlert onClick={handleEnd}>게임 종료!</EndAlert>
-            ) : null}
-          </>
+          {endAlert ? <EndAlert>게임 종료!</EndAlert> : null}
         </Game>
       ) : game === "before" ? (
         <>
@@ -395,7 +398,7 @@ const Progress = styled.div`
   color: #151b26;
 `;
 const QuizIndex = styled.div`
-  font-size: 6.2vw;
+  font-size: 8.7vh;
   font-family: "UhbeeJung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
