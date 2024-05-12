@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-// import { useSpeechRecognition } from "react-speech-kit";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -11,6 +10,7 @@ import Chance from "../Components/Chance";
 import speech from "../speechData";
 import playIcon from "../sources/images/Game/playIcon_blue.svg";
 
+import PlayBtnImg from "../sources/images/Game/speechQuiz/playBtn.svg";
 import startBtn from "../sources/images/Game/speechQuiz/startBtn.svg";
 import stopBtn from "../sources/images/Game/speechQuiz/stopBtn.svg";
 
@@ -34,19 +34,7 @@ export default function SpeechQuiz({}) {
   const score = useRef(0);
   const pass = useRef();
 
-  // 음성 전환 로직 - react-speech-kit 사용
-  // const { listen, listening, stop } = useSpeechRecognition({
-  //   onResult: (result) => {
-  //     setUserAnswer(result);
-  //   },
-  // });
-
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  const { transcript, listening } = useSpeechRecognition();
 
   useEffect(() => {
     setTimeout(() => {
@@ -63,19 +51,31 @@ export default function SpeechQuiz({}) {
   const play = () => {
     playerRef.current.currentTime = 0;
     playerRef.current.play();
+    setNowPlaying(true);
   };
   const replay = () => {
-    playerRef.current.currentTime = 0;
-    playerRef.current.play();
+    if (!nowPlaying && !listening) {
+      playerRef.current.currentTime = 0;
+      playerRef.current.play();
+      setNowPlaying(true);
+    }
   };
   const pauseVideo = () => {
     if (playerRef.current.currentTime >= speech[quizIndex].end && !roundEnd) {
       playerRef.current.pause();
+      setNowPlaying(false);
+    }
+  };
+  const record = () => {
+    if (!nowPlaying) {
+      SpeechRecognition.startListening();
     }
   };
   const handleFirstTry = () => {
-    SpeechRecognition.startListening();
-    setIsFirstTry(false);
+    if (!nowPlaying) {
+      SpeechRecognition.startListening();
+      setIsFirstTry(false);
+    }
   };
   const next = () => {
     if (quizIndex === totalQuiz - 1) {
@@ -109,6 +109,19 @@ export default function SpeechQuiz({}) {
     }
   }, [quizIndex, roundEnd]);
 
+  useEffect(() => {
+    if (endAlert) {
+      setTimeout(() => {
+        if (score.current >= 3) {
+          pass.current = true;
+        } else {
+          pass.current = false;
+        }
+        setGame("end");
+      }, 1000); // 게임종료에서 넘어가는 시점 조절
+    }
+  }, [endAlert]);
+
   const handlePass = () => {
     if (listening) SpeechRecognition.stopListening();
     if (nowPlaying) setNowPlaying(false);
@@ -118,14 +131,6 @@ export default function SpeechQuiz({}) {
     setTimeout(() => {
       setCorrect(null);
     }, 2000);
-  };
-  const handleEnd = () => {
-    if (score.current >= 2) {
-      pass.current = true;
-    } else {
-      pass.current = false;
-    }
-    setGame("end");
   };
 
   const normalization = (s) => {
@@ -197,9 +202,7 @@ export default function SpeechQuiz({}) {
                   <span>PASS</span>
                   <img src={playIcon} />
                 </NextBtn>
-              ) : null}
-
-              {showPass ? null : (
+              ) : (
                 <NextBtn
                   onClick={next}
                   show={roundEnd && quizIndex !== totalQuiz - 1}
@@ -212,6 +215,7 @@ export default function SpeechQuiz({}) {
             <QuizDiv isFirstTry={isFirstTry}>
               <Quiz>
                 <Player>
+                  {nowPlaying ? null : <PlayBtn src={PlayBtnImg} />}
                   <Video
                     src={`./videos/speechQuiz${quizIndex}.mp4#t,${speech[quizIndex].end}`}
                     ref={playerRef}
@@ -278,7 +282,7 @@ export default function SpeechQuiz({}) {
                     <BtnDiv>
                       {listening ? (
                         <Btn
-                          onClick={SpeechRecognition.stopListening}
+                          onClick={record}
                           isFirstTry={isFirstTry}
                           disabled={roundEnd}
                         >
@@ -287,7 +291,7 @@ export default function SpeechQuiz({}) {
                         </Btn>
                       ) : (
                         <Btn
-                          onClick={SpeechRecognition.startListening}
+                          onClick={record}
                           isFirstTry={isFirstTry}
                           disabled={roundEnd}
                         >
@@ -314,9 +318,7 @@ export default function SpeechQuiz({}) {
           ) : correct === false ? (
             <Correct src={wrongImg} />
           ) : null}
-          {endAlert ? (
-            <EndAlert onClick={handleEnd}>게임 종료!</EndAlert>
-          ) : null}
+          {endAlert ? <EndAlert>게임 종료!</EndAlert> : null}
         </Game>
       ) : game === "before" ? (
         <>
@@ -346,6 +348,7 @@ const Game = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 7.3vh;
   align-items: start;
 `;
@@ -402,7 +405,15 @@ const Player = styled.div`
   position: relative;
   justify-content: center;
 `;
+
+const PlayBtn = styled.img`
+  position: absolute;
+  margin: 0 auto;
+  top: 50%;
+  transform: translateY(-50%);
+`;
 const Video = styled.video`
+  width: 36.2vw;
   height: 34.1vh;
 `;
 const AnswerInfo = styled.div`
