@@ -29,11 +29,12 @@ export default function GameResult({ pass, score, total, round, end }) {
   const totalDiary = JSON.parse(localStorage.getItem("totalDiary"));
   useEffect(() => {
     if (pass) {
+      localStorage.setItem("totalDiary", JSON.stringify([...totalDiary, true]));
+    } else {
       localStorage.setItem(
         "totalDiary",
-        JSON.stringify([...totalDiary, round])
+        JSON.stringify([...totalDiary, false])
       );
-      console.log("얻은 일기장 개수 : ", totalDiary);
     }
   }, [pass]);
   return (
@@ -104,7 +105,7 @@ const Tittle = styled.span`
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "UhBee jung BOLD";
-  font-size: 11vh;
+  font-size: 11.7vh;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
@@ -194,7 +195,7 @@ const OptionText = styled.span`
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "UhBee jung";
-  font-size: 4.16vw;
+  font-size: 5.8vh;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
