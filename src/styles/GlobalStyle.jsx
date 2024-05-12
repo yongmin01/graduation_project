@@ -11,6 +11,10 @@ const GlobalStyle = createGlobalStyle`
     user-select: none;
 }
 
+*:focus {
+    outline: 0;
+}
+
 canvas {
       margin: 0;
       padding: 0;
