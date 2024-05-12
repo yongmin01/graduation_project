@@ -149,10 +149,10 @@ export default function Diary() {
             <Front
               src={
                 characterSex === "girl"
-                  ? result.includes(1)
+                  ? result[3]
                     ? gPage3
                     : gPage3_dirt
-                  : result.includes(1)
+                  : result[3]
                   ? bPage3
                   : bPage3_dirt
               }
@@ -173,10 +173,10 @@ export default function Diary() {
             <Front
               src={
                 characterSex === "girl"
-                  ? result.includes(1)
+                  ? result[2]
                     ? gPage2
                     : gPage2_dirt
-                  : result.includes(1)
+                  : result[2]
                   ? bPage2
                   : bPage2_dirt
               }
@@ -197,10 +197,10 @@ export default function Diary() {
             <Front
               src={
                 characterSex === "girl"
-                  ? result.includes(1)
+                  ? result[1]
                     ? gPage1
                     : gPage1_dirt
-                  : result.includes(1)
+                  : result[1]
                   ? bPage1
                   : bPage1_dirt
               }
