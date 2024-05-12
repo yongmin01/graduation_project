@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import bg from "../sources/images/Outro/outroBg.png";
-import cover from "../sources/images/Outro/diaryCover.webp";
+import cover from "../sources/images/Outro/diaryCover.png";
 
 export default function Intro() {
   const introRef = useRef(null);
