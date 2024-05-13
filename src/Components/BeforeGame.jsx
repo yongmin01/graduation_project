@@ -338,13 +338,14 @@ const GameStartDiv = styled.div`
 const Options = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 20px;
   background-image: url(${OptionsPath});
   height: 39vh;
   padding: 88px 119px 89px 110px;
   background-repeat: no-repeat;
   background-position: center;
   position: absolute;
-  right: 6vw;
+  right: 8vw;
   bottom: 10vh;
   text-align: center;
   justify-content: center;
