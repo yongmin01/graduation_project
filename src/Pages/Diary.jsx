@@ -327,8 +327,8 @@ const lastPageTransition = keyframes`
     
   }
   100%{
-    transform: translateX(-14.58vw)
-    scale(1.1);
+    transform: translateX(-14.58vw) translateY(-2vh)
+    scale(1.1) ;
     
   }
 `;
