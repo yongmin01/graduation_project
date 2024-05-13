@@ -1,10 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+
 import musics from "../musicData";
 import Player from "react-player";
 import GameStartCounter from "../Components/GameStartCounter";
+
+// 사운드
+import { Howl } from "howler";
+import bgm from "../sources/sound/Game/musicQuizBgm.mp3";
 import useEffectSound from "../utils/EffectSound";
+import correctSound from "../sources/sound/Game/correct.mp3";
+import wrongSound from "../sources/sound/Game/wrong.mp3";
 import countDownSound from "../sources/sound/Game/countDown.mp3";
+
 import BeforeGame from "../Components/BeforeGame";
 import GameResult from "../Components/GameResult";
 import Chance from "../Components/Chance";
@@ -40,10 +48,26 @@ export default function MusicQuiz({}) {
   const score = useRef(0);
   const pass = useRef();
 
+  // 사운드
+  const sound = new Howl({
+    src: [bgm],
+    loop: true,
+    volume: 1,
+  });
+  const soundStop = () => sound.stop();
+
+  useEffect(() => {
+    sound.play();
+    sound.on("play", () => {});
+    return soundStop;
+  }, []);
   const countDownEffect = useEffectSound(countDownSound, 2);
   useEffect(() => {
     if (game === "start") {
       countDownEffect.play();
+    }
+    if (game === "before") {
+      return soundStop;
     }
   }, [game]);
   useEffect(() => {
@@ -149,12 +173,15 @@ export default function MusicQuiz({}) {
     return answer;
   };
 
+  const correctEffect = useEffectSound(correctSound, 1);
+  const wrongEffect = useEffectSound(wrongSound, 1);
   const checkAnswer = (value) => {
     const answer1 = normalization(musics[nowPlayingIndex].title[0]);
     const answer2 = normalization(musics[nowPlayingIndex].title[1]);
     if (value === answer1 || value === answer2) {
       score.current = score.current + 1;
       setCorrect(true);
+      correctEffect.play();
       setShowArtist(true);
       setUserAnswer(musics[nowPlayingIndex].title[0]);
       setShowPass(false);
@@ -168,6 +195,7 @@ export default function MusicQuiz({}) {
       }
       setChance((chance) => chance - 1);
       setCorrect(false);
+      wrongEffect.play();
       setTimeout(() => {
         setCorrect(null);
       }, 2000);
@@ -204,6 +232,7 @@ export default function MusicQuiz({}) {
   useEffect(() => {
     if (chance === 0) {
       setRoundEnd(true);
+      setShowPass(false);
     }
   }, [chance]);
 
@@ -388,7 +417,7 @@ const Center = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 13.3vw;
+  margin-left: 15.3vw; // 임의로 맞춤
   margin-right: ${({ showPass }) => (showPass ? "16.9vw" : "13.4vw")};
 `;
 const Progress = styled.div`

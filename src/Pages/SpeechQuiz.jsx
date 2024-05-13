@@ -3,6 +3,14 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import styled from "styled-components";
+
+// 사운드
+import { Howl } from "howler";
+import bgm from "../sources/sound/Game/speechQuizBgm.mp3";
+import useEffectSound from "../utils/EffectSound";
+import correctSound from "../sources/sound/Game/correct.mp3";
+import wrongSound from "../sources/sound/Game/wrong.mp3";
+
 import GameCommonStyle from "../utils/GameCommonStyle";
 import BeforeGame from "../Components/BeforeGame";
 import GameResult from "../Components/GameResult";
@@ -36,10 +44,28 @@ export default function SpeechQuiz({}) {
 
   const { transcript, listening } = useSpeechRecognition();
 
+  // 사운드
+  const sound = new Howl({
+    src: [bgm],
+    loop: true,
+    volume: 1,
+  });
+
+  const soundStop = () => sound.stop();
   useEffect(() => {
-    setTimeout(() => {
-      setShowPass(true);
-    }, 5000);
+    sound.play();
+    sound.on("play", () => {});
+    return soundStop;
+  }, []);
+
+  useEffect(() => {
+    if (game === "before") {
+      return soundStop;
+    }
+  }, [game]);
+
+  useEffect(() => {
+    setShowPass(true);
   }, [quizIndex]);
 
   useEffect(() => {
@@ -141,6 +167,9 @@ export default function SpeechQuiz({}) {
     }
     return answer;
   };
+
+  const correctEffect = useEffectSound(correctSound, 1);
+  const wrongEffect = useEffectSound(wrongSound, 1);
   const clickSubmit = () => {
     if (userAnswer === null) return;
     SpeechRecognition.stopListening();
@@ -149,6 +178,7 @@ export default function SpeechQuiz({}) {
     }
     if (normalization(userAnswer) === normalization(speech[quizIndex].answer)) {
       setCorrect(true);
+      correctEffect.play();
       score.current = score.current + 1;
       setRoundEnd(true);
       setShowPass(false);
@@ -157,6 +187,7 @@ export default function SpeechQuiz({}) {
       }, 650);
     } else {
       setCorrect(false);
+      wrongEffect.play();
       setTimeout(() => {
         setCorrect(null);
       }, 900);
@@ -361,7 +392,7 @@ const Center = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 18.8vw;
+  margin-left: 25.8vw; // 임의로 맞춤
   margin-right: ${({ showPass }) => (showPass ? "16.9vw" : "14.5vw")};
 `;
 const Progress = styled.div`

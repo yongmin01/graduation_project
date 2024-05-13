@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+
+// 사운드
 import { Howl } from "howler";
+import bgm from "../sources/sound/Game/puzzleQuizBgm.mp3";
 import bgm1 from "../sources/sound/Game/puzzleQuizBgm1.mp3";
 import bgm2 from "../sources/sound/Game/puzzleQuizBgm2.mp3";
 import useEffectSound from "../utils/EffectSound";
 import countDownSound from "../sources/sound/Game/countDown.mp3";
 import endSound from "../sources/sound/Game/end.mp3";
+
 import flipSound from "../sources/sound/Game/flip.mp3";
 import GameStartCounter from "../Components/GameStartCounter.jsx";
 import BeforeGame from "../Components/BeforeGame.jsx";
@@ -135,6 +139,19 @@ export default function PuzzleQuiz() {
   ];
   const symbols2 = ["A1", "B1", "C1", "D1", "E1", "F1"];
 
+  // 사운드
+  const sound = new Howl({
+    src: [bgm],
+    loop: true,
+    volume: 1,
+  });
+  const soundStop = () => sound.stop();
+  useEffect(() => {
+    sound.play();
+    sound.on("play", () => {});
+    return soundStop;
+  }, []);
+
   const countDownEffect = useEffectSound(countDownSound, 2);
   const endEffect = useEffectSound(endSound, 2);
 
@@ -155,6 +172,9 @@ export default function PuzzleQuiz() {
   useEffect(() => {
     if (game === "start") {
       countDownEffect.play();
+    }
+    if (game === "before") {
+      return soundStop;
     }
   }, [game]);
   useEffect(() => {
