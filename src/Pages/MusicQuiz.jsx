@@ -70,6 +70,7 @@ export default function MusicQuiz({}) {
       return soundStop;
     }
   }, [game]);
+
   useEffect(() => {
     if (counter === false) {
       playerRef.current.seekTo(0);
@@ -87,14 +88,16 @@ export default function MusicQuiz({}) {
   };
 
   useEffect(() => {
-    if (usingHint2) {
-      if (currentTime.playedSeconds >= 5) {
-        setNowPlaying(false);
-        setUsingHint2(false);
-      }
-    } else if (currentTime.playedSeconds >= 2) {
-      if (!roundEnd) {
-        setNowPlaying(false);
+    if (!roundEnd) {
+      if (usingHint2) {
+        if (currentTime.playedSeconds >= 5) {
+          setNowPlaying(false);
+          setUsingHint2(false);
+        }
+      } else if (currentTime.playedSeconds >= 2) {
+        if (!roundEnd) {
+          setNowPlaying(false);
+        }
       }
     }
   }, [currentTime, roundEnd]);
@@ -114,7 +117,7 @@ export default function MusicQuiz({}) {
   const handlePass = () => {
     setRoundEnd(true);
     setShowPass(false);
-
+    wrongEffect.play();
     setCorrect(false);
     setTimeout(() => {
       setCorrect(null);
@@ -253,7 +256,7 @@ export default function MusicQuiz({}) {
           pass.current = false;
         }
         setGame("end");
-      }, 1000); // 게임종료에서 넘어가는 시점 조절
+      }, 3000); // 게임종료에서 넘어가는 시점 조절
     }
   }, [endAlert]);
 
@@ -278,41 +281,40 @@ export default function MusicQuiz({}) {
             onProgress={setCurrentTime}
           />
 
-          <Header>
-            {/* 남은 기회 */}
-            <Chance total="3" remaining={chance} />
-
-            {/* 문제 진행도 */}
-            <Center>
-              <Progress>
-                {nowPlayingIndex + 1}/{musics.length}
-              </Progress>
-              <QuizIndex>문제 {nowPlayingIndex + 1}</QuizIndex>
-            </Center>
-
-            {/* 패스 또는 다음 문제*/}
-            {showPass ? (
-              <NextBtn onClick={handlePass} show={showPass}>
-                <span>PASS</span>
-                <img src={playIcon} />
-              </NextBtn>
-            ) : (
-              <NextBtn
-                onClick={next}
-                show={roundEnd && nowPlayingIndex !== totalQuiz - 1}
-              >
-                <span>다음 문제</span>
-                <img src={playIcon} />
-              </NextBtn>
-            )}
-          </Header>
-
-          {/* 문제 상자 */}
           <Container>
+            <Header>
+              {/* 남은 기회 */}
+              <Chance total="3" remaining={chance} />
+
+              {/* 문제 진행도 */}
+              <Center>
+                <Progress>
+                  {nowPlayingIndex + 1}/{musics.length}
+                </Progress>
+                <QuizIndex>문제 {nowPlayingIndex + 1}</QuizIndex>
+              </Center>
+
+              {/* 패스 또는 다음 문제*/}
+              {showPass ? (
+                <NextBtn onClick={handlePass} show={showPass}>
+                  <span>PASS</span>
+                  <img src={playIcon} />
+                </NextBtn>
+              ) : (
+                <NextBtn
+                  onClick={next}
+                  show={roundEnd && nowPlayingIndex !== totalQuiz - 1}
+                >
+                  <span>다음 문제</span>
+                  <img src={playIcon} />
+                </NextBtn>
+              )}
+            </Header>
             {counter ? (
               <GameStartCounter startCount={setCounter} />
             ) : (
               <>
+                {/* 문제 상자 */}
                 <Quiz>
                   <PlayBox>
                     {roundEnd ? (
@@ -407,18 +409,20 @@ const PlayerSt = styled(Player)`
 `;
 
 const Header = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10.5vh;
+  /* margin-bottom: 10.5vh; */
 `;
 const Center = styled.div`
-  width: 16vw;
+  /* width: 16vw; */
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 15.3vw; // 임의로 맞춤
-  margin-right: ${({ showPass }) => (showPass ? "16.9vw" : "13.4vw")};
+  margin-left: 6vw; // 임의로 맞춤
+  /* margin-right: ${({ showPass }) => (showPass ? "16.9vw" : "13.4vw")}; */
 `;
 const Progress = styled.div`
   font-size: 2.5vw;
@@ -431,7 +435,7 @@ const QuizIndex = styled.div`
   font-family: "UhbeeJung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
-  width: max-content;
+  /* width: max-content; */
 `;
 
 const NextBtn = styled.button`
@@ -443,7 +447,6 @@ const NextBtn = styled.button`
   justify-content: end;
   align-items: center;
   gap: 1vw;
-  /* margin-bottom: 1.1vh; */
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -457,9 +460,11 @@ const NextBtn = styled.button`
 `;
 
 const Container = styled.div`
+  width: 68vw;
   display: flex;
   flex-direction: column;
-  gap: 10.4vh;
+  align-items: center;
+  gap: 8.4vh;
 `;
 
 const Quiz = styled.div`
@@ -470,6 +475,7 @@ const Quiz = styled.div`
 
 // 문제 재생 상태 및 앨범 커버 박스
 const PlayBox = styled.div`
+  width: 17.7vw;
   height: 23.8vh;
   display: flex;
   justify-content: center;
@@ -526,13 +532,15 @@ const Artist = styled.div`
 `;
 
 const InputDiv = styled.div`
-  width: 45.8vw;
+  /* width: 45.8vw; */
   font-family: "UhbeeJung";
   font-size: 2.5vw;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
+  gap: 6vw;
   margin-bottom: 5.5vh;
+  /* background-color: pink; */
 `;
 const InputBox = styled.div`
   display: flex;
@@ -565,7 +573,7 @@ const SubmitBtn = styled.button`
   background-color: transparent;
   font-family: "UhbeeJung";
   color: #151b26;
-  font-size: 3.2vw;
+  font-size: 5.4vh; // 제출 버튼 크기 조절 필요(임의조절 함)
   &:hover ${SubmitBtnHighlight} {
     opacity: 1;
   }
