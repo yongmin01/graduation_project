@@ -106,6 +106,7 @@ export default function Diary() {
     src: [bgm],
     loop: true,
     volume: 0.4,
+    preload: true,
   });
   const soundStop = () => sound.unload();
 

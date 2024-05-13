@@ -436,35 +436,60 @@ export default function Map4() {
   }, [characterMove]);
 
   // 사운드
-  const sound = new Howl({
-    src: [bgm],
-    loop: true,
-    volume: 0.6,
-  });
-  const soundStop = () => sound.unload();
+  // const soundStop = () => sound.unload();
 
   useEffect(() => {
+    const sound = new Howl({
+      src: [bgm],
+      loop: true,
+      volume: 0.6,
+      preload: true,
+    });
     sound.play();
     sound.on("play", () => {});
-    return soundStop;
+    return () => {
+      sound.unload();
+    };
   }, []);
 
-  const marioEffect = useEffectSound(marioSound, 1);
+  // const marioEffect = useEffectSound(marioSound, 1);
   useEffect(() => {
+    const marioEffect = new Howl({
+      src: [marioSound],
+      volume: 1,
+    });
     if (nintendoStatus) {
       marioEffect.play();
     }
+    return () => {
+      marioEffect.unload();
+    };
   }, [nintendoStatus]);
-  const clickEffect = useEffectSound(clickSound, 1);
+
+  // const clickEffect = useEffectSound(clickSound, 1);
   useEffect(() => {
+    const clickEffect = new Howl({
+      src: [clickSound],
+      volume: 1,
+    });
     if (!frameStatus) {
       clickEffect.play();
     }
+    return () => {
+      clickEffect.unload();
+    };
   }, [frameStatus]);
   useEffect(() => {
+    const clickEffect = new Howl({
+      src: [clickSound],
+      volume: 1,
+    });
     if (noteStatus) {
       clickEffect.play();
     }
+    return () => {
+      clickEffect.unload();
+    };
   }, [noteStatus]);
 
   return (

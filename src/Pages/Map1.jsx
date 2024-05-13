@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-import useEffectSound from "../utils/EffectSound";
+// import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map1/map1_bgm.mp3";
 import hornSound from "../sources/sound/Map1/hornSound.mp3";
 import telephoneSound from "../sources/sound/Map1/telephoneSound.m4a";
@@ -409,39 +409,55 @@ export default function Map1() {
   const [loading, setLoading] = useState(false);
 
   // 사운드
-  const sound = new Howl({
-    // 2. sound라는 상수에 new Howl 생성자 생성하고 원하는 옵션을 추가한다.
-    src: [bgm],
-    // 2-1. 사용할 배경음 src에 추가
-    loop: true,
-    // 2-2. 반복재생값 true로 설정 (반복재생 on)
-    volume: 0.4,
-    // 2-3. 기본 볼륨은 0.1로 설정 (최소 0, 최대 1의 값을 가질 수 있다)
-  });
-  const soundStop = () => sound.unload();
+  // const soundStop = () => sound.unload();
   // 3. soundStop이라는 함수가 실행되면 sound가 멈추도록 설정한다.
 
   useEffect(() => {
+    const sound = new Howl({
+      // 2. sound라는 상수에 new Howl 생성자 생성하고 원하는 옵션을 추가한다.
+      src: [bgm],
+      // 2-1. 사용할 배경음 src에 추가
+      loop: true,
+      // 2-2. 반복재생값 true로 설정 (반복재생 on)
+      volume: 0.4,
+      // 2-3. 기본 볼륨은 0.1로 설정 (최소 0, 최대 1의 값을 가질 수 있다)
+      preload: true,
+    });
     sound.play();
     // 4. 화면이 렌더링될 때 sound,play()를 통해 배경음악을 실행시킨다.
     sound.on("play", () => {});
-    return soundStop;
+    return () => {
+      sound.unload();
+    };
     // 4-5. sound.on() 두번째 매개변수인 익명 함수의 리턴값은 soundStop으로 설정한다.
     // 4-6. loop을 true로 설정했기 때문에 soundStop이 실행될 일은 없을 듯.
   }, []);
-
-  const hornEffect = useEffectSound(hornSound, 1);
+  // const hornEffect = useEffectSound(hornSound, 1);
   useEffect(() => {
+    const hornEffect = new Howl({
+      src: [hornSound],
+      volume: 1,
+    });
     if (stop && characterMove !== 1) {
       hornEffect.play();
     }
+    return () => {
+      hornEffect.unload();
+    };
   }, [stop]);
 
-  const telePhoneEffect = useEffectSound(telephoneSound, 3);
+  // const telePhoneEffect = useEffectSound(telephoneSound, 3);
   useEffect(() => {
+    const telePhoneEffect = new Howl({
+      src: [telephoneSound],
+      volume: 3,
+    });
     if (telephoneStatus) {
       telePhoneEffect.play();
     }
+    return () => {
+      telePhoneEffect.unload();
+    };
   }, [telephoneStatus]);
 
   return (

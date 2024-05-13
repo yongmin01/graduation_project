@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-import useEffectSound from "../utils/EffectSound";
+// import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map3/map3_bgm.mp3";
 import chickSound from "../sources/sound/Map3/chickSound.mp3";
 import busSound from "../sources/sound/Map3/busSound.m4a";
@@ -597,50 +597,87 @@ export default function Map3() {
   const [loading, setLoading] = useState(false);
 
   // 사운드
-  const sound = new Howl({
-    src: [bgm],
-    loop: true,
-    volume: 0.2,
-  });
-  const soundStop = () => sound.unload();
-
+  // const soundStop = () => sound.unload();
   useEffect(() => {
+    const sound = new Howl({
+      src: [bgm],
+      loop: true,
+      volume: 0.2,
+      preload: true,
+    });
     sound.play();
     sound.on("play", () => {});
-    return soundStop;
+    return () => {
+      sound.unload();
+    };
   }, []);
 
-  const chickEffect = useEffectSound(chickSound, 1);
+  // const chickEffect = useEffectSound(chickSound, 1);
   useEffect(() => {
+    const chickEffect = new Howl({
+      src: [chickSound],
+      volume: 1,
+    });
     if (chickStatus === true) {
       chickEffect.play();
       setTimeout(() => {
         chickEffect.pause();
       }, 1500);
     }
+    return () => {
+      chickEffect.unload();
+    };
   }, [chickStatus]);
-  const clickEffect = useEffectSound(clickSound, 1);
+  // const clickEffect = useEffectSound(clickSound, 1);
   useEffect(() => {
+    const clickEffect = new Howl({
+      src: [clickSound],
+      volume: 1,
+    });
     if (sugarSnackStatus) {
       clickEffect.play();
     }
+    return () => {
+      clickEffect.unload();
+    };
   }, [sugarSnackStatus]);
   useEffect(() => {
+    const clickEffect = new Howl({
+      src: [clickSound],
+      volume: 1,
+    });
     if (snackStatus) {
       clickEffect.play();
     }
+    return () => {
+      clickEffect.unload();
+    };
   }, [snackStatus]);
-  const busEffect = useEffectSound(busSound, 1);
+  // const busEffect = useEffectSound(busSound, 1);
   useEffect(() => {
+    const busEffect = new Howl({
+      src: [busSound],
+      volume: 1,
+    });
     if (stop && characterMove !== 1) {
       busEffect.play();
     }
+    return () => {
+      busEffect.unload();
+    };
   }, [stop]);
-  const windEffect = useEffectSound(windSound, 1);
+  // const windEffect = useEffectSound(windSound, 1);
   useEffect(() => {
+    const windEffect = new Howl({
+      src: [windSound],
+      volume: 1,
+    });
     if (leafAnimation === "now") {
       windEffect.play();
     }
+    return () => {
+      windEffect.unload();
+    };
   }, [leafAnimation]);
 
   return (

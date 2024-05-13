@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-import useEffectSound from "../utils/EffectSound";
+// import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map2/map2_bgm.mp3";
 import boysRunningSound from "../sources/sound/Map2/boysRunningSound.m4a";
 import schoolBellSound from "../sources/sound/Map2/schoolBellSound.m4a";
@@ -461,45 +461,81 @@ export default function Map2() {
   const [loading, setLoading] = useState(false);
 
   // 사운드
-  const sound = new Howl({
-    src: [bgm],
-    loop: true,
-    volume: 0.4,
-  });
-  const soundStop = () => sound.unload();
+  // const soundStop = () => sound.unload();
 
   useEffect(() => {
+    const sound = new Howl({
+      src: [bgm],
+      loop: true,
+      volume: 0.4,
+      preload: true,
+    });
     sound.play();
     sound.on("play", () => {});
-    return soundStop;
+    return () => {
+      sound.unload();
+    };
   }, []);
 
-  const bellEffect = useEffectSound(schoolBellSound, 0.5);
-  const boysRunningEffect = useEffectSound(boysRunningSound, 0.8);
+  // const bellEffect = useEffectSound(schoolBellSound, 0.5);
+  // const boysRunningEffect = useEffectSound(boysRunningSound, 0.8);
   useEffect(() => {
+    const bellEffect = new Howl({
+      src: [schoolBellSound],
+      volume: 0.5,
+    });
+    const boysRunningEffect = new Howl({
+      src: [boysRunningSound],
+      volume: 0.8,
+    });
     if (stop && characterMove !== 1) {
       bellEffect.play();
       setTimeout(() => {
         boysRunningEffect.play();
       }, 500);
     }
+    return () => {
+      bellEffect.unload();
+      boysRunningEffect.unload();
+    };
   }, [stop]);
 
-  const clickEffect = useEffectSound(clickSound, 1);
+  // const clickEffect = useEffectSound(clickSound, 1);
   useEffect(() => {
+    const clickEffect = new Howl({
+      src: [clickSound],
+      volume: 1,
+    });
     if (letterStatus) {
       clickEffect.play();
     }
+    return () => {
+      clickEffect.unload();
+    };
   }, [letterStatus]);
   useEffect(() => {
+    const clickEffect = new Howl({
+      src: [clickSound],
+      volume: 1,
+    });
     if (milkStatus) {
       clickEffect.play();
     }
+    return () => {
+      clickEffect.unload();
+    };
   }, [milkStatus]);
   useEffect(() => {
+    const clickEffect = new Howl({
+      src: [clickSound],
+      volume: 1,
+    });
     if (plateStatus) {
       clickEffect.play();
     }
+    return () => {
+      clickEffect.unload();
+    };
   }, [plateStatus]);
 
   return (
