@@ -145,7 +145,7 @@ export default function PuzzleQuiz() {
     loop: true,
     volume: 1,
   });
-  const soundStop = () => sound.stop();
+  const soundStop = () => sound.unload();
   useEffect(() => {
     sound.play();
     sound.on("play", () => {});
@@ -300,8 +300,8 @@ export default function PuzzleQuiz() {
     // loop: true,
     volume: 0.5,
   });
-  const sound1Stop = () => sound1.stop();
-  const sound2Stop = () => sound2.stop();
+  const sound1Stop = () => sound1.unload();
+  const sound2Stop = () => sound2.unload();
   return (
     <>
       <GameCommonStyle color={"#CDEACF"} />

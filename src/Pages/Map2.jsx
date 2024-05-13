@@ -466,7 +466,7 @@ export default function Map2() {
     loop: true,
     volume: 0.4,
   });
-  const soundStop = () => sound.stop();
+  const soundStop = () => sound.unload();
 
   useEffect(() => {
     sound.play();

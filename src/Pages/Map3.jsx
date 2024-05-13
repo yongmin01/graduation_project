@@ -602,7 +602,7 @@ export default function Map3() {
     loop: true,
     volume: 0.2,
   });
-  const soundStop = () => sound.stop();
+  const soundStop = () => sound.unload();
 
   useEffect(() => {
     sound.play();

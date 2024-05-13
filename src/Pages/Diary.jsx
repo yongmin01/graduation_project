@@ -107,7 +107,7 @@ export default function Diary() {
     loop: true,
     volume: 0.4,
   });
-  const soundStop = () => sound.stop();
+  const soundStop = () => sound.unload();
 
   useEffect(() => {
     sound.play();

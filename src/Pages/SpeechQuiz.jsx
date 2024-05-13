@@ -51,7 +51,7 @@ export default function SpeechQuiz({}) {
     volume: 1,
   });
 
-  const soundStop = () => sound.stop();
+  const soundStop = () => sound.unload();
   useEffect(() => {
     sound.play();
     sound.on("play", () => {});

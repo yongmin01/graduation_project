@@ -418,7 +418,7 @@ export default function Map1() {
     volume: 0.4,
     // 2-3. 기본 볼륨은 0.1로 설정 (최소 0, 최대 1의 값을 가질 수 있다)
   });
-  const soundStop = () => sound.stop();
+  const soundStop = () => sound.unload();
   // 3. soundStop이라는 함수가 실행되면 sound가 멈추도록 설정한다.
 
   useEffect(() => {
