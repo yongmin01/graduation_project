@@ -439,7 +439,7 @@ const Player = styled.div`
   display: flex;
   position: relative;
   justify-content: center;
-  background-color: orange;
+  background-color: transparent;
 `;
 const Video = styled.video`
   width: 36.2vw;
