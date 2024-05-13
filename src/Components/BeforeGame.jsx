@@ -126,7 +126,7 @@ export default function BeforeGame({ go, title, round }) {
                   다음에 올 대사를{" "}
                   <img
                     src={recordBtn}
-                    style={{ margin: "0 5px" }}
+                    style={{ margin: "0 1vw" }}
                     alt="Record Button"
                   />
                   버튼을 눌러 녹음하고,
