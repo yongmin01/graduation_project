@@ -653,7 +653,7 @@ export default function Map3() {
         <MapContainer>
           {pressedKey ? null : (
             <Date>
-              <img src={dateFormatImg} />
+              <img src={dateFormatImg} style={{ height: "11vh" }} />
               <Diaries>
                 {diaries.map((diary, index) => (
                   <Diary key={index} src={diary} />
@@ -711,14 +711,17 @@ const Date = styled.div`
   left: 0;
   z-index: 10;
   display: flex;
-  gap: 10px;
 `;
 const Diaries = styled.div`
   position: absolute;
-  left: 57%;
+  left: 56%;
+  display: flex;
+  gap: 0.5vw;
+  margin-top: 0.7%;
 `;
 const Diary = styled.img`
-  width: 6.5vw;
+  height: 8vh;
+  height: ${({ src }) => (src === "diaryXImg" ? "9.1vh" : "8vh")};
   z-index: 20;
 `;
 const translate = keyframes`

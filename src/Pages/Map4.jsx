@@ -471,7 +471,7 @@ export default function Map4() {
     <MapContainer>
       {pressedKey ? null : (
         <Date>
-          <img src={dateFormatImg} />
+          <img src={dateFormatImg} style={{ height: "11vh" }} />
           <Diaries>
             {diaries.map((diary, index) => (
               <Diary key={index} src={diary} />
@@ -527,14 +527,17 @@ const Date = styled.div`
   left: 0;
   z-index: 10;
   display: flex;
-  gap: 10px;
 `;
 const Diaries = styled.div`
   position: absolute;
-  left: 57%;
+  left: 56%;
+  display: flex;
+  gap: 0.5vw;
+  margin-top: 0.7%;
 `;
 const Diary = styled.img`
-  width: 6.5vw;
+  height: 8vh;
+  height: ${({ src }) => (src === "diaryXImg" ? "9.1vh" : "8vh")};
   z-index: 20;
 `;
 const translate = keyframes`
@@ -576,15 +579,4 @@ const Canvas = styled.canvas`
   height: 100%;
   background-color: transparent;
   overflow-y: hidden;
-`;
-const Loading = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: black;
-`;
-const LoadingImg = styled.img`
-  width: 100%;
 `;
