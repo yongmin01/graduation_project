@@ -7,6 +7,7 @@ import { Howl } from "howler";
 import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map1/map1_bgm.mp3";
 import hornSound from "../sources/sound/Map1/hornSound.mp3";
+import telephoneSound from "../sources/sound/Map1/telephoneSound.m4a";
 
 // 이미지
 import loading1 from "../sources/images/MP3.gif";
@@ -435,6 +436,13 @@ export default function Map1() {
       hornEffect.play();
     }
   }, [stop]);
+
+  const telePhoneEffect = useEffectSound(telephoneSound, 3);
+  useEffect(() => {
+    if (telephoneStatus) {
+      telePhoneEffect.play();
+    }
+  }, [telephoneStatus]);
 
   return (
     <>

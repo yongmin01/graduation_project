@@ -7,6 +7,9 @@ import { Howl } from "howler";
 import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map3/map3_bgm.mp3";
 import chickSound from "../sources/sound/Map3/chickSound.mp3";
+import busSound from "../sources/sound/Map3/busSound.m4a";
+import windSound from "../sources/sound/Map3/windSound.m4a";
+import clickSound from "../sources/sound/clickSound.mp3";
 
 // 이미지
 import loading1 from "../sources/images/icettaeng.gif";
@@ -595,24 +598,16 @@ export default function Map3() {
 
   // 사운드
   const sound = new Howl({
-    // 2. sound라는 상수에 new Howl 생성자 생성하고 원하는 옵션을 추가한다.
     src: [bgm],
-    // 2-1. 사용할 배경음 src에 추가
     loop: true,
-    // 2-2. 반복재생값 true로 설정 (반복재생 on)
     volume: 0.2,
-    // 2-3. 기본 볼륨은 0.1로 설정 (최소 0, 최대 1의 값을 가질 수 있다)
   });
   const soundStop = () => sound.stop();
-  // 3. soundStop이라는 함수가 실행되면 sound가 멈추도록 설정한다.
 
   useEffect(() => {
     sound.play();
-    // 4. 화면이 렌더링될 때 sound,play()를 통해 배경음악을 실행시킨다.
     sound.on("play", () => {});
     return soundStop;
-    // 4-5. sound.on() 두번째 매개변수인 익명 함수의 리턴값은 soundStop으로 설정한다.
-    // 4-6. loop을 true로 설정했기 때문에 soundStop이 실행될 일은 없을 듯.
   }, []);
 
   const chickEffect = useEffectSound(chickSound, 1);
@@ -624,6 +619,29 @@ export default function Map3() {
       }, 1500);
     }
   }, [chickStatus]);
+  const clickEffect = useEffectSound(clickSound, 1);
+  useEffect(() => {
+    if (sugarSnackStatus) {
+      clickEffect.play();
+    }
+  }, [sugarSnackStatus]);
+  useEffect(() => {
+    if (snackStatus) {
+      clickEffect.play();
+    }
+  }, [snackStatus]);
+  const busEffect = useEffectSound(busSound, 1);
+  useEffect(() => {
+    if (stop && characterMove !== 1) {
+      busEffect.play();
+    }
+  }, [stop]);
+  const windEffect = useEffectSound(windSound, 1);
+  useEffect(() => {
+    if (leafAnimation === "now") {
+      windEffect.play();
+    }
+  }, [leafAnimation]);
 
   return (
     <>
