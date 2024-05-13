@@ -118,6 +118,7 @@ export default function SpeechQuiz({}) {
   useEffect(() => {
     if (chance === 0) {
       setRoundEnd(true);
+      setShowPass(false);
     }
   }, [chance]);
 
@@ -144,7 +145,7 @@ export default function SpeechQuiz({}) {
           pass.current = false;
         }
         setGame("end");
-      }, 1000); // 게임종료에서 넘어가는 시점 조절
+      }, 4000); // 게임종료에서 넘어가는 시점 조절
     }
   }, [endAlert]);
 
@@ -377,6 +378,7 @@ const Game = styled.div`
   align-items: center;
 `;
 const Container = styled.div`
+  width: 75vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -384,16 +386,18 @@ const Container = styled.div`
   align-items: start;
 `;
 const Header = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 `;
 const Center = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 25.8vw; // 임의로 맞춤
-  margin-right: ${({ showPass }) => (showPass ? "16.9vw" : "14.5vw")};
+  margin-left: 6vw; // 임의로 맞춤
+  /* margin-right: ${({ showPass }) => (showPass ? "16.9vw" : "14.5vw")}; */
 `;
 const Progress = styled.div`
   font-size: 3.5vh;
@@ -417,7 +421,7 @@ const QuizDiv = styled.div`
   padding-right: ${({ isFirstTry }) => (isFirstTry ? "4.79vw" : "auto")};
   position: relative;
 `;
-const Quiz = styled.span`
+const Quiz = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -435,6 +439,12 @@ const Player = styled.div`
   display: flex;
   position: relative;
   justify-content: center;
+  background-color: orange;
+`;
+const Video = styled.video`
+  width: 36.2vw;
+  height: 34.1vh;
+  object-fit: cover;
 `;
 
 const PlayBtn = styled.img`
@@ -443,10 +453,7 @@ const PlayBtn = styled.img`
   top: 50%;
   transform: translateY(-50%);
 `;
-const Video = styled.video`
-  width: 36.2vw;
-  height: 34.1vh;
-`;
+
 const AnswerInfo = styled.div`
   font-family: "Gaegu";
   display: flex;
