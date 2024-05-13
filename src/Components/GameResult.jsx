@@ -44,7 +44,7 @@ export default function GameResult({ pass, score, total, round, end }) {
       <Result isPass={pass}>
         <Tittle isPass={pass}>결과</Tittle>
         <Score isPass={pass}>
-          맞힌 문제 :{score}개 / {total}개
+          맞힌 문제 : {score}개 / {total}개
         </Score>
         <Comments>
           {pass ? (
@@ -52,7 +52,7 @@ export default function GameResult({ pass, score, total, round, end }) {
               <Comment>축하합니다!</Comment>
               <Comment>
                 <span style={{ fontWeight: "700" }}>‘{itemName[round]}’</span>
-                아이템을 획득하셨습니다.
+                {round === 3 ? "을" : "를"} 획득하셨습니다.
               </Comment>
             </>
           ) : (
@@ -75,7 +75,7 @@ export default function GameResult({ pass, score, total, round, end }) {
           <img src={playIcon_blue} />
         )}
         <Option>
-          <OptionText onClick={route} round={round}>
+          <OptionText onClick={route} round={round} pass={pass}>
             {pass ? "다음" : "맵으로 돌아가기"}
           </OptionText>
           {pass ? <NextPath /> : <BackToMapPath />}
@@ -105,11 +105,11 @@ const Tittle = styled.span`
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "UhBee jung BOLD";
-  font-size: 11.7vh;
+  font-size: 10.7vh;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-bottom: ${({ isPass }) => (isPass ? "7.8vh" : "6.9vh")};
+  margin-bottom: ${({ isPass }) => (isPass ? "8.8vh" : "6.9vh")};
 `;
 const Score = styled.div`
   color: #151b26;
@@ -119,12 +119,12 @@ const Score = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-bottom: ${({ isPass }) => (isPass ? "6.8vh" : "4.4vh")};
+  margin-bottom: ${({ isPass }) => (isPass ? "6.8vh" : "5.4vh")};
 
-  &:before {
+  /* &:before {
     content: "";
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 38.4vw;
@@ -132,7 +132,7 @@ const Score = styled.div`
     background: rgba(255, 216, 216, 0.8);
     filter: blur(15px);
     border-radius: 10px;
-  }
+  } */
 `;
 const Comments = styled.div`
   display: flex;
@@ -154,34 +154,34 @@ const Item = styled.img`
   left: ${({ round, pass }) =>
     pass
       ? round === 1
-        ? "7.7vw"
+        ? "13.7vw"
         : round === 2
-        ? "10.5vw"
-        : "7.3vw"
-      : "5.8vw"};
+        ? "18.5vw"
+        : "15.3vw"
+      : "13.8vw"};
   top: ${({ round, pass }) =>
     pass
       ? round === 1
-        ? "62.5vh"
+        ? "60.5vh"
         : round === 2
         ? "58.6vh"
-        : "60.6vh"
+        : "58.6vh"
       : "59.9vh"};
   height: 28.5vh;
 `;
 const Arrow = styled.img`
   position: absolute;
   left: ${({ round }) =>
-    round === 1 ? "26.4vw" : round === 2 ? "25vw" : "22.9vw"};
+    round === 1 ? "34.4vw" : round === 2 ? "31vw" : "30.9vw"};
   top: ${({ round }) =>
-    round === 1 ? "68.9vh" : round === 2 ? "71.6vh" : "73.6vh"};
+    round === 1 ? "67.9vh" : round === 2 ? "66.6vh" : "68.6vh"};
   width: 4.4vw;
 `;
 const OptionBtn = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 2px;
+  gap: 6px;
   position: absolute;
   right: 12.5vw;
   bottom: 13.8vh;
@@ -195,7 +195,7 @@ const OptionText = styled.span`
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "UhBee jung";
-  font-size: 5.8vh;
+  font-size: ${({ pass }) => (pass ? "5.8vh" : "5.3vh")};
   font-style: normal;
   font-weight: 400;
   line-height: normal;
