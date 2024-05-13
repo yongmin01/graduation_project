@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
 // import afterGameMap from "../sources/images/Map/map4/afterGame.png";
 import afterGameMap from "../sources/images/Map/map4/afterGame.webp";
-import nextBtnImage from "../sources/images/nextBtn.svg";
 import ItemImage from "../sources/images/Game/npc4_play.png";
 
 export default function Npc4() {
@@ -30,7 +29,7 @@ export default function Npc4() {
 
   useEffect(() => {
     const checkTimeAndSetShowNext = () => {
-      if (videoRef.current && videoRef.current.currentTime >= 23) {
+      if (videoRef.current && videoRef.current.currentTime >= 20) {
         setShowNext(true);
       }
     };
@@ -49,8 +48,11 @@ export default function Npc4() {
             // style={{ display: buttonClicked ? "block" : "none" }}
           >
             <source
-              src="./videos/npc_tv_g
-.mov"
+              src={
+                characterSex === "girl"
+                  ? "./videos/npc_tv_g.mov"
+                  : "./videos/npc_tv_b.mov"
+              }
             />
           </Video>
 
