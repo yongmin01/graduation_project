@@ -12,7 +12,9 @@ export default function Chance({ remaining, total }) {
       const iconColor = i < remaining ? "#FF9CB6" : "#858585";
 
       // SVG 아이콘 추가
-      icons.push(<HeartSt color={iconColor} key={i} />);
+      icons.push(
+        <HeartSt color={iconColor} key={i} style={{ marginRight: "1vw" }} />
+      );
     }
 
     return icons;
@@ -38,11 +40,9 @@ const ChanceDiv = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  /* margin-bottom: 1.1vh; */
 `;
 const Hearts = styled.div`
   width: max-content;
-  gap: 1.38vw;
 `;
 const HeartSt = styled(Heart)`
   height: 5.6vh;
