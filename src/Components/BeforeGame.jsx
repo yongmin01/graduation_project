@@ -497,12 +497,12 @@ const Left = styled.img`
   width: 2.2vw;
   position: absolute;
   top: 28.5vh;
-  left: 39.2vw;
+  left: 41.2vw;
 `;
 const Right = styled.img`
   position: absolute;
   top: 29.1vh;
-  right: 20vw; // 원래는 17vw
+  right: 24vw; // 원래는 17vw
 `;
 const Sprinkle2 = styled.img`
   position: absolute;
@@ -513,6 +513,6 @@ const Decoration = styled.div`
   display: flex;
   flex-direction: row;
   position: absolute;
-  left: 4.16vw;
-  bottom: 4vh; // 원래는 3.vh
+  left: 6.16vw;
+  bottom: 4.5vh; // 원래는 3.vh
 `;
