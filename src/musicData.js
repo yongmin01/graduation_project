@@ -30,21 +30,21 @@ const totalMusics = [
     year: "2013",
   },
   {
-    id: "0pWz9xztrHE",
-    title: ["한여름밤의 꿀"],
-    artist: "SanE,레이나",
-    year: "2014",
-  },
-  {
-    id: "6pkmAOYJt-Q",
-    title: ["Cafe", "카페"],
+    id: "as6fQ_HPTJQ",
+    title: ["Fantastic Baby", "판타스틱 베이비"],
     artist: "빅뱅",
-    year: "2006",
+    year: "2012",
   },
   {
-    id: "NY47mqz4yCg",
-    title: ["비가 오는 날엔"],
-    artist: "비스트",
+    id: "qJQKmu9_UrU",
+    title: ["잘자요 굿나잇", "Baby good night"],
+    artist: "B1A4",
+    year: "2012",
+  },
+  {
+    id: "xe7IwlLyjsI",
+    title: ["내가 제일 잘 나가"],
+    artist: "2NE1",
     year: "2011",
   },
   {
