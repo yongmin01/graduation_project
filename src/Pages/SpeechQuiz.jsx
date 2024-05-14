@@ -538,7 +538,7 @@ const NextBtn = styled.button`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBee jung BOLD";
+  font-family: "UhBeejungBOLD";
   font-size: 2.7vw;
   font-style: normal;
   font-weight: 700;
