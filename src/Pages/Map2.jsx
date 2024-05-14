@@ -365,8 +365,8 @@ export default function Map2() {
           setStop(false);
           setBoysAnimation(false);
         }
-        setBoy1Coor({ ...boy1Coor, x: boy1Coor.x - 9 });
-        setBoy2Coor({ ...boy2Coor, x: boy2Coor.x - 10 });
+        setBoy1Coor({ ...boy1Coor, x: boy1Coor.x - 15 });
+        setBoy2Coor({ ...boy2Coor, x: boy2Coor.x - 16 });
       }
     };
   };
