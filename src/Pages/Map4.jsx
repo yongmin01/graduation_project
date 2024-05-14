@@ -61,10 +61,8 @@ export default function Map4() {
     if (totalDiary) {
       for (let i = 1; i < totalDiary.length; i++) {
         if (totalDiary[i]) {
-          console.log("pushed O");
           temp.push(diaryImg);
         } else {
-          console.log("pushsedX");
           temp.push(diaryXImg);
         }
       }
@@ -442,7 +440,7 @@ export default function Map4() {
     const sound = new Howl({
       src: [bgm],
       loop: true,
-      volume: 0.6,
+      volume: 0.8,
       preload: true,
     });
     sound.play();
