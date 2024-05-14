@@ -30,7 +30,7 @@ export default function Npc1() {
 
   useEffect(() => {
     const checkTimeAndSetShowNext = () => {
-      if (videoRef.current && videoRef.current.currentTime >= 17) {
+      if (videoRef.current && videoRef.current.currentTime >= 18) {
         setShowNext(true);
       }
     };
@@ -68,8 +68,7 @@ export default function Npc1() {
             <UseText>사용하기</UseText>
           </ItemUseBtn>
           {showNext && (
-            <GetDiary>
-              <GetDiaryAlert src={getDiaryImg} />
+            
               <Button
                 onClick={routeing}
                 style={{ display: "flex", marginLeft: "auto" }}
@@ -77,7 +76,7 @@ export default function Npc1() {
                 <Text>다음 맵으로 이동</Text>
                 <NextBtnImg width="2.6vw" fill={"#151B26"} />
               </Button>
-            </GetDiary>
+            
           )}
         </Modal>
       </Npc>
@@ -168,7 +167,7 @@ const GetDiary = styled.div`
   align-items: center;
   position: absolute;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255);
   border-radius: 41px;
 `;
 const GetDiaryAlert = styled.img`

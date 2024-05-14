@@ -30,7 +30,7 @@ export default function Npc3() {
 
   useEffect(() => {
     const checkTimeAndSetShowNext = () => {
-      if (videoRef.current && videoRef.current.currentTime >= 20) {
+      if (videoRef.current && videoRef.current.currentTime >= 22) {
         setShowNext(true);
       }
     };
@@ -68,8 +68,7 @@ export default function Npc3() {
             <UseText>사용하기</UseText>
           </ItemUseBtn>
           {showNext && (
-            <GetDiary>
-              <GetDiaryAlert src={getDiaryImg} />
+            
               <Button
                 onClick={routeing}
                 style={{ display: "flex", marginLeft: "auto" }}
@@ -77,7 +76,6 @@ export default function Npc3() {
                 <Text>다음 맵으로 이동</Text>
                 <NextBtnImg width="2.6vw" fill={"#151B26"} />
               </Button>
-            </GetDiary>
           )}
         </Modal>
       </Npc>
