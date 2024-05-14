@@ -58,7 +58,7 @@ const DiaryDiv = styled.div`
   padding-top: 17vh;
 `;
 const Diary = styled.img`
-  width: 382px;
+  height: 55.9vh;
   margin-left: 3.5vw;
 `;
 const Btn = styled.button`
@@ -69,12 +69,16 @@ const Btn = styled.button`
   background: #fff7cd;
   color: #7c4622;
   text-align: center;
-  font-family: "UhBee jung BOLD";
-  font-size: 4.1vw;
+  font-family: "UhBeejungBold";
+  font-size: 3.8vw;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1vh;
 `;
 
 const Video = styled.video`
