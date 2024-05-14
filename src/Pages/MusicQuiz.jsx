@@ -480,6 +480,7 @@ const PlayBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 3vw;
 `;
 const NowPlayingTrue = styled.img`
   height: 17.7vh;
@@ -538,9 +539,8 @@ const InputDiv = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 6vw;
+  gap: 4vw;
   margin-bottom: 5.5vh;
-  /* background-color: pink; */
 `;
 const InputBox = styled.div`
   display: flex;
