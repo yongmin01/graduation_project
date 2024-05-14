@@ -75,10 +75,10 @@ export default function Tutorial() {
               <Story>
                 <div>어렸을 적 일상으로 다시 돌아온 당신,</div>
                 <div>오늘은 어떤 하루가 기다리고 있을까요?</div>
-                <Diary style={{ marginLeft: "-50px" }}>
-                  <img src={diaryImg} />
-                  <img src={diaryImg} />
-                  <img src={diaryImg} />
+                <Diary style={{ marginLeft: "-4vw" }}>
+                  <DiaryImg src={diaryImg} />
+                  <DiaryImg src={diaryImg} />
+                  <DiaryImg src={diaryImg} />
                 </Diary>
                 <div>미니게임을 통해 일기장을 하나씩 얻어가며</div>
                 <div>맵과 게임 속에서 과거의 추억을 천천히 구경해보세요.</div>
@@ -203,6 +203,9 @@ const Diary = styled.div`
   flex-direction: row;
   gap: 2px;
 `;
+const DiaryImg = styled.img`
+    height: 5vh;
+`
 const End = styled.div`
   animation: ${fadeIn} 1s linear forwards;
   animation-delay: 2s;
