@@ -78,8 +78,8 @@ export default function BeforeGame({ go, title, round }) {
                   <Word color="#9B3AE8">‘가수공개’</Word> 가 있어요.
                 </Line>
                 <Line>
-                  총 <Word color="#FF4BCD">5라운드</Word>의 게임, 3라운드 이상
-                  정답을 맞춰야 일기장을
+                  총 <Word color="#FF4BCD">5라운드</Word>의 게임, <Word color="#FF0000">3라운드 이상
+                  정답</Word>을 맞춰야 일기장을
                 </Line>
                 <Line>획득할 수 있습니다. 한 번 도전해보세요!</Line>
               </Order>
@@ -140,7 +140,7 @@ export default function BeforeGame({ go, title, round }) {
                 </Line>
                 <Line>
                   총 <Word color="#FF3E3E">3라운드</Word>의 게임,{" "}
-                  <Word color="#FF3E3E">2라운드 이상 정답</Word>을 맞춰야
+                  <Word color="#FF9B06">2라운드 이상 정답</Word>을 맞춰야
                   아이템을
                 </Line>
                 <Line>획득할 수 있습니다. 한 번 도전해보세요!</Line>
@@ -264,7 +264,7 @@ const DescTitle = styled.div`
 const DescTitleText = styled.div`
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBee jung BOLD";
+  font-family: "UhBeejungBold";
   font-size: 9.7vh;
   font-style: normal;
   font-weight: 700;
@@ -372,7 +372,7 @@ const Option = styled.div`
 const OptionText = styled.div`
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBee jung BOLD";
+  font-family: "UhBeejungBold";
   font-size: 5.8vh;
   font-style: normal;
   font-weight: 700;
@@ -502,7 +502,7 @@ const Left = styled.img`
 const Right = styled.img`
   position: absolute;
   top: 29.1vh;
-  right: 24vw; // 원래는 17vw
+  right: 26vw; // 원래는 17vw
 `;
 const Sprinkle2 = styled.img`
   position: absolute;
