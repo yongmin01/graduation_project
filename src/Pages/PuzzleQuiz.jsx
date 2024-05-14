@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-import bgm from "../sources/sound/Game/puzzleQuizBgm.mp3";
+import bgm from "../sources/sound/Game/puzzleQuizBgm.m4a";
 import bgm1 from "../sources/sound/Game/puzzleQuizBgm1.mp3";
 import bgm2 from "../sources/sound/Game/puzzleQuizBgm2.mp3";
 import useEffectSound from "../utils/EffectSound";
@@ -110,7 +110,7 @@ const Card = ({ round, card, onClick, isFlipped }) => {
 export default function PuzzleQuiz() {
   const [game, setGame] = useState("before");
   const [counter, setCounter] = useState(true); // 라운드 시작 전 3, 2, 1
-  const timeLimit = 30;
+  const timeLimit = 31;
   const [time, setTime] = useState(timeLimit); // 제한 시간 (단위: 초)
   const [urgent, setUrgent] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -309,7 +309,7 @@ export default function PuzzleQuiz() {
         <Game>
           <Time>
             <TimeDiv>TIME</TimeDiv>
-            <Seconds isUrgent={urgent}>{time}</Seconds>
+            <Seconds isUrgent={urgent}>{time !== 0 ? time-1 : 0}</Seconds>
           </Time>
           <Index>
             <Progress>{quizIndex + 1}/3</Progress>
@@ -331,7 +331,7 @@ export default function PuzzleQuiz() {
           ) : (
             <>
               {roundEnd === "yet" ? null : roundEnd === "pass" ? (
-                <Cover>
+                <Cover quizIndex={quizIndex}>
                   {roundEndAlert === "after" && quizIndex !== totalQuiz - 1 ? (
                     <NextBtn onClick={next}>
                       <PlayIcon />
@@ -381,7 +381,7 @@ export default function PuzzleQuiz() {
                   ) : null}
                 </Cover>
               ) : roundEnd === "fail" ? (
-                <Cover>
+                <Cover quizIndex={quizIndex}>
                   {roundEndAlert === "before"
                     ? null
                     : roundEndAlert === "now"
@@ -537,7 +537,7 @@ const Cover = styled.div`
   justify-content: center;
   background: rgba(255, 255, 255, 0.94);
   text-align: center;
-  gap: 5.2vh;
+  gap: ${({quizIndex}) => quizIndex === 2 ? "2vh" : "5.2vh"};
   color: #000;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: "UhBee jung";
@@ -608,7 +608,7 @@ const LevelupTitle = styled.div`
   color: #ff0d0d;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBee jung BOLD";
+  font-family: "UhBeejungBOLD";
   font-size: 90px;
   font-style: normal;
   font-weight: 700;
