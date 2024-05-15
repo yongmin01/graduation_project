@@ -4,7 +4,6 @@ import styled, { keyframes } from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-// import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map1/map1_bgm.mp3";
 import hornSound from "../sources/sound/Map1/hornSound.mp3";
 import telephoneSound from "../sources/sound/Map1/telephoneSound.m4a";
@@ -18,12 +17,11 @@ import redBg from "../sources/images/Map/map1/redBg.webp";
 
 import dateFormatImg from "../sources/images/Map/dateFormat1.svg";
 
-import clickImage from "../sources/images/Map/click.png";
-import carImg from "../sources/images/Map/map1/car.png";
+import carImg from "../sources/images/Map/map1/car.webp";
 
 import shopKidsImg from "../sources/images/Map/map1/shopKids.webp";
 import telephoneImg from "../sources/images/Map/map1/1541.webp";
-import telephoneBorderImg from "../sources/images/Map/map1/telephoneBorder.png";
+import telephoneBorderImg from "../sources/images/Map/map1/telephoneBorder.webp";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
@@ -120,11 +118,11 @@ export default function Map1() {
   const [telephoneStatus, setTelephoneStatus] = useState(false);
   const telephoneBorderSize = {
     w: (448 / CW) * val,
-    h: (470 / CH) * canvasHeight,
+    h: (475 / CH) * canvasHeight,
   };
   const telephoneBorderCoor = {
     x: (3489 / CW) * val,
-    y: (287 / CH) * canvasHeight,
+    y: (282 / CH) * canvasHeight,
   };
   const telephoneBubbleSize = {
     w: (336 / CW) * val,
@@ -134,8 +132,6 @@ export default function Map1() {
     x: (3506 / CW) * val,
     y: (147 / CH) * canvasHeight,
   };
-  const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
-  const clickCoor1 = { x: (3649 / CW) * val, y: (282 / CH) * canvasHeight };
 
   const canvasRef = useRef(null);
 
@@ -187,21 +183,6 @@ export default function Map1() {
           telephoneBubbleCoor.y,
           telephoneBubbleSize.w,
           telephoneBubbleSize.h
-        );
-      }
-    };
-
-    const click = new Image();
-    click.src = clickImage;
-
-    click.onload = () => {
-      if (!telephoneStatus) {
-        context.drawImage(
-          click,
-          background + clickCoor1.x,
-          clickCoor1.y,
-          clickSize.w,
-          clickSize.h
         );
       }
     };

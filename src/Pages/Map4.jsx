@@ -4,7 +4,6 @@ import styled, { keyframes } from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map4/map4_bgm.mp3";
 import marioSound from "../sources/sound/Map4/marioSound.mp3";
 import pianoSound from "../sources/sound/Map4/pianoSound.mp3";
@@ -18,12 +17,11 @@ import dateFormatImg from "../sources/images/Map/dateFormat4.svg";
 import diaryImg from "../sources/images/diary.svg";
 import diaryXImg from "../sources/images/diaryX.svg";
 
-import clickImage from "../sources/images/Map/click.png";
-import frameBorderImage from "../sources/images/Map/map4/frameBorder.png";
-import nintendoBorderImage from "../sources/images/Map/map4/nintendoBorder.png";
-import speechbubbleImage from "../sources/images/Map/map4/game.png";
-import noteBorderImage from "../sources/images/Map/map4/noteBorder.png";
-import practiceNoteImage from "../sources/images/Map/map4/practiceNote.png";
+import frameBorderImage from "../sources/images/Map/map4/frameBorder.webp";
+import nintendoBorderImage from "../sources/images/Map/map4/nintendoBorder.webp";
+import speechbubbleImage from "../sources/images/Map/map4/game.webp";
+import noteBorderImage from "../sources/images/Map/map4/noteBorder.webp";
+import practiceNoteImage from "../sources/images/Map/map4/practiceNote.webp";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
@@ -108,21 +106,21 @@ export default function Map4() {
   const [frameStatus, setFrameStatus] = useState(true);
   const frameBorderSize = {
     w: (428 / CW) * val,
-    h: (342 / CH) * canvasHeight,
+    h: (374 / CH) * canvasHeight,
   };
   const frameBorderCoor = {
     x: (257 / CW) * val,
-    y: (142 / CH) * canvasHeight,
+    y: (110 / CH) * canvasHeight,
   };
 
   const [nintendoStatus, setNintendoStatus] = useState(false);
   const nintendoBorderSize = {
     w: (246 / CW) * val,
-    h: (246 / CH) * canvasHeight,
+    h: (262 / CH) * canvasHeight,
   };
   const nintendoBorderCoor = {
     x: (1963 / CW) * val,
-    y: (599 / CH) * canvasHeight,
+    y: (583 / CH) * canvasHeight,
   };
 
   const gameSpeechBubbleSize = {
@@ -137,11 +135,11 @@ export default function Map4() {
   const [noteStatus, setNoteStatus] = useState(false);
   const noteBorderSize = {
     w: (314 / CW) * val,
-    h: (168 / CH) * canvasHeight,
+    h: (186 / CH) * canvasHeight,
   };
   const noteBorderCoor = {
     x: (2718 / CW) * val,
-    y: (278 / CH) * canvasHeight,
+    y: (260 / CH) * canvasHeight,
   };
 
   const practiceNoteSize = {
@@ -152,11 +150,6 @@ export default function Map4() {
     x: (3015 / CW) * val,
     y: (22 / CH) * canvasHeight,
   };
-
-  const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
-  const clickCoor0 = { x: (438 / CW) * val, y: (110 / CH) * canvasHeight };
-  const clickCoor1 = { x: (2048 / CW) * val, y: (583 / CH) * canvasHeight };
-  const clickCoor2 = { x: (2816 / CW) * val, y: (260 / CH) * canvasHeight };
 
   const canvasRef = useRef(null);
 
@@ -178,38 +171,6 @@ export default function Map4() {
       context.drawImage(bg, background, 0, val, canvasHeight);
     };
 
-    const click = new Image();
-    click.src = clickImage;
-
-    click.onload = () => {
-      if (frameStatus) {
-        context.drawImage(
-          click,
-          background + clickCoor0.x,
-          clickCoor0.y,
-          clickSize.w,
-          clickSize.h
-        );
-      }
-      if (!nintendoStatus) {
-        context.drawImage(
-          click,
-          background + clickCoor1.x,
-          clickCoor1.y,
-          clickSize.w,
-          clickSize.h
-        );
-      }
-      if (!noteStatus) {
-        context.drawImage(
-          click,
-          background + clickCoor2.x,
-          clickCoor2.y,
-          clickSize.w,
-          clickSize.h
-        );
-      }
-    };
     // 게임 말풍선 그리기
     const gamesppechbubble = new Image();
     gamesppechbubble.src = speechbubbleImage;

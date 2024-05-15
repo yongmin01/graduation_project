@@ -4,7 +4,6 @@ import styled, { keyframes } from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-// import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map3/map3_bgm.mp3";
 import chickSound from "../sources/sound/Map3/chickSound.mp3";
 import lightSound from "../sources/sound/Map3/lightSound.mp3";
@@ -127,23 +126,6 @@ export default function Map3() {
     x: (687 / CW) * val,
     y: (386 / CH) * canvasHeight,
   };
-  const chicksSize = {
-    w: (214 / CW) * val,
-    h: (172 / CH) * canvasHeight,
-  };
-  const chicksCoor = {
-    x: (918 / CW) * val,
-    y: (548 / CH) * canvasHeight,
-  };
-  const moneySize = {
-    w: (228 / CW) * val,
-    h: (176 / CH) * canvasHeight,
-  };
-  const moneyCoor = {
-    x: (874 / CW) * val,
-    y: (256 / CH) * canvasHeight,
-  };
-
   const chickWmoneySize = {
     w: (278 / CW) * val,
     h: (460 / CH) * canvasHeight,
@@ -161,22 +143,6 @@ export default function Map3() {
   const shopBorderCoor = {
     x: (1644 / CW) * val,
     y: (260 / CH) * canvasHeight,
-  };
-  const snack1Size = {
-    w: (274 / CW) * val,
-    h: (306 / CH) * canvasHeight,
-  };
-  const snack1Coor = {
-    x: (1591 / CW) * val,
-    y: (20 / CH) * canvasHeight,
-  };
-  const snack2Size = {
-    w: (232 / CW) * val,
-    h: (260 / CH) * canvasHeight,
-  };
-  const snack2Coor = {
-    x: (1916 / CW) * val,
-    y: (52 / CH) * canvasHeight,
   };
 
   const snacksSize = {
@@ -213,10 +179,6 @@ export default function Map3() {
     w: (176 / CW) * val,
     h: (178 / CH) * canvasHeight,
   };
-
-  // const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
-  // const clickCoor1 = { x: (797 / CW) * val, y: (386 / CH) * canvasHeight };
-  // const clickCoor2 = { x: (1814 / CW) * val, y: (260 / CH) * canvasHeight };
 
   const canvasRef = useRef(null);
 

@@ -4,7 +4,6 @@ import styled, { keyframes } from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-// import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map2/map2_bgm.mp3";
 import boysRunningSound from "../sources/sound/Map2/boysRunningSound.m4a";
 import schoolBellSound from "../sources/sound/Map2/schoolBellSound.m4a";
@@ -20,15 +19,13 @@ import diaryImg from "../sources/images/diary.svg";
 import diaryXImg from "../sources/images/diaryX.svg";
 import diaryYetImg from "../sources/images/diaryYet.svg";
 
-import clickImage from "../sources/images/Map/click.png";
-import letterImage from "../sources/images/Map/map2/letter.png";
-import boy1Image from "../sources/images/Map/map2/boy1.png";
-import boy2Image from "../sources/images/Map/map2/boy2.png";
-import milkBoxBorderImage from "../sources/images/Map/map2/milkBoxBorder.png";
-import milkImage from "../sources/images/Map/map2/milk.png";
-import cartBorderImage from "../sources/images/Map/map2/cartBorder.png";
-import plateImage from "../sources/images/Map/map2/plate.png";
-import speakerSoundImage from "../sources/images/Map/map2/speakerSound.png";
+import letterImage from "../sources/images/Map/map2/letter.webp";
+import boy1Image from "../sources/images/Map/map2/boy1.webp";
+import boy2Image from "../sources/images/Map/map2/boy2.webp";
+import milkBoxBorderImage from "../sources/images/Map/map2/milkBoxBorder.webp";
+import milkImage from "../sources/images/Map/map2/milk.webp";
+import cartBorderImage from "../sources/images/Map/map2/cartBorder.webp";
+import plateImage from "../sources/images/Map/map2/plate.webp";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
@@ -126,11 +123,11 @@ export default function Map2() {
   const [milkStatus, setmilkStatus] = useState(false);
   const milkBoxBorderSize = {
     w: (416 / CW) * val,
-    h: (362 / CH) * canvasHeight,
+    h: (380 / CH) * canvasHeight,
   };
   const milkBoxBorderCoor = {
     x: (2814 / CW) * val,
-    y: (540 / CH) * canvasHeight,
+    y: (522 / CH) * canvasHeight,
   };
   const milkCoor = { x: (3001 / CW) * val, y: (358 / CH) * canvasHeight };
   const milkSize = { w: (214 / CW) * val, h: (186 / CH) * canvasHeight };
@@ -144,10 +141,6 @@ export default function Map2() {
   const boy1Size = { w: (341 / CW) * val, h: (472 / CH) * canvasHeight };
   const boy2Size = { w: (343 / CW) * val, h: (450 / CH) * canvasHeight };
   const boysStartPoint = (404 / CH) * canvasHeight;
-
-  const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
-  const clickCoor1 = { x: (2974 / CW) * val, y: (522 / CH) * canvasHeight };
-  const clickCoor2 = { x: (3673 / CW) * val, y: (349 / CH) * canvasHeight };
 
   const canvasRef = useRef(null);
 
@@ -209,29 +202,6 @@ export default function Map2() {
       };
     }
 
-    const click = new Image();
-    click.src = clickImage;
-
-    click.onload = () => {
-      if (!milkStatus) {
-        context.drawImage(
-          click,
-          background + clickCoor1.x,
-          clickCoor1.y,
-          clickSize.w,
-          clickSize.h
-        );
-      }
-      if (!plateStatus) {
-        context.drawImage(
-          click,
-          background + clickCoor2.x,
-          clickCoor2.y,
-          clickSize.w,
-          clickSize.h
-        );
-      }
-    };
     // 우유 박스 테두리 그리기
     const milkBoxBorder = new Image();
     milkBoxBorder.src = milkBoxBorderImage;
