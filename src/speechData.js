@@ -70,9 +70,9 @@ const totalQuiz = [
   },
   {
     id: 10,
-    end: 2,
-    quiz: "나 꿍꼬또",
-    answer: "기싱 꿍꼬또",
+    end: 0.7,
+    quiz: "힘을 내요",
+    answer: "슈퍼파월",
     format: "mov",
   },
 ];
