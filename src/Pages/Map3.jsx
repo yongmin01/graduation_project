@@ -8,7 +8,7 @@ import { Howl } from "howler";
 import bgm from "../sources/sound/Map3/map3_bgm.mp3";
 import chickSound from "../sources/sound/Map3/chickSound.mp3";
 import lightSound from "../sources/sound/Map3/lightSound.mp3";
-import sugarSnackSound from "../sources/sound/Map3/sugarSnackSound.mp3";
+import sugarSnackSound from "../sources/sound/Map3/sugarSnackSound.m4a";
 import busSound from "../sources/sound/Map3/busSound.m4a";
 import windSound from "../sources/sound/Map3/windSound.m4a";
 import clickSound from "../sources/sound/clickSound.mp3";
