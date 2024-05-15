@@ -104,7 +104,7 @@ const Tittle = styled.span`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 10.7vh;
   font-style: normal;
   font-weight: 500;
@@ -114,7 +114,7 @@ const Tittle = styled.span`
 const Score = styled.div`
   color: #151b26;
   text-align: center;
-  font-family: Gaegu;
+  font-family: "Gaegu";
   font-size: 5vh;
   font-style: normal;
   font-weight: 700;
@@ -142,7 +142,7 @@ const Comments = styled.div`
 const Comment = styled.span`
   color: #151b26;
   text-align: center;
-  font-family: Gaegu;
+  font-family: "Gaegu";
   font-size: 5vh;
   font-style: normal;
   font-weight: 400;

@@ -480,7 +480,7 @@ const Time = styled.div`
   /* top: 10vh; */
   left: 11vw;
   gap: 2px;
-  font-family: Gaegu;
+  font-family: "Gaegu";
 `;
 const TimeDiv = styled.div`
   display: flex;
@@ -517,13 +517,13 @@ const Index = styled.div`
 `;
 const Progress = styled.div`
   font-size: 3.5vh;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
 const QuizIndex = styled.div`
   font-size: 8.7vh;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
@@ -540,7 +540,7 @@ const Cover = styled.div`
   gap: ${({ quizIndex }) => (quizIndex === 2 ? "2vh" : "5.2vh")};
   color: #000;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 100px;
   font-style: normal;
   font-weight: 400;
@@ -551,7 +551,7 @@ const Comment = styled.div`
   color: ${(props) => props.color};
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 4.8vh;
   font-style: normal;
   font-weight: 400;
@@ -574,7 +574,7 @@ const AnswerCard = styled.div`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -608,7 +608,7 @@ const LevelupTitle = styled.div`
   color: #ff0d0d;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 90px;
   font-style: normal;
   font-weight: 700;
@@ -620,7 +620,7 @@ const Description = styled.div`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 40px;
   font-style: normal;
   font-weight: 400;

@@ -114,14 +114,11 @@ const ItemUseBtn = styled.div`
   width: 54vw;
   height: 57vh;
   text-align: center;
-  font-family: Uhbee Jung;
   z-index: 10;
   position: absolute;
   background-color: rgba(255, 255, 255, 0.737);
-
   color: #000;
-  text-align: center;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 2.7vw;
   font-style: normal;
   font-weight: 400;
@@ -141,7 +138,7 @@ const Button = styled.div`
   top: 6.7%;
   right: 4.6%;
   font-size: 50px;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   cursor: pointer;
   z-index: 100;
   width: auto;
@@ -150,7 +147,7 @@ const Button = styled.div`
 const Text = styled.div`
   color: #000;
   text-align: right;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 4.2vh;
   font-style: normal;
   font-weight: 400;

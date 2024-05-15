@@ -69,7 +69,7 @@ const Btn = styled.button`
   background: #fff7cd;
   color: #7c4622;
   text-align: center;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 3.8vw;
   font-style: normal;
   font-weight: 700;

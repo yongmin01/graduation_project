@@ -426,13 +426,13 @@ const Center = styled.div`
 `;
 const Progress = styled.div`
   font-size: 2.5vw;
-  font-family: "UhbeeJung";
+  font-family: "Uhbee jung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
 const QuizIndex = styled.div`
   font-size: 8.7vh;
-  font-family: "UhbeeJung";
+  font-family: "Uhbee jung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
   /* width: max-content; */
@@ -450,7 +450,7 @@ const NextBtn = styled.button`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 2.7vw;
   font-style: normal;
   font-weight: 700;
@@ -534,7 +534,7 @@ const Artist = styled.div`
 
 const InputDiv = styled.div`
   /* width: 45.8vw; */
-  font-family: "UhbeeJung";
+  font-family: "Uhbee jung";
   font-size: 2.5vw;
   display: flex;
   flex-direction: row;
@@ -571,7 +571,7 @@ const SubmitBtn = styled.button`
   position: relative;
   border: none;
   background-color: transparent;
-  font-family: "UhbeeJung";
+  font-family: "Uhbee jung";
   color: #151b26;
   font-size: 5.4vh; // 제출 버튼 크기 조절 필요(임의조절 함)
   &:hover ${SubmitBtnHighlight} {
@@ -626,7 +626,7 @@ const EndAlert = styled.div`
   align-items: center;
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.8);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 8.3vw;
   font-weight: 500;
 `;

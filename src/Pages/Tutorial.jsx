@@ -180,10 +180,10 @@ const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: Uhbee Jung;
+  font-family: "Uhbee jung";
   font-weight: 700;
   color: #fff;
-  background-color: pink;
+  background-color: transparent;
 `;
 
 const CharacterContainer = styled.div`

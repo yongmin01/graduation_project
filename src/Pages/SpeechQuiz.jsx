@@ -401,13 +401,13 @@ const Center = styled.div`
 `;
 const Progress = styled.div`
   font-size: 3.5vh;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
 const QuizIndex = styled.div`
   font-size: 8.7vh;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
   margin-bottom: 3.3vh;
@@ -463,7 +463,7 @@ const AnswerInfo = styled.div`
 `;
 
 const InputDiv = styled.div`
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 50px;
   display: flex;
   flex-direction: column;
@@ -485,7 +485,7 @@ const InputBox = styled.div`
 const InputTagBox = styled.input`
   border: none;
   background-color: transparent;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 44px;
   margin-bottom: 4px;
 `;
@@ -503,7 +503,7 @@ const Btn = styled.button`
   justify-content: center;
   align-items: center;
   background-color: transparent;
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: ${({ isFirstTry }) => (isFirstTry ? "2.3vw" : "1.9vw")};
   color: #151b26;
   border-radius: ${({ isFirstTry }) => (isFirstTry ? "4.1vw" : "2.7vw")};
@@ -538,7 +538,7 @@ const NextBtn = styled.button`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 2.7vw;
   font-style: normal;
   font-weight: 700;
@@ -552,7 +552,7 @@ const EndAlert = styled.div`
   height: 100vh;
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.8);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 120px;
   font-weight: 500;
   position: absolute;

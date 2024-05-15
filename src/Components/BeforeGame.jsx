@@ -279,7 +279,7 @@ const DescTitle = styled.div`
 const DescTitleText = styled.div`
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 9.7vh;
   font-style: normal;
   font-weight: 500;
@@ -340,7 +340,7 @@ const TitleStyled = styled.div`
   top: 30vh;
   text-align: center;
   width: 100%;
-  font-family: "UhBeeJung";
+  font-family: "UhBee jung";
   font-size: 120px;
 `;
 
@@ -387,7 +387,7 @@ const Option = styled.div`
 const OptionText = styled.div`
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejung";
+  font-family: "UhBee jung";
   font-size: 5.8vh;
   font-style: normal;
   font-weight: 700;
