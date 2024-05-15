@@ -7,11 +7,10 @@ import { Howl } from "howler";
 import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map4/map4_bgm.mp3";
 import marioSound from "../sources/sound/Map4/marioSound.mp3";
+import pianoSound from "../sources/sound/Map4/pianoSound.mp3";
 import clickSound from "../sources/sound/clickSound.mp3";
 
 // 이미지
-import loading1 from "../sources/images/icettaeng.gif";
-
 import frameBgImage from "../sources/images/Map/map4/frameBg.webp";
 import panelBgImage from "../sources/images/Map/map4/panelBg.webp";
 
@@ -478,15 +477,15 @@ export default function Map4() {
     };
   }, [frameStatus]);
   useEffect(() => {
-    const clickEffect = new Howl({
-      src: [clickSound],
+    const pianoEffect = new Howl({
+      src: [pianoSound],
       volume: 1,
     });
     if (noteStatus) {
-      clickEffect.play();
+      pianoEffect.play();
     }
     return () => {
-      clickEffect.unload();
+      pianoEffect.unload();
     };
   }, [noteStatus]);
 
