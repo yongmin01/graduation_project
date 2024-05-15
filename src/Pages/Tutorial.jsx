@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
@@ -6,12 +6,44 @@ import bgImg from "../sources/images/Map/map1/redBg.webp";
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
-import keyboardImg from "../sources/images/Intro/keyboard.svg";
-import keyboardImg2 from "../sources/images/Intro/keyboardWASD.svg";
-import mouseImg from "../sources/images/Intro/mouse.svg";
+import keyboardImg from "../sources/images/Intro/keyboard.webp";
+import keyboardImg2 from "../sources/images/Intro/keyboardWASD.webp";
+import mouseImg from "../sources/images/Intro/mouse.webp";
 import diaryImg from "../sources/images/diary.svg";
+// import clickImg from "../sources/images/Map/click.png";
+import clickImg from "../sources/images/Intro/clickWhite.webp";
 
 export default function Tutorial() {
+  const girlImage = () => {
+    let girl = new Image();
+    girl.src = girlImg;
+  };
+  const boyImage = () => {
+    let boy = new Image();
+    boy.src = boyImg;
+  };
+  const diaryImage = () => {
+    let diary = new Image();
+    diary.src = diaryImg;
+  };
+
+  const keyboardLeftImage = () => {
+    let keyboard = new Image();
+    keyboard.src = keyboardImg2;
+  };
+  const keyboardRightImage = () => {
+    let keyboard = new Image();
+    keyboard.src = keyboardImg;
+  };
+
+  useLayoutEffect(() => {
+    girlImage();
+    boyImage();
+    diaryImage();
+    keyboardLeftImage();
+    keyboardRightImage();
+  }, []);
+
   const [step, setStep] = useState(0);
   const [character, setCharacter] = useState(null);
   useEffect(() => {
@@ -96,7 +128,7 @@ export default function Tutorial() {
                 <IMG src={keyboardImg} height="17.1vh" />
               </Order>
               <Order>
-                맵에서 궁금한 부분은 꼭 마우스로 클릭해보세요.
+                맵에서 <img src={clickImg} />이 보이면 꼭 마우스로 클릭해보세요.
                 <IMG src={mouseImg} height="29vh" />
               </Order>
               <Next onClick={() => setStep(4)}>
@@ -204,8 +236,8 @@ const Diary = styled.div`
   gap: 2px;
 `;
 const DiaryImg = styled.img`
-    height: 5vh;
-`
+  height: 5vh;
+`;
 const End = styled.div`
   animation: ${fadeIn} 1s linear forwards;
   animation-delay: 2s;
