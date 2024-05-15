@@ -1,55 +1,97 @@
-export const speech = [
-  // {
-  //   id: "vgyvy-Jhxjw",
-  //   start: 42,
-  //   end: 44,
-  //   answer: "마트 다녀오셨어요?",
-  //   quiz: "음~ 맛있다~",
-  //   title: "거침없이 하이킥",
-  //   year: "2006",
-  // },
-  // {
-  //   id: "UGdhz9X1Db4",
-  //   start: 0,
-  //   end: 4,
-  //   answer: "루시퍼의 등장이라",
-  //   quiz: "사탄들의 학교에",
-  //   title: "상속자들",
-  //   year: "2013",
-  // },
-  // {
-  //   id: "fQUB-cfz1_k",
-  //   start: 30,
-  //   end: 34.5,
-  //   answer: "이것은 갈비인가 통닭인가.",
-  //   quiz: "지금까지 이런 맛은 없었다.",
-  //   title: "극한직업",
-  //   year: "2019",
-  // },
+function getRandomElements(array, numElements) {
+  const shuffled = array.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, numElements);
+}
+
+const totalQuiz = [
   {
     id: 0,
     end: 2,
-    answer: "왼손으로 비비고",
-    quiz: "오른손으로 비비고",
-    title: "비빔면 광고",
-    year: "2012",
+    quiz: "소혜야",
+    answer: "가수가 하고 싶어?",
+    format: "mp4",
   },
   {
     id: 1,
-    end: 4,
-    answer: "비비디 바비디 부",
-    quiz: "살라카둘라 메치카불라",
-    title: "SKT 광고",
-    year: "2005",
+    end: 2.5,
+    quiz: "고갱님~",
+    answer: "당황하셨어요?",
+    format: "mp4",
   },
   {
     id: 2,
-    end: 3,
-    answer: "대답해드리는게 인지상정",
-    quiz: "뭐지뭐지하고 물으신다면",
-    title: "포켓몬스터",
-    year: "2005",
+    end: 2.5,
+    quiz: "길라임씨는",
+    answer: "몇 살 때부터 그렇게 예뻤나?",
+    format: "mov",
+  },
+  {
+    id: 3,
+    end: 1,
+    quiz: "이따 5시에",
+    answer: "호떡집에 불이 날 거예요",
+    format: "mov",
+  },
+
+  {
+    id: 4,
+    end: 1,
+    quiz: "괜찮아요?",
+    answer: "많이 놀랬죠?",
+    format: "mov",
+  },
+  {
+    id: 5,
+    end: 1.5,
+    quiz: "아직 신에게는",
+    answer: "12척의 배가 남아있사옵니다.",
+    format: "mov",
+  },
+  {
+    id: 6,
+    end: 2,
+    quiz: "나는 예쁜 척하는 게 아니라",
+    answer: "그냥 예쁘게 태어난 건데",
+    format: "mov",
+  },
+  {
+    id: 7,
+    end: 2.3,
+    quiz: "엄청 커다란 모기가 나의 발을 물었어",
+    answer: "간지러웠어",
+    format: "mov",
+  },
+  {
+    id: 8,
+    end: 0.5,
+    quiz: "오션월드",
+    answer: "하태핫태",
+    format: "mov",
+  },
+  {
+    id: 10,
+    end: 1,
+    quiz: "나 꿍꼬또",
+    answer: "기싱 꿍꼬또",
+    format: "mov",
   },
 ];
+
+const randomQuiz = getRandomElements(totalQuiz, 4);
+
+const speech = randomQuiz.map(({ id, end, quiz, answer, format }) => ({
+  id,
+  end,
+  quiz,
+  answer,
+  format,
+}));
+speech.push({
+  id: 9,
+  end: 2.5,
+  quiz: "뭐지뭐지하고 물으신다면",
+  answer: "대답해드리는게 인지상정",
+  format: "mp4",
+});
 
 export default speech;

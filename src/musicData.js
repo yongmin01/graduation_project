@@ -6,52 +6,148 @@ function getRandomElements(array, numElements) {
 
 const totalMusics = [
   {
-    id: "12OHeq-qYwI",
-    title: ["Gee"],
-    artist: "소녀시대",
-    yeart: "2009",
+    id: "vWbMDA7wjLw",
+    title: ["A"],
+    artist: "레인보우",
   },
   {
-    id: "bzdsqPOJK_I",
-    title: ["잔소리"],
-    artist: "IU",
-    year: "2010",
+    id: "rjMcJHfzoIs",
+    title: ["으르렁"],
+    artist: "엑소",
+  },
+  {
+    id: "ufP7vtO7hSQ",
+    title: ["쏘리쏘리", "Sorry Sorry"],
+    artist: "슈퍼주니어",
+  },
+  {
+    id: "OX4MUsFRzKI",
+    title: ["트윙클"],
+    artist: "태티서",
+  },
+  {
+    id: "kxk8MOEmLEk",
+    title: ["200%"],
+    artist: "악동뮤지션",
+  },
+  {
+    id: "v-FvZaaLKSI",
+    title: ["NoNoNo", "노노노"],
+    artist: "에이핑크",
+  },
+  {
+    id: "ubJjRXSnzFE",
+    title: ["Pretty Girl", "프리티 걸"],
+    artist: "카라",
+  },
+  {
+    id: "epQBOq_WGPI",
+    title: ["U Go Girl", "유고걸"],
+    artist: "이효리",
+  },
+  {
+    id: "fEEf_UzQtCo",
+    title: ["Good boy", "굿보이"],
+    artist: "GD X TAEYANG",
+  },
+  {
+    id: "xEEtcrCH5To",
+    title: ["낭만 고양이"],
+    artist: "체리필터",
+  },
+  {
+    id: "QS2HsYnaSXk",
+    title: ["풍선"],
+    artist: "동방신기(TVXQ!)",
+  },
+
+  {
+    id: "prWVZFgZ3Zc",
+    title: ["Cheer up", "치얼업"],
+    artist: "TWICE",
+  },
+  {
+    id: "su2zOUW6fUM",
+    title: ["Something", "썸띵"],
+    artist: "걸스데이",
+  },
+  {
+    id: "_ya_ewPWt3E",
+    title: ["추격자"],
+    artist: "인피니트",
+  },
+  {
+    id: "9iMFkd2yf_Y",
+    title: ["Shy Boy", "샤이보이"],
+    artist: "시크릿",
+  },
+
+  {
+    id: "rQOQRXE_3i8",
+    title: ["Queen"],
+    artist: "손담비",
+  },
+
+  {
+    id: "5qMUzPH7Qik",
+    title: ["드림하이"],
+    artist: "수지, 김수현, 장우영, 택연",
+  },
+  {
+    id: "WJCoH47PaA8",
+    title: ["내 머리가 나빠서"],
+    artist: "SS501",
+  },
+  {
+    id: "sdCeZhSNF3E",
+    title: ["가슴이 뛴다"],
+    artist: "케이윌",
+  },
+  {
+    id: "c0t3FpVWLJ8",
+    title: ["Hot Issue", "핫이슈"],
+    artist: "포미닛(4MINUTE)",
   },
   {
     id: "uJUzAMEeYfM",
     title: ["죽을만큼 아파서"],
-    artist: "MC몽",
-    year: "2010",
+    artist: "MC 몽",
   },
   {
-    id: "VX7w5fwdMkI",
-    title: ["자니"],
-    artist: "프라이머리",
-    year: "2013",
+    id: "X90M32q-ifw",
+    title: ["샴푸", "Shampoo"],
+    artist: "애프터스쿨",
   },
   {
-    id: "as6fQ_HPTJQ",
-    title: ["Fantastic Baby", "판타스틱 베이비"],
-    artist: "빅뱅",
-    year: "2012",
+    id: "p_1ypvwxiSw",
+    title: ["썸"],
+    artist: "소유&정기고",
+  },
+
+  {
+    id: "RX0OLbxqVGw",
+    title: ["나혼자"],
+    artist: "씨스타",
   },
   {
-    id: "qJQKmu9_UrU",
-    title: ["잘자요 굿나잇", "Baby good night"],
-    artist: "B1A4",
-    year: "2012",
+    id: "9X5Kcr8hXmI",
+    title: ["좋은 날"],
+    artist: "IU",
   },
   {
-    id: "xe7IwlLyjsI",
-    title: ["내가 제일 잘 나가"],
-    artist: "2NE1",
-    year: "2011",
+    id: "edsYWXnR2bc",
+    title: ["대박사건"],
+    artist: "B.A.P",
   },
   {
-    id: "dMDouzr0OOI",
-    title: ["바람났어"],
-    artist: "GG(박명수, G-Dragon)",
-    year: "2011",
+    id: "OHlvBC9Sk6A",
+    title: ["Bad Girl Good Girl", "배드 걸 굿 걸"],
+    artist: "미쓰에이(miss A)",
+  },
+  {
+    id: "ZlqeBArFee0",
+    title: ["Roly-Poly", "롤리폴리"],
+    artist: "티아라",
   },
 ];
 
@@ -59,11 +155,10 @@ const totalMusics = [
 const randomMusics = getRandomElements(totalMusics, 5);
 
 // musics 배열에 객체 형태로 담기
-const musics = randomMusics.map(({ id, title, artist, year }) => ({
+const musics = randomMusics.map(({ id, title, artist }) => ({
   id,
   title,
   artist,
-  year,
 }));
 
 export default musics;
