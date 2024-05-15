@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import bg from "../sources/images/Outro/outroBg.png";
+import bg from "../sources/images/Outro/outroBg.webp";
 import cover from "../sources/images/Outro/diaryCover.png";
 
 export default function Intro() {
