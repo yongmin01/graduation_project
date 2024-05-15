@@ -279,10 +279,10 @@ const DescTitle = styled.div`
 const DescTitleText = styled.div`
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejungBold";
+  font-family: "UhBeejung";
   font-size: 9.7vh;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   line-height: normal;
   z-index: 1;
 `;
@@ -299,7 +299,7 @@ const Elipse = styled.div`
 const CommonLine = styled.span`
   color: ${(props) =>
     props.color === 1 ? "#FF9B06" : props.color === 2 ? "#209228" : "#007FD5"};
-  font-family: Gaegu;
+  font-family: "Gaegu";
   font-size: 3.3vw;
   font-style: normal;
   font-weight: 400;
@@ -319,7 +319,7 @@ const Order = styled.div`
 `;
 const Line = styled.div`
   color: #151b26;
-  font-family: Gaegu;
+  font-family: "Gaegu";
   font-size: 2.7vw;
   font-style: normal;
   font-weight: 400;
@@ -387,7 +387,7 @@ const Option = styled.div`
 const OptionText = styled.div`
   color: #151b26;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejungBold";
+  font-family: "UhBeejung";
   font-size: 5.8vh;
   font-style: normal;
   font-weight: 700;

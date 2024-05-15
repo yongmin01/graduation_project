@@ -309,7 +309,7 @@ export default function PuzzleQuiz() {
         <Game>
           <Time>
             <TimeDiv>TIME</TimeDiv>
-            <Seconds isUrgent={urgent}>{time !== 0 ? time-1 : 0}</Seconds>
+            <Seconds isUrgent={urgent}>{time !== 0 ? time - 1 : 0}</Seconds>
           </Time>
           <Index>
             <Progress>{quizIndex + 1}/3</Progress>
@@ -517,13 +517,13 @@ const Index = styled.div`
 `;
 const Progress = styled.div`
   font-size: 3.5vh;
-  font-family: UhBeeJung;
+  font-family: "UhBeejung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
 const QuizIndex = styled.div`
   font-size: 8.7vh;
-  font-family: UhBeeJung;
+  font-family: "UhBeejung";
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: #151b26;
 `;
@@ -537,10 +537,10 @@ const Cover = styled.div`
   justify-content: center;
   background: rgba(255, 255, 255, 0.94);
   text-align: center;
-  gap: ${({quizIndex}) => quizIndex === 2 ? "2vh" : "5.2vh"};
+  gap: ${({ quizIndex }) => (quizIndex === 2 ? "2vh" : "5.2vh")};
   color: #000;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBee jung";
+  font-family: "UhBeejung";
   font-size: 100px;
   font-style: normal;
   font-weight: 400;
@@ -551,7 +551,7 @@ const Comment = styled.div`
   color: ${(props) => props.color};
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBee jung";
+  font-family: "UhBeejung";
   font-size: 4.8vh;
   font-style: normal;
   font-weight: 400;
@@ -574,7 +574,7 @@ const AnswerCard = styled.div`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBee jung";
+  font-family: "UhBeejung";
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -608,7 +608,7 @@ const LevelupTitle = styled.div`
   color: #ff0d0d;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejungBOLD";
+  font-family: "UhBeejung";
   font-size: 90px;
   font-style: normal;
   font-weight: 700;
@@ -620,7 +620,7 @@ const Description = styled.div`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBee jung";
+  font-family: "UhBeejung";
   font-size: 40px;
   font-style: normal;
   font-weight: 400;

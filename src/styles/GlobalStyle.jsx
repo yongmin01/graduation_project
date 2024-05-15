@@ -1,6 +1,8 @@
 import { createGlobalStyle } from "styled-components";
 import SangSangShinb7 from "../sources/font/SSShinb7.ttf";
 import Gaegu from "../sources/font/J개구쟁이-Medium.otf";
+import UhbeeJung from "../sources/font/UhBee jung.ttf";
+
 const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
     box-sizing: border-box;
@@ -40,22 +42,22 @@ img {
 }
   @font-face {
         font-family: 'SangSangShinb7';
-        src: url(${SangSangShinb7}) format('truetype');
+        src: url(${SangSangShinb7}) format('woff');
   }
 
   @font-face {
         font-family: 'Gaegu';
-        src: url(${Gaegu}) format('opentype');
+        src: url(${Gaegu}) format('woff');
   }
   @font-face {
       font-family: 'UhBeejung';
-      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_five@.2.0/UhBeejung.woff') format('woff');
+      src: url(${UhbeeJung}) format('woff');
       font-weight: normal;
       font-style: normal;
 }
   @font-face {
       font-family: 'UhBeejungBold';
-      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_five@.2.0/UhBeejung.woff') format('woff');
+      src: url(${UhbeeJung}) format('woff');
       font-weight: bold;
       font-style: normal;
 }

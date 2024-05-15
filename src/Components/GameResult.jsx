@@ -104,10 +104,10 @@ const Tittle = styled.span`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejungBOLD";
+  font-family: "UhBeejung";
   font-size: 10.7vh;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   line-height: normal;
   margin-bottom: ${({ isPass }) => (isPass ? "8.8vh" : "6.9vh")};
 `;

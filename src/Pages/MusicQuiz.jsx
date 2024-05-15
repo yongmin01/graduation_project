@@ -450,7 +450,7 @@ const NextBtn = styled.button`
   color: #151b26;
   text-align: center;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-family: "UhBeejungBold";
+  font-family: "UhBeejung";
   font-size: 2.7vw;
   font-style: normal;
   font-weight: 700;
@@ -626,7 +626,7 @@ const EndAlert = styled.div`
   align-items: center;
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.8);
-  font-family: "UhBeejungBold";
+  font-family: "UhBeejung";
   font-size: 8.3vw;
-  font-weight: 700;
+  font-weight: 500;
 `;
