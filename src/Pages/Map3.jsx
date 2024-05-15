@@ -25,17 +25,15 @@ import diaryImg from "../sources/images/diary.svg";
 import diaryXImg from "../sources/images/diaryX.svg";
 import diaryYetImg from "../sources/images/diaryYet.svg";
 
-import clickImage from "../sources/images/Map/click.png";
-import chickManBorderImage from "../sources/images/Map/map3/chickManBorder.png";
-import chickImage from "../sources/images/Map/map3/chick.png";
-import moneyImage from "../sources/images/Map/map3/money.png";
+import chickManBorderImage from "../sources/images/Map/map3/chickManBorder.webp";
+import chickWMoneyImage from "../sources/images/Map/map3/chickWmoney.webp";
 
-import shopBorderImage from "../sources/images/Map/map3/shopBorder.png";
-import snack1Image from "../sources/images/Map/map3/snack1.png";
-import snack2Image from "../sources/images/Map/map3/snack2.png";
-import sugarSnackImage from "../sources/images/Map/map3/sugarSnack.png";
-import leafImage from "../sources/images/Map/map3/leaf.png";
-import busImage from "../sources/images/Map/map3/bus.png";
+import shopBorderImage from "../sources/images/Map/map3/shopBorder.webp";
+import snacksImage from "../sources/images/Map/map3/snacks.webp";
+
+import sugarSnackImage from "../sources/images/Map/map3/sugarSnack.webp";
+import leafImage from "../sources/images/Map/map3/leaf.webp";
+import busImage from "../sources/images/Map/map3/bus.webp";
 
 import girlImg from "../sources/images/Map/girl/girl.png";
 import boyImg from "../sources/images/Map/boy/boy.png";
@@ -123,11 +121,11 @@ export default function Map3() {
   const [chickStatus, setChickStatus] = useState(false);
   const chicksManBorderSize = {
     w: (252 / CW) * val,
-    h: (330 / CH) * canvasHeight,
+    h: (340 / CH) * canvasHeight,
   };
   const chicksManBorderCoor = {
     x: (687 / CW) * val,
-    y: (396 / CH) * canvasHeight,
+    y: (386 / CH) * canvasHeight,
   };
   const chicksSize = {
     w: (214 / CW) * val,
@@ -146,14 +144,23 @@ export default function Map3() {
     y: (256 / CH) * canvasHeight,
   };
 
+  const chickWmoneySize = {
+    w: (278 / CW) * val,
+    h: (460 / CH) * canvasHeight,
+  };
+  const chickWmoneyCoor = {
+    x: (850 / CW) * val,
+    y: (276 / CH) * canvasHeight,
+  };
+
   const [snackStatus, setSnackStatus] = useState(false);
   const shopBorderSize = {
     w: (436 / CW) * val,
-    h: (424 / CH) * canvasHeight,
+    h: (452 / CH) * canvasHeight,
   };
   const shopBorderCoor = {
     x: (1644 / CW) * val,
-    y: (288 / CH) * canvasHeight,
+    y: (260 / CH) * canvasHeight,
   };
   const snack1Size = {
     w: (274 / CW) * val,
@@ -170,6 +177,15 @@ export default function Map3() {
   const snack2Coor = {
     x: (1916 / CW) * val,
     y: (52 / CH) * canvasHeight,
+  };
+
+  const snacksSize = {
+    w: (560 / CW) * val,
+    h: (302 / CH) * canvasHeight,
+  };
+  const snacksCoor = {
+    x: (1588 / CW) * val,
+    y: (17 / CH) * canvasHeight,
   };
 
   const [sugarSnackStatus, setSugarSnackStatus] = useState(false);
@@ -198,9 +214,9 @@ export default function Map3() {
     h: (178 / CH) * canvasHeight,
   };
 
-  const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
-  const clickCoor1 = { x: (797 / CW) * val, y: (386 / CH) * canvasHeight };
-  const clickCoor2 = { x: (1814 / CW) * val, y: (260 / CH) * canvasHeight };
+  // const clickSize = { w: (102 / CW) * val, h: (32 / CH) * canvasHeight };
+  // const clickCoor1 = { x: (797 / CW) * val, y: (386 / CH) * canvasHeight };
+  // const clickCoor2 = { x: (1814 / CW) * val, y: (260 / CH) * canvasHeight };
 
   const canvasRef = useRef(null);
 
@@ -225,30 +241,6 @@ export default function Map3() {
       context.drawImage(bg, background, 0, val, canvasHeight);
     };
 
-    const click = new Image();
-    click.src = clickImage;
-
-    click.onload = () => {
-      if (!chickStatus) {
-        context.drawImage(
-          click,
-          background + clickCoor1.x,
-          clickCoor1.y,
-          clickSize.w,
-          clickSize.h
-        );
-      }
-      if (!snackStatus) {
-        context.drawImage(
-          click,
-          background + clickCoor2.x,
-          clickCoor2.y,
-          clickSize.w,
-          clickSize.h
-        );
-      }
-    };
-
     // 병아리 아저씨 테두리 그리기
     const chickManBorder = new Image();
     chickManBorder.src = chickManBorderImage;
@@ -263,34 +255,19 @@ export default function Map3() {
         );
       };
     }
-    // 돈 그리기
-    const money = new Image();
-    money.src = moneyImage;
 
-    money.onload = () => {
+    // 돈, 병아리 그리기
+    const chickWmoney = new Image();
+    chickWmoney.src = chickWMoneyImage;
+
+    chickWmoney.onload = () => {
       if (chickStatus) {
         context.drawImage(
-          money,
-          background + moneyCoor.x,
-          moneyCoor.y,
-          moneySize.w,
-          moneySize.h
-        );
-      }
-    };
-
-    // 병아리 그리기
-    const chick = new Image();
-    chick.src = chickImage;
-
-    chick.onload = () => {
-      if (chickStatus) {
-        context.drawImage(
-          chick,
-          background + chicksCoor.x,
-          chicksCoor.y,
-          chicksSize.w,
-          chicksSize.h
+          chickWmoney,
+          background + chickWmoneyCoor.x,
+          chickWmoneyCoor.y,
+          chickWmoneySize.w,
+          chickWmoneySize.h
         );
       }
     };
@@ -310,28 +287,16 @@ export default function Map3() {
       };
     }
 
-    // 간식 그리기
-    const snack1 = new Image();
-    snack1.src = snack1Image;
-    const snack2 = new Image();
-    snack2.src = snack2Image;
+    const snacks = new Image();
+    snacks.src = snacksImage;
     if (snackStatus) {
-      snack1.onload = () => {
+      snacks.onload = () => {
         context.drawImage(
-          snack1,
-          background + snack1Coor.x,
-          snack1Coor.y,
-          snack1Size.w,
-          snack1Size.h
-        );
-      };
-      snack2.onload = () => {
-        context.drawImage(
-          snack2,
-          background + snack2Coor.x,
-          snack2Coor.y,
-          snack2Size.w,
-          snack2Size.h
+          snacks,
+          background + snacksCoor.x,
+          snacksCoor.y,
+          snacksSize.w,
+          snacksSize.h
         );
       };
     }
