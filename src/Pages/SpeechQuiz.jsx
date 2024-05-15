@@ -26,7 +26,7 @@ import correctImg from "../sources/images/Game/correct.svg";
 import wrongImg from "../sources/images/Game/wrong.svg";
 
 export default function SpeechQuiz({}) {
-  const totalQuiz = 3;
+  const totalQuiz = 5;
   const [game, setGame] = useState("before");
   const [nowPlaying, setNowPlaying] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -249,7 +249,7 @@ export default function SpeechQuiz({}) {
                 <Player>
                   {nowPlaying ? null : <PlayBtn src={PlayBtnImg} />}
                   <Video
-                    src={`./videos/speechQuiz${quizIndex}.mp4#t,${speech[quizIndex].end}`}
+                    src={`./videos/speechQuiz${speech[quizIndex].id}.${speech[quizIndex].format}#t,${speech[quizIndex].end}`}
                     ref={playerRef}
                     onTimeUpdate={pauseVideo}
                     onClick={replay}
