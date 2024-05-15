@@ -33,7 +33,7 @@ import communlineUnder_speech from "../sources/images/Game/speechQuiz/commonline
 
 // 퍼즐퀴즈 장식
 import cardGlass from "../sources/images/Game/puzzleQuiz/cardglass.webp";
-import pencilEraser from "../sources/images/Game/puzzleQuiz/pencileraser.svg";
+import pencilEraser from "../sources/images/Game/puzzleQuiz/pencileraser.webp";
 import flower_yellow from "../sources/images/Game/flower_yellow.svg";
 import playIcon_green from "../sources/images/Game/playIcon_green.svg";
 import communlineUnder_puzzle from "../sources/images/Game/puzzleQuiz/commonlineUnder_puzzle.png";
