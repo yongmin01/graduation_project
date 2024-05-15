@@ -7,6 +7,8 @@ import { Howl } from "howler";
 // import useEffectSound from "../utils/EffectSound";
 import bgm from "../sources/sound/Map3/map3_bgm.mp3";
 import chickSound from "../sources/sound/Map3/chickSound.mp3";
+import lightSound from "../sources/sound/Map3/lightSound.mp3";
+import sugarSnackSound from "../sources/sound/Map3/sugarSnackSound.mp3";
 import busSound from "../sources/sound/Map3/busSound.m4a";
 import windSound from "../sources/sound/Map3/windSound.m4a";
 import clickSound from "../sources/sound/clickSound.mp3";
@@ -459,20 +461,18 @@ export default function Map3() {
     }
   };
 
-  // 램프 켜기
   useEffect(() => {
+    // 램프 켜기
     if (background < (-200 / 5000) * val) {
       setStreetLightStatus(1);
     }
-    if (background < (-2600 / 5000) * val) {
-      setStreetLightStatus(2);
-    }
-  }, [background]);
-
-  // 달고나 보이기
-  useEffect(() => {
+    // 달고나 보이기
     if (background < (-1300 / 5000) * val) {
       setSugarSnackStatus(true);
+    }
+    // 램프 켜기
+    if (background < (-2600 / 5000) * val) {
+      setStreetLightStatus(2);
     }
   }, [background]);
 
@@ -628,17 +628,29 @@ export default function Map3() {
       chickEffect.unload();
     };
   }, [chickStatus]);
+  useEffect(() => {
+    const lightEffect = new Howl({
+      src: [lightSound],
+      volume: 1,
+    });
+    if (streetLightStatus) {
+      lightEffect.play();
+    }
+    return () => {
+      lightEffect.unload();
+    };
+  }, [streetLightStatus]);
   // const clickEffect = useEffectSound(clickSound, 1);
   useEffect(() => {
-    const clickEffect = new Howl({
-      src: [clickSound],
+    const sugarSnackEffect = new Howl({
+      src: [sugarSnackSound],
       volume: 1,
     });
     if (sugarSnackStatus) {
-      clickEffect.play();
+      sugarSnackEffect.play();
     }
     return () => {
-      clickEffect.unload();
+      sugarSnackEffect.unload();
     };
   }, [sugarSnackStatus]);
   useEffect(() => {
@@ -662,9 +674,9 @@ export default function Map3() {
     if (stop && characterMove !== 1) {
       busEffect.play();
     }
-    return () => {
-      busEffect.unload();
-    };
+    // return () => {
+    //   busEffect.unload();
+    // };
   }, [stop]);
   // const windEffect = useEffectSound(windSound, 1);
   useEffect(() => {
@@ -675,9 +687,9 @@ export default function Map3() {
     if (leafAnimation === "now") {
       windEffect.play();
     }
-    return () => {
-      windEffect.unload();
-    };
+    // return () => {
+    //   windEffect.unload();
+    // };
   }, [leafAnimation]);
 
   return (
