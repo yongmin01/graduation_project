@@ -1,6 +1,6 @@
 import GlobalStyle from "./styles/GlobalStyle";
-import React, { useEffect, useRef, useState } from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import Intro from "./Pages/Intro";
@@ -18,8 +18,6 @@ import Npc2 from "./Pages/Npc2";
 import Npc3 from "./Pages/Npc3";
 import Npc4 from "./Pages/Npc4";
 import Diary from "./Pages/Diary";
-
-import Test from "./Pages/Test";
 
 function App() {
   const handle = useFullScreenHandle();
@@ -52,8 +50,6 @@ function App() {
             <Route path="/npc4" element={<Npc4 />} />
 
             <Route path="/diary" element={<Diary />} />
-
-            <Route path="/test" element={<Test />} />
           </Routes>
         </BrowserRouter>
         <button onClick={handle.enter}>전체화면 전환</button>

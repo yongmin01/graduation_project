@@ -2,10 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
-// import afterGameMap from "../sources/images/Map/map3/afterGame.png";
 import afterGameMap from "../sources/images/Map/map3/afterGame.webp";
 import ItemImage from "../sources/images/Game/seal.svg";
-import getDiaryImg from "../sources/images/getDiary.svg";
 
 export default function Npc3() {
   const videoRef = useRef();
@@ -68,14 +66,13 @@ export default function Npc3() {
             <UseText>사용하기</UseText>
           </ItemUseBtn>
           {showNext && (
-            
-              <Button
-                onClick={routeing}
-                style={{ display: "flex", marginLeft: "auto" }}
-              >
-                <Text>다음 맵으로 이동</Text>
-                <NextBtnImg width="2.6vw" fill={"#151B26"} />
-              </Button>
+            <Button
+              onClick={routeing}
+              style={{ display: "flex", marginLeft: "auto" }}
+            >
+              <Text>다음 맵으로 이동</Text>
+              <NextBtnImg width="2.6vw" fill={"#151B26"} />
+            </Button>
           )}
         </Modal>
       </Npc>
@@ -156,21 +153,6 @@ const UseText = styled.div`
   &:hover:before {
     opacity: 1;
   }
-`;
-const GetDiary = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 41px;
-`;
-const GetDiaryAlert = styled.img`
-  height: 54.2vh;
 `;
 const Video = styled.video`
   width: 54.3vw;
