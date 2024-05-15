@@ -27,7 +27,7 @@ const totalQuiz = [
   },
   {
     id: 3,
-    end: 1,
+    end: 0.8,
     quiz: "이따 5시에",
     answer: "호떡집에 불이 날 거예요",
     format: "mov",
@@ -70,7 +70,7 @@ const totalQuiz = [
   },
   {
     id: 10,
-    end: 1,
+    end: 2,
     quiz: "나 꿍꼬또",
     answer: "기싱 꿍꼬또",
     format: "mov",
