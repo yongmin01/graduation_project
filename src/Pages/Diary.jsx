@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import styled, { css, keyframes } from "styled-components";
 import bg from "../sources/images/Outro/outroBg.webp";
 
-import cover from "../sources/images/Outro/diaryCover.png";
+import cover from "../sources/images/Outro/diaryCover.webp";
 import pageBack from "../sources/images/Outro/pageBack.png";
 
 import gPage1 from "../sources/images/Outro/gPage1.png";
