@@ -494,10 +494,10 @@ export default function Map2() {
         boysRunningEffect.play();
       }, 500);
     }
-    return () => {
-      bellEffect.unload();
-      boysRunningEffect.unload();
-    };
+    // return () => {
+    //   bellEffect.unload();
+    //   boysRunningEffect.unload();
+    // };
   }, [stop]);
 
   // const clickEffect = useEffectSound(clickSound, 1);
