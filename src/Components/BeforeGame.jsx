@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import styled from "styled-components";
 import OptionsPath from "../sources/images/Game/optionsBg.svg";
 
@@ -32,7 +32,7 @@ import recordBtn from "../sources/images/Game/speechQuiz/recordBtn.svg";
 import communlineUnder_speech from "../sources/images/Game/speechQuiz/commonlineUnder_speech.png";
 
 // 퍼즐퀴즈 장식
-import cardGlass from "../sources/images/Game/puzzleQuiz/cardglass.svg";
+import cardGlass from "../sources/images/Game/puzzleQuiz/cardglass.webp";
 import pencilEraser from "../sources/images/Game/puzzleQuiz/pencileraser.svg";
 import flower_yellow from "../sources/images/Game/flower_yellow.svg";
 import playIcon_green from "../sources/images/Game/playIcon_green.svg";
@@ -40,6 +40,20 @@ import communlineUnder_puzzle from "../sources/images/Game/puzzleQuiz/commonline
 
 export default function BeforeGame({ go, title, round }) {
   const [description, setDescription] = useState(false);
+  const cardGlassImage = () => {
+    let cardGlass = new Image();
+    cardGlass.src = cardGlass;
+  };
+  const pencilEraserImage = () => {
+    let pencilEraserImage = new Image();
+    pencilEraserImage.src = PencilEraser;
+  };
+
+  useLayoutEffect(() => {
+    cardGlassImage();
+    pencilEraserImage();
+  }, []);
+
   return (
     <>
       {description ? (
@@ -78,8 +92,9 @@ export default function BeforeGame({ go, title, round }) {
                   <Word color="#9B3AE8">‘가수공개’</Word> 가 있어요.
                 </Line>
                 <Line>
-                  총 <Word color="#FF4BCD">5라운드</Word>의 게임, <Word color="#FF0000">3라운드 이상
-                  정답</Word>을 맞춰야 일기장을
+                  총 <Word color="#FF4BCD">5라운드</Word>의 게임,{" "}
+                  <Word color="#FF0000">3라운드 이상 정답</Word>을 맞춰야
+                  일기장을
                 </Line>
                 <Line>획득할 수 있습니다. 한 번 도전해보세요!</Line>
               </Order>
