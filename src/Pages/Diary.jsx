@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css, keyframes } from "styled-components";
-import bg from "../sources/images/Outro/outroBg.png";
+import bg from "../sources/images/Outro/outroBg.webp";
 
 import cover from "../sources/images/Outro/diaryCover.png";
 import pageBack from "../sources/images/Outro/pageBack.png";
@@ -20,8 +20,9 @@ import bPage2_dirt from "../sources/images/Outro/bPage2_dirt.png";
 import bPage3_dirt from "../sources/images/Outro/bPage3_dirt.png";
 
 // 사운드
-import { Howl } from "howler";
-import bgm from "../sources/sound/endingBgm.mp3";
+import { Howl, Howler } from "howler";
+import npc4Bgm from "../sources/sound/npc4Bgm.mp3";
+import lastBgm from "../sources/sound/endingBgm.mp3";
 
 export default function Diary() {
   const characterSex = JSON.parse(localStorage.getItem("character"));
@@ -44,10 +45,13 @@ export default function Diary() {
   const [page4Flipped, setPage4Flipped] = useState(false);
   const [removeCover, setRemoveCover] = useState(false);
 
+  const [npc4SoundStatus, setNpc4SoundStatus] = useState(true);
+
   // 페이지 넘기기 함수
   const handleCoverClick = () => {
     if (page3Flipped) {
       setPage4Flipped(true);
+      setNpc4SoundStatus(false);
       setTimeout(() => {
         setRemoveCover(true);
       }, 2100);
@@ -69,11 +73,6 @@ export default function Diary() {
         setShowCover(false);
       }, 500);
     }
-  };
-
-  // 마지막 페이지 이동 및 확대 애니메이션 끝나면 영상 재생
-  const startVideo = () => {
-    if (videoRef.current) videoRef.current.play();
   };
 
   // 넘기는 애니메이션 뒷장 보여주기
@@ -102,19 +101,43 @@ export default function Diary() {
   }, [coverFlipped, page1Flipped, page2Flipped, page3Flipped, page4Flipped]);
 
   // 사운드
-  const sound = new Howl({
-    src: [bgm],
+
+  useEffect(() => {
+    const npc4Sound = new Howl({
+      src: [npc4Bgm],
+      loop: true,
+      volume: 0.4,
+      preload: true,
+    });
+    if (npc4SoundStatus) {
+      npc4Sound.play();
+      npc4Sound.seek(localStorage.getItem("bgmStartingTime") + 15000);
+      console.log(
+        "이어서 재생되는 시점 : ",
+        localStorage.getItem("bgmStartingTime") + 300
+      );
+      npc4Sound.on("play", () => {});
+    } else {
+      Howler.stop();
+    }
+    return () => {
+      npc4Sound.unload();
+    };
+  }, [npc4SoundStatus]);
+
+  const lastBgmSound = new Howl({
+    src: [lastBgm],
     loop: true,
     volume: 0.4,
     preload: true,
   });
-  const soundStop = () => sound.unload();
-
-  useEffect(() => {
-    sound.play();
-    sound.on("play", () => {});
-    return soundStop;
-  }, []);
+  // 마지막 페이지 이동 및 확대 애니메이션 끝나면 영상 재생
+  const startVideo = () => {
+    if (videoRef.current) videoRef.current.play();
+    return () => {
+      lastBgmSound.unload();
+    };
+  };
 
   return (
     <>
@@ -345,7 +368,7 @@ const LastPage = styled.div`
   ${({ pageslide }) =>
     pageslide &&
     css`
-      animation: ${lastPageTransition} 3s linear forwards;
+      animation: ${lastPageTransition} 2s linear forwards;
     `}
 
   & > video {

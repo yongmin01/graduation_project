@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as NextBtnImg } from "../sources/images/nextBtn.svg";
-// import afterGameMap from "../sources/images/Map/map4/afterGame.png";
+
 import afterGameMap from "../sources/images/Map/map4/afterGame.webp";
-import ItemImage from "../sources/images/Game/npc4_play.png";
+import ItemImage from "../sources/images/Game/npc4_play.webp";
 
 export default function Npc4() {
   const videoRef = useRef();
@@ -15,6 +15,11 @@ export default function Npc4() {
 
   const navigator = useNavigate();
   const routeing = () => {
+    localStorage.setItem(
+      "bgmStartingTime",
+      JSON.stringify(videoRef.current.currentTime - 15)
+    );
+    console.log("이동되는 시점 : ", videoRef.current.currentTime - 15);
     setTimeout(() => {
       navigator("/diary");
     }, 1000);
@@ -116,7 +121,7 @@ const ItemUseBtn = styled.div`
 
   color: #000;
   text-align: center;
-  font-family: "UhBee jung";
+  font-family: "UhBeejung";
   font-size: 2.7vw;
   font-style: normal;
   font-weight: 400;
@@ -136,7 +141,7 @@ const Button = styled.div`
   top: 6.7%;
   right: 4.6%;
   font-size: 50px;
-  font-family: UhbeeJung;
+  font-family: "UhBeejung";
   cursor: pointer;
   z-index: 100;
   width: auto;
@@ -145,21 +150,10 @@ const Button = styled.div`
 const Text = styled.div`
   color: #000;
   text-align: right;
-  font-family: "UhBee jung";
+  font-family: "UhBeejung";
   font-size: 4.2vh;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
-`;
-
-const UseItem = styled.div`
-  position: absolute;
-  margin: 0 auto;
-  width: 40%;
-  background-color: yellow;
-  border-radius: 50px;
-  text-align: center;
-  font-family: Uhbee Jung;
-  z-index: 10;
 `;
