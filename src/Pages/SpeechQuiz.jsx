@@ -360,7 +360,7 @@ export default function SpeechQuiz({}) {
         <GameResult
           pass={pass.current}
           score={score.current}
-          total={3}
+          total={5}
           round={3}
           end={setGame}
         />
