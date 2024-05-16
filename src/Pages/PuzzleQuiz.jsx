@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 // 사운드
 import { Howl } from "howler";
-import bgm from "../sources/sound/Game/puzzleQuizBgm.m4a";
+import bgm from "../sources/sound/Game/puzzleQuizBgm.mp3";
 import bgm1 from "../sources/sound/Game/puzzleQuizBgm1.mp3";
 import bgm2 from "../sources/sound/Game/puzzleQuizBgm2.mp3";
 import useEffectSound from "../utils/EffectSound";
