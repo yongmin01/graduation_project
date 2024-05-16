@@ -21,9 +21,9 @@ import Diary from "./Pages/Diary";
 
 function App() {
   const handle = useFullScreenHandle();
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "\\") handle.enter();
-  });
+  // window.addEventListener("keydown", (e) => {
+  //   if (e.key === "\\") handle.enter();
+  // });
 
   return (
     <>
