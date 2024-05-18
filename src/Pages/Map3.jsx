@@ -571,7 +571,7 @@ export default function Map3() {
   useEffect(() => {
     const sugarSnackEffect = new Howl({
       src: [sugarSnackSound],
-      volume: 1,
+      volume: 0.5,
     });
     if (sugarSnackStatus) {
       sugarSnackEffect.play();
