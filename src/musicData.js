@@ -83,9 +83,9 @@ const totalMusics = [
   },
 
   {
-    id: "rQOQRXE_3i8",
-    title: ["Queen"],
-    artist: "손담비",
+    id: "GAAaxI_svZU",
+    title: ["Jackpot", "잭팟"],
+    artist: "블락비",
   },
 
   {
@@ -99,9 +99,9 @@ const totalMusics = [
     artist: "SS501",
   },
   {
-    id: "sdCeZhSNF3E",
-    title: ["가슴이 뛴다"],
-    artist: "케이윌",
+    id: "-l56O00kEgM",
+    title: ["까탈레나"],
+    artist: "오렌지캬라멜",
   },
   {
     id: "c0t3FpVWLJ8",
@@ -114,9 +114,9 @@ const totalMusics = [
     artist: "MC 몽",
   },
   {
-    id: "X90M32q-ifw",
-    title: ["샴푸", "Shampoo"],
-    artist: "애프터스쿨",
+    id: "49aKDZNtqjc",
+    title: ["10 Minutes", "텐미닛"],
+    artist: "이효리",
   },
   {
     id: "p_1ypvwxiSw",
