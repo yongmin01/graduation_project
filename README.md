@@ -7,6 +7,8 @@
 <br> 
 
 ## 🕹️ 작품 프리뷰
+[![나의 평범한 일기장 시연영상](https://github.com/yongmin01/graduation_project/assets/78396941/dab59837-56ac-4b1a-9e2e-52726a7ebe1e)](https://www.youtube.com/watch?v=34HPWWDtPJA)
+
 ![맵 4종](https://github.com/yongmin01/graduation_project/assets/78396941/6efb1e76-4ead-493a-b672-633e58578842)
 
 ![게임3종](https://github.com/yongmin01/graduation_project/assets/78396941/651f66e5-9d46-4235-8145-89748ffc130e)
